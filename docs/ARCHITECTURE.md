@@ -62,9 +62,11 @@ YouTube reuses the browse page.
 - When a row's key upgrades from positional to occurrence (bridge data arrives late),
   `SelectionModel.rename` carries its selection over.
 
-**Observed limitation:** signed out, the lockup layout's data contains no `setVideoId`
-(only `contentId` and a watch endpoint with `index`), so live rows are positional. Whether
-signed-in owners get `setVideoId` in lockup data has **not been verified**.
+**Observed:** signed out, YouTube serves the lockup layout and its data contains no
+`setVideoId` (only `contentId` and a watch endpoint with `index`), so rows are positional.
+Signed in, Watch Later was served in the legacy layout with a distinct `setVideoId` on
+every row (52/52). Distinct IDs for duplicate videos in a regular playlist are not yet
+verified (see ROADMAP.md).
 
 ## Session lifecycle
 

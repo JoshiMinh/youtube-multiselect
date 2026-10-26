@@ -115,11 +115,22 @@ now fixed and covered by fixtures.
 Not yet verified: playlists over ~300 entries live, background-tab behaviour, and
 Watch Later / Liked videos.
 
-**Signed-in occurrence identity: pending.** Signed out, all lockup rows expose framework
-data, but it contains no `setVideoId` anywhere (checked with `scripts/identity-probe.js`).
-The check needs a signed-in session on a playlist the user owns that contains the same
-video at least twice. Paste the probe into DevTools there and record:
-`withOccurrenceId`, `foundAt`, and whether duplicate video IDs get distinct occurrence IDs.
+**Signed-in occurrence identity: partly verified.**
+
+| Session | Page | Layout | Rows with `setVideoId` |
+| --- | --- | --- | --- |
+| signed out | public playlists | `yt-lockup-view-model` | 0 (none anywhere in row data) |
+| signed in (2026-10-26) | Watch Later (`list=WL`), 52 entries | `ytd-playlist-video-renderer` | **52 / 52, all distinct** |
+
+Signed in, the ID sits directly on the row data (`data.setVideoId`) and again inside
+`menu…playlistEditEndpoint.actions[*]` scoped to this playlist. Both paths are read by the
+bridge's `findOccurrenceId`, so signed-in rows should get `occurrence` identity. The layout
+depends on sign-in state; the adapter supports both.
+
+**Still unverified:** whether two copies of the *same* video in a regular playlist get
+distinct IDs. Watch Later can't hold duplicates. To finish, open a regular playlist with a
+repeated video while signed in, paste `scripts/identity-probe.js` into DevTools, and check
+that `duplicate occurrenceIds=0` while `duplicate videoIds>0`.
 
 Outcomes:
 - IDs present and scoped to the playlist: the bridge already uses them; add a fixture with
