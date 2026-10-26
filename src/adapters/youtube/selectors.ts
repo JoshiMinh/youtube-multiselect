@@ -21,6 +21,20 @@ export const YT = {
   titleAttr: 'a#video-title[title], h3[title]',
   channelLink: 'ytd-channel-name a, #channel-name a, .ytContentMetadataViewModelMetadataRow a',
   index: '#index',
+  /** Sentinel YouTube renders at the end of a partially loaded list; scrolled into view, it loads more. */
+  continuation: 'ytd-continuation-item-renderer, yt-continuation-item-view-model',
+  /**
+   * Lockup layout: the playlist's rows and its sentinel share an item section.
+   * A second sentinel directly in the section list loads content *after* the
+   * playlist and can remain once the playlist is complete, so it is ignored.
+   */
+  itemSection: 'yt-item-section-renderer, ytd-item-section-renderer',
+  /** Header text that contains the playlist's video count ("182 videos"). */
+  headerCount: [
+    'ytd-browse:not([hidden]) yt-page-header-renderer .ytContentMetadataViewModelMetadataRow',
+    'ytd-browse:not([hidden]) ytd-playlist-byline-renderer',
+    'ytd-browse:not([hidden]) ytd-playlist-sidebar-primary-info-renderer #stats',
+  ],
   /** Fired by YouTube's SPA router once a navigation has rendered. */
   navigateFinishEvent: 'yt-navigate-finish',
   /** Present on <html> when YouTube's dark theme is active. */

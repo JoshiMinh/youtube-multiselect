@@ -41,8 +41,11 @@ export function describeStatus(probe: TabProbe, enabled: boolean): StatusView {
   if (!session || !session.listFound) {
     return { tone: 'neutral', title: 'Waiting for the playlist to load', lines: ['If this persists, YouTube may have changed its layout.'] };
   }
-  const lines = [`${session.loaded} entries loaded, ${session.selected} selected.`];
+  const of = session.hasMore && session.expected !== null ? ` of ~${session.expected}` : '';
+  const lines = [`${session.loaded}${of} entries loaded, ${session.selected} selected.`];
   if (session.loaded === 0) lines.push('No supported entries found on this page yet.');
+  if (session.load.status === 'loading') lines.push('Loading more entries…');
+  else if (session.hasMore) lines.push('Use “Load all” in the page toolbar to load the rest.');
   if (session.identity === 'positional' || session.identity === 'mixed') {
     lines.push('Duplicates are told apart by position; reordering the playlist can shift them.');
   }

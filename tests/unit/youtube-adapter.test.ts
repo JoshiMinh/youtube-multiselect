@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { detectYouTubePage, youtubeAdapter } from '@/src/adapters/youtube/adapter';
+import { detectYouTubePage, parseVideoCount, youtubeAdapter } from '@/src/adapters/youtube/adapter';
 import { BRIDGE } from '@/src/adapters/youtube/selectors';
 import { loadPlaylistPage } from '../fixtures/playlist';
 
@@ -23,6 +23,54 @@ describe('detectYouTubePage', () => {
     'https://www.youtube.com/',
   ])('rejects %s', (url) => {
     expect(detectYouTubePage(new URL(url), document).kind).toBe('unsupported');
+  });
+});
+
+describe('parseVideoCount', () => {
+  it.each([
+    ['Playlist•182 videos•1,045,672,789 views', 182],
+    ['1,234 videos', 1234],
+    ['1.234 Videos', 1234],
+    ['5 000 videos', 5000],
+    ['1 video', 1],
+    ['182 video', 182],
+    ['Course•245 lessons', 245],
+  ])('parses %j', (text, value) => {
+    expect(parseVideoCount(text)).toBe(value);
+  });
+
+  it.each(['1,045,672,789 views', 'No videos', ''])('ignores %j', (text) => {
+    expect(parseVideoCount(text)).toBeNull();
+  });
+});
+
+describe.each(['legacy', 'lockup'] as const)('youtubeAdapter loading (%s)', (layout) => {
+  it('reads the advertised count and finds the continuation sentinel', () => {
+    loadPlaylistPage(document, PL, [{ videoId: 'aaaaaaaaaaa', title: 'A' }], { layout, expected: 1500, complete: false });
+    const container = youtubeAdapter.findListContainer(document)!;
+    expect(youtubeAdapter.readExpectedCount(document)).toBe(1500);
+    expect(youtubeAdapter.findContinuation(container, page)).not.toBeNull();
+    // Complete list: the lockup fixture still has a section-list sentinel, which must be ignored.
+    loadPlaylistPage(document, PL, [{ videoId: 'aaaaaaaaaaa', title: 'A' }], { layout });
+    expect(youtubeAdapter.findContinuation(youtubeAdapter.findListContainer(document)!, page)).toBeNull();
+  });
+
+  it('ignores sentinels in sections that hold no rows of this playlist', () => {
+    loadPlaylistPage(document, PL, [{ videoId: 'aaaaaaaaaaa', title: 'A', list: 'PLother' }], { layout, complete: false });
+    const sentinel = youtubeAdapter.findContinuation(youtubeAdapter.findListContainer(document)!, page);
+    // Legacy has a single list, so its sentinel always belongs to the playlist.
+    expect(sentinel === null).toBe(layout === 'lockup');
+  });
+
+  it('scrolls the sentinel into view, or away from it when nudging', () => {
+    loadPlaylistPage(document, PL, [{ videoId: 'aaaaaaaaaaa', title: 'A' }], { layout, complete: false });
+    const sentinel = youtubeAdapter.findContinuation(youtubeAdapter.findListContainer(document)!, page)!;
+    const intoView = vi.spyOn(sentinel, 'scrollIntoView').mockImplementation(() => {});
+    const scrollBy = vi.spyOn(window, 'scrollBy').mockImplementation(() => {});
+    youtubeAdapter.requestMore(sentinel);
+    youtubeAdapter.requestMore(sentinel, true);
+    expect(intoView).toHaveBeenCalledTimes(1);
+    expect(scrollBy).toHaveBeenCalledTimes(1);
   });
 });
 

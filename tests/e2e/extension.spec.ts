@@ -1,6 +1,6 @@
 import { expect, test as base, type BrowserContext, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
-import { playlistPageHtml, sampleRows, type FixtureRow, type Layout } from '../fixtures/playlist';
+import { continuationScript, playlistPageHtml, sampleRows, type FixtureRow, type Layout } from '../fixtures/playlist';
 import { launchWithExtension } from './fixtures';
 
 // Per-URL fixture pages served instead of the real youtube.com.
@@ -12,6 +12,13 @@ function shell(body: string, title: string, dark = false): string {
 
 function servePlaylist(id: string, rows: FixtureRow[], title = `Fixture ${id}`, layout: Layout = 'legacy') {
   pages.set(`/playlist?list=${id}`, shell(playlistPageHtml(id, rows, { title, layout }), title));
+}
+
+/** A playlist that loads `batch` rows at a time as its sentinel scrolls into view. */
+function serveLongPlaylist(id: string, total: number, batch: number, delayMs: number, layout: Layout = 'legacy') {
+  const all = sampleRows(total);
+  const html = playlistPageHtml(id, all.slice(0, batch), { title: 'Long', layout, expected: total, complete: false });
+  pages.set(`/playlist?list=${id}`, shell(html + continuationScript(id, all, batch, delayMs, layout), 'Long'));
 }
 
 const test = base.extend<{ context: BrowserContext; page: Page; extensionId: string }>({
@@ -76,6 +83,44 @@ test('lockup layout: controls sit inside the row, selection works, row link is n
   await checkboxes(page).nth(3).click({ modifiers: ['Shift'] });
   await expect(toolbar(page)).toContainText('4 selected');
   expect(new URL(page.url()).pathname).toBe('/playlist');
+});
+
+for (const layout of ['legacy', 'lockup'] as const) {
+  test(`Load all (${layout}): loads 1,200 entries with progress, keeps selection, restores scroll`, async ({ page }) => {
+    test.setTimeout(90_000);
+    serveLongPlaylist(`PLlong${layout}`, 1200, 100, 40, layout);
+    await page.goto(`https://www.youtube.com/playlist?list=PLlong${layout}`);
+    await expect(checkboxes(page)).toHaveCount(100);
+    await expect(toolbar(page)).toContainText('100 of ~1200 loaded');
+    await checkboxes(page).nth(1).click();
+    await checkboxes(page).nth(3).click({ modifiers: ['Shift'] });
+
+    await toolbar(page).getByRole('button', { name: 'Load all' }).click();
+    await expect(toolbar(page).getByRole('progressbar', { name: 'Loading playlist entries' })).toBeVisible();
+    await expect(toolbar(page)).toContainText('All 1200 entries loaded.', { timeout: 60_000 });
+
+    await expect(checkboxes(page)).toHaveCount(1200);
+    await expect(toolbar(page)).toContainText('3 selected');
+    await expect(toolbar(page).getByRole('button', { name: 'Load all' })).toHaveCount(0);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+    const states = await checkboxes(page).evaluateAll((els) => els.slice(0, 5).map((el) => (el as HTMLInputElement).checked));
+    expect(states).toEqual([false, true, true, true, false]);
+  });
+}
+
+test('Load all can be cancelled from the toolbar', async ({ page }) => {
+  serveLongPlaylist('PLcancel', 3000, 100, 250);
+  await page.goto('https://www.youtube.com/playlist?list=PLcancel');
+  await toolbar(page).getByRole('button', { name: 'Load all' }).click();
+  await expect.poll(() => checkboxes(page).count(), { timeout: 20_000 }).toBeGreaterThanOrEqual(300);
+  await toolbar(page).getByRole('button', { name: 'Cancel' }).click();
+  await expect(toolbar(page)).toContainText(/Loading cancelled at \d+\./);
+  const count = await checkboxes(page).count();
+  expect(count).toBeLessThan(3000);
+  await page.waitForTimeout(800);
+  // No further batches requested after cancelling.
+  expect(await checkboxes(page).count()).toBeLessThanOrEqual(count + 100);
+  await expect(toolbar(page).getByRole('button', { name: 'Load all' })).toBeVisible();
 });
 
 test('keyboard: a focused checkbox shows a focus ring and Space toggles it', async ({ page }) => {

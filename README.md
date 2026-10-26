@@ -11,6 +11,8 @@ Chrome and Edge; a Firefox build is produced but not yet tested.
 - Checkbox beside every entry on desktop playlist pages (`youtube.com/playlist?list=…`)
 - Click to toggle, **Shift-click** (or Shift+Space) to select a range
 - **Select loaded** / **Clear**, with a small toolbar showing the count
+- **Load all**: scrolls the playlist until every entry is loaded, with progress and Cancel,
+  then returns you to where you were
 - Selection survives more rows loading as you scroll
 - Handles YouTube's in-page navigation: no duplicate controls, no stale selection
 - Duplicate videos in one playlist are separate entries (see *Limitations*)
@@ -71,13 +73,19 @@ npm run check && npm run test:e2e
 `test:live` is opt-in because it depends on the live site. Set `YTMS_LIVE_PLAYLIST` /
 `YTMS_LIVE_LONG_PLAYLIST` to pin public playlists.
 
+To check whether YouTube exposes per-occurrence IDs on a page, for example signed in on
+your own playlist, paste [scripts/identity-probe.js](scripts/identity-probe.js) into
+DevTools there. It is read-only.
+
 ## Limitations
 
 - **Entry identity**: the extension prefers YouTube's per-occurrence ID (`setVideoId`). When
   YouTube doesn't expose it, as on the current layout when signed out, duplicates are told
   apart by **position**. The toolbar then shows "position-based IDs". Positions shift if the
   playlist is reordered or earlier entries are removed while the page is open.
-- Only entries YouTube has loaded can be selected. "Load all" is planned.
+- Only loaded entries can be selected; use **Load all** for the rest. Unavailable videos in
+  YouTube's count are never shown, so "266 of ~272" can be the complete list.
+- "Load all" scrolls the page while it runs and works best in the foreground tab.
 - Desktop `www.youtube.com` playlist pages only. Not supported: `m.youtube.com`, watch-page
   playlist panels, channel pages, Shorts, YouTube Music.
 - No playlist changes of any kind in this version.

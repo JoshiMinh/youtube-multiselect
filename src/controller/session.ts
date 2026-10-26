@@ -3,6 +3,7 @@ import { HOST_ATTR } from '../adapters/youtube/selectors';
 import { buildExport, toText, type ExportFile, type ExportFormat } from '../core/export';
 import { SelectionModel } from '../core/selection';
 import { RowControl } from '../ui/rowControl';
+import { loadAll, type LoadOptions, type LoadState } from './loadAll';
 
 export type PlaylistPage = Extract<PageInfo, { kind: 'playlist' }>;
 export type IdentitySummary = IdentityKind | 'mixed' | 'none';
@@ -17,6 +18,11 @@ export interface SessionSnapshot {
   identity: IdentitySummary;
   theme: Theme;
   listFound: boolean;
+  /** The site shows a "load more" sentinel: the list is not fully loaded. */
+  hasMore: boolean;
+  /** Entry count advertised by the site (approximate; may include unavailable videos). */
+  expected: number | null;
+  load: LoadState;
   notice: string | null;
 }
 
@@ -25,6 +31,8 @@ export interface SessionStore {
   subscribe(listener: () => void): () => void;
   selectLoaded(): void;
   clear(): void;
+  loadAll(): Promise<void>;
+  cancelLoad(): void;
   copyText(): Promise<void>;
   download(format: ExportFormat): void;
 }
@@ -44,6 +52,8 @@ export interface SessionDeps {
   schedule?(callback: () => void): () => void;
   /** How often to check that the observed list is still in the document. */
   livenessIntervalMs?: number;
+  /** Overrides for the Load all loop (tests). */
+  loadOptions?: LoadOptions;
 }
 
 const OBSERVE_ROWS: MutationObserverInit = { childList: true, subtree: true, attributes: true, attributeFilter: ['href'] };
@@ -69,6 +79,10 @@ export class PageSession implements SessionStore {
   private toolbar: ToolbarHandle | null = null;
   private theme: Theme = 'light';
   private notice: string | null = null;
+  private hasMore = false;
+  private expected: number | null = null;
+  private load: LoadState = { status: 'idle' };
+  private loadAbort: AbortController | null = null;
   private snapshot: SessionSnapshot;
   private disposed = false;
 
@@ -111,6 +125,7 @@ export class PageSession implements SessionStore {
     if (this.disposed) return;
     this.disposed = true;
     this.abort.abort();
+    this.loadAbort?.abort();
     this.cancelScheduled?.();
     this.detachRows();
     this.searchObserver?.disconnect();
@@ -132,6 +147,7 @@ export class PageSession implements SessionStore {
     if (!container) {
       this.detachRows();
       this.waitForList();
+      this.hasMore = false;
       this.publish();
       return;
     }
@@ -140,8 +156,55 @@ export class PageSession implements SessionStore {
     adapter.requestIdentityRefresh?.(doc);
     const rows = adapter.readRows(container, this.page);
     this.reconcile(rows);
+    this.hasMore = adapter.findContinuation(container, this.page) !== null;
+    this.expected = adapter.readExpectedCount(doc);
     this.publish();
   }
+
+  /**
+   * Keep asking the site for more rows until the list is complete. The page
+   * scrolls while loading; the original scroll position is restored after.
+   */
+  loadAll = async (): Promise<void> => {
+    if (this.disposed || this.load.status === 'loading') return;
+    const controller = new AbortController();
+    this.loadAbort = controller;
+    const view = this.deps.doc.defaultView;
+    const startY = view?.scrollY ?? 0;
+    const { adapter } = this.deps;
+    const result = await loadAll(
+      {
+        loadedCount: () => {
+          // Re-read directly: animation-frame scans pause in background tabs.
+          this.scan();
+          return this.order.length;
+        },
+        hasMore: () => Boolean(this.container && adapter.findContinuation(this.container, this.page)),
+        requestMore: (nudge) => {
+          const continuation = this.container && adapter.findContinuation(this.container, this.page);
+          if (continuation) adapter.requestMore(continuation, nudge);
+        },
+        expectedCount: () => this.expected,
+      },
+      controller.signal,
+      (state) => {
+        this.load = state;
+        this.publish();
+      },
+      this.deps.loadOptions,
+    );
+    if (this.loadAbort === controller) this.loadAbort = null;
+    if (this.disposed) return;
+    view?.scrollTo({ top: startY });
+    this.scan();
+    this.load = result;
+    this.notice = loadNotice(result);
+    this.publish();
+  };
+
+  cancelLoad = (): void => {
+    this.loadAbort?.abort();
+  };
 
   // --- SessionStore -------------------------------------------------------
 
@@ -301,6 +364,9 @@ export class PageSession implements SessionStore {
       identity,
       theme: this.theme,
       listFound: this.container !== null,
+      hasMore: this.hasMore,
+      expected: this.expected,
+      load: this.load,
       notice: this.notice,
     };
   }
@@ -343,6 +409,21 @@ function saveWithAnchor(doc: Document) {
     anchor.remove();
     setTimeout(() => URL.revokeObjectURL(url), 30_000);
   };
+}
+
+function loadNotice(state: LoadState): string | null {
+  switch (state.status) {
+    case 'done':
+      return `All ${state.loaded} ${plural(state.loaded, 'entry', 'entries')} loaded.`;
+    case 'cancelled':
+      return `Loading cancelled at ${state.loaded}.`;
+    case 'stalled':
+      return `Loading stopped at ${state.loaded}: YouTube sent no more entries. Try again.`;
+    case 'capped':
+      return `Stopped at the ${state.cap}-entry limit.`;
+    default:
+      return null;
+  }
 }
 
 function plural(count: number, one: string, many: string): string {

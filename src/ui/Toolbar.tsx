@@ -32,11 +32,13 @@ export function Toolbar({ store }: { store: SessionStore }) {
 
   const hasSelection = snap.selected > 0;
   const countLabel = `${snap.selected} selected`;
+  const loading = snap.load.status === 'loading' ? snap.load : null;
+  const of = snap.expected !== null ? ` of ~${snap.expected}` : '';
   const detail = !snap.listFound
     ? 'Waiting for playlist…'
     : snap.selectedNotLoaded > 0
-      ? `${snap.loaded} loaded · ${snap.selectedNotLoaded} selected not shown`
-      : `${snap.loaded} loaded`;
+      ? `${snap.loaded}${of} loaded · ${snap.selectedNotLoaded} selected not shown`
+      : `${snap.loaded}${snap.hasMore ? of : ''} loaded`;
 
   return (
     <div className="ytms-toolbar" data-theme={snap.theme} role="toolbar" aria-label="Playlist selection">
@@ -44,6 +46,26 @@ export function Toolbar({ store }: { store: SessionStore }) {
         <strong>{countLabel}</strong>
         <span className="ytms-detail">{detail}</span>
       </div>
+      {loading ? (
+        <div className="ytms-progress">
+          <progress
+            aria-label="Loading playlist entries"
+            value={loading.loaded}
+            max={loading.expected !== null && loading.expected >= loading.loaded ? loading.expected : undefined}
+          />
+          <span className="ytms-detail" aria-hidden="true">
+            Loading {loading.loaded}
+            {loading.expected !== null ? ` / ~${loading.expected}` : ''}…
+          </span>
+          <button type="button" onClick={store.cancelLoad}>
+            Cancel
+          </button>
+        </div>
+      ) : snap.hasMore ? (
+        <button type="button" onClick={() => void store.loadAll()} title="Scroll through the playlist until every entry is loaded">
+          Load all
+        </button>
+      ) : null}
       <button type="button" onClick={store.selectLoaded} disabled={snap.loaded === 0}>
         Select loaded
       </button>
@@ -105,7 +127,7 @@ export function Toolbar({ store }: { store: SessionStore }) {
         </span>
       ) : null}
       <span className="ytms-sr" aria-live="polite" role="status">
-        {snap.notice ?? countLabel}
+        {snap.notice ?? (loading ? `Loading, ${loading.loaded} loaded` : countLabel)}
       </span>
       {snap.notice ? (
         <span className="ytms-notice" aria-hidden="true">

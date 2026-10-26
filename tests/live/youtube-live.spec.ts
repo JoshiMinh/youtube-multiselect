@@ -86,10 +86,12 @@ test('live YouTube long playlist: continuation rows get controls and selection s
     await checkboxes(page).nth(3).click({ modifiers: ['Shift'] });
     await expect(toolbar(page)).toContainText('3 selected');
 
-    for (let i = 0; i < 10 && (await checkboxes(page).count()) <= initial; i++) {
-      await page.mouse.wheel(0, 20_000);
-      await page.waitForTimeout(1500);
-    }
+    test.skip(!(await toolbar(page).getByRole('button', { name: 'Load all' }).isVisible()), 'Playlist is already fully loaded');
+    const started = Date.now();
+    await toolbar(page).getByRole('button', { name: 'Load all' }).click();
+    await expect(toolbar(page)).toContainText(/All \d+ entries loaded\.|Loading stopped|limit/, { timeout: 90_000 });
+    console.log(`[live-long] Load all finished in ${Date.now() - started} ms: ${await toolbar(page).locator('[role="status"]').textContent()}`);
+    await expect(toolbar(page)).toContainText(/All \d+ entries loaded\./);
     const after = await checkboxes(page).count();
     const allRows = await page.locator(ROWS).count();
     // Lockups outside the playlist (e.g. recommendations) don't link to this list and get no control.

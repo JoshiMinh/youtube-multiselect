@@ -97,12 +97,40 @@ commands for that list, with all the stability and policy risks above, plus a se
 identity check (Watch Later rows may use a different layout). Treat it as its own spike
 with a go/no-go decision. Don't assume the Phase 4 engine works for it unchanged.
 
+## Phase 2a status (2026-10-26)
+
+**Load all: done.** Continuation scrolling with progress, cancel, stall detection
+with one nudge, a 5,000 cap, and scroll restore. Tested with fixtures (1,050–3,000 rows in
+happy-dom; 1,200 rows in real Chromium for both layouts, with cancel) and live, signed out:
+
+| Public playlist | Advertised | Loaded | Time |
+| --- | --- | --- | --- |
+| PLFgquLnL59alCl_2TQvOiD5Vgm1hCaGSI | 182 videos | 182 | 1.8 s |
+| PLkKvotUGCyLeSDxODsglLJ0ET5PJ8K7e2 (course) | 245 lessons | 245 | 2.1 s |
+| PLQKBpQZcRycrvUUxLdVmlfMChJS0S5Zw0 | 272 videos | 266 (rest unavailable) | 2.4 s |
+
+The live run exposed the trailing section-list sentinel (see ARCHITECTURE.md › Load all),
+now fixed and covered by fixtures.
+
+Not yet verified: playlists over ~300 entries live, background-tab behaviour, and
+Watch Later / Liked videos.
+
+**Signed-in occurrence identity: pending.** Signed out, all lockup rows expose framework
+data, but it contains no `setVideoId` anywhere (checked with `scripts/identity-probe.js`).
+The check needs a signed-in session on a playlist the user owns that contains the same
+video at least twice. Paste the probe into DevTools there and record:
+`withOccurrenceId`, `foundAt`, and whether duplicate video IDs get distinct occurrence IDs.
+
+Outcomes:
+- IDs present and scoped to the playlist: the bridge already uses them; add a fixture with
+  the observed data path and a live assertion.
+- IDs only appear after opening a row's menu: investigate reading them without UI
+  interaction before Phase 4.
+- No IDs: Phase 4 needs another identity source (e.g. reading the playlist via the write
+  backend chosen in Phase 3). Duplicate actions stay disabled meanwhile.
+
 ## Next concrete milestone
 
-**Phase 2a: signed-in identity and full-list loading spike.**
-1. With a signed-in test account that owns a playlist containing the same video twice,
-   record which layout and data shape YouTube serves, and whether the bridge produces
-   occurrence IDs (`npm run test:live` with a pinned playlist, plus manual check).
-2. Prototype "Load all" via continuation scrolling with progress and cancel, behind the
-   adapter, with fixture tests for 1,000+ rows and a live check on the 182-entry public list.
-3. Update this roadmap with the findings before starting filters/duplicates.
+1. Finish the signed-in identity check above.
+2. Phase 2b: filtering (text, unavailable) and duplicate grouping on top of Load all, with
+   duplicate *actions* enabled only for occurrence identity.

@@ -24,6 +24,11 @@ export default tseslint.config(
     rules: reactHooks.configs.recommended.rules,
   },
   {
+    // Pasted into a YouTube page's DevTools console.
+    files: ['scripts/identity-probe.js'],
+    languageOptions: { sourceType: 'script', globals: { ...globals.browser } },
+  },
+  {
     files: ['scripts/**/*.mjs', '*.config.{js,ts}', 'tests/e2e/**/*.ts'],
     languageOptions: { globals: { ...globals.node } },
   },

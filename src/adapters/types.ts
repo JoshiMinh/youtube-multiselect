@@ -54,6 +54,15 @@ export interface PlatformAdapter {
   watchTheme(doc: Document, listener: (theme: Theme) => void, signal: AbortSignal): Theme;
   /** Ask the page to refresh per-occurrence identity data (optional). */
   requestIdentityRefresh?(doc: Document): void;
+  /** The playlist's own "load more" sentinel, or null when the list is fully loaded. */
+  findContinuation(container: HTMLElement, page: Extract<PageInfo, { kind: 'playlist' }>): HTMLElement | null;
+  /**
+   * Ask the site to load the next batch of rows. With `nudge`, instead undo
+   * whatever triggers loading so the next normal request re-triggers it.
+   */
+  requestMore(continuation: HTMLElement, nudge?: boolean): void;
+  /** Entry count the site advertises for the playlist, if readable. Approximate. */
+  readExpectedCount(doc: Document): number | null;
 }
 
 /**

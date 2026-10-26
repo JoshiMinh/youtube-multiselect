@@ -75,9 +75,16 @@ function setIfChanged(el: Element, name: string, value: string | null): void {
   }
 }
 
+// Rows whose data object and playlist are unchanged since the last refresh are
+// skipped, so repeated scans while loading long playlists stay cheap.
+const processed = new WeakMap<Element, { data: Data | null; playlistId: string | null }>();
+
 export function refreshIdentity(doc: Document, playlistId: string | null): void {
   for (const el of doc.querySelectorAll<FrameworkElement>(YT.row)) {
     const data = rowData(el);
+    const last = processed.get(el);
+    if (last && last.data === data && last.playlistId === playlistId) continue;
+    processed.set(el, { data, playlistId });
     const videoId = data && videoIdOf(data);
     const occurrenceId = data && videoId && playlistId ? findOccurrenceId(data, playlistId) : null;
     setIfChanged(el, BRIDGE.occurrenceAttr, occurrenceId && videoId ? occurrenceId : null);

@@ -90,6 +90,37 @@ PageSession
   removes stray hosts on start.
 - If the toolbar finishes mounting after its session was disposed, it is removed immediately.
 
+## Load all
+
+`controller/loadAll.ts` is a small loop over a `LoadPort` (`loadedCount`, `hasMore`,
+`requestMore`, `expectedCount`) with injectable clock and sleep:
+
+- Every 250 ms: if the playlist's sentinel exists, request more (YouTube loads when the
+  sentinel *becomes visible*, so the adapter scrolls it into view). Then re-scan and record
+  progress.
+- **Done** when no sentinel is seen for 3 consecutive polls, so a sentinel that briefly
+  disappears between batches doesn't end the load early.
+- **Stalled** after 12 s with no new rows. Halfway there it nudges once: scrolls the sentinel
+  out of view so the next request re-triggers YouTube's loader.
+- **Cancelled** via an `AbortController` (toolbar Cancel, navigation, or disable). Rows
+  already loaded stay loaded and selectable.
+- **Capped** at 5,000 entries (YouTube's playlist limit) as a safety stop.
+
+The session re-reads rows directly on each poll, because animation-frame scans pause in
+background tabs, and restores the original scroll position when loading ends. The toolbar
+shows a `<progress>` with "N / ~expected" and a Cancel button; the advertised count comes
+from the header ("182 videos" / "245 lessons") and is approximate. Unavailable videos are
+counted there but not rendered: live, a "272 videos" list loads 266 rows.
+
+**Sentinel scoping (found live):** in the lockup layout YouTube also renders a second
+continuation directly in the section list, for content after the playlist. It can stay
+after the playlist is complete. `findContinuation` only accepts a sentinel inside an item
+section that contains rows linking to this playlist. Without that, "Load all" stalled
+instead of finishing on complete lists.
+
+The MAIN-world bridge caches each row's last data object, so repeated scans during long
+loads only re-walk rows whose data changed.
+
 ## Selection
 
 `SelectionModel` stores keys, not nodes, and an anchor. Shift-click (or Shift+Space)

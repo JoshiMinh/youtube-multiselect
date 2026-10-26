@@ -11,6 +11,19 @@ export function detectYouTubePage(url: URL, doc: Document): PageInfo {
   return { kind: 'playlist', playlistId, title };
 }
 
+/**
+ * Parse "182 videos", "1,234 videos", "1.234 Videos", "182 video" or
+ * "245 lessons" (course playlists). Only matches a number directly followed
+ * by such a word, so view counts are ignored. Other UI languages may return null.
+ */
+export function parseVideoCount(text: string): number | null {
+  // \s also covers the no-break spaces some locales use as thousands separators.
+  const match = /(\d{1,3}(?:[,.\s]\d{3})*|\d+)\s*(?:video|lesson)/i.exec(text);
+  if (!match?.[1]) return null;
+  const value = Number(match[1].replace(/[^\d]/g, ''));
+  return Number.isSafeInteger(value) && value > 0 ? value : null;
+}
+
 function currentTheme(doc: Document): Theme {
   return doc.documentElement.hasAttribute(YT.darkAttribute) ? 'dark' : 'light';
 }
@@ -50,6 +63,36 @@ export const youtubeAdapter: PlatformAdapter = {
     observer.observe(doc.documentElement, { attributes: true, attributeFilter: [YT.darkAttribute] });
     signal.addEventListener('abort', () => observer.disconnect(), { once: true });
     return theme;
+  },
+
+  findContinuation(container, page) {
+    // Legacy: the container is the list itself.
+    if (!container.matches('yt-section-list-renderer')) return container.querySelector<HTMLElement>(YT.continuation);
+    const playlistLink = `a[href*="list=${page.playlistId}"]`;
+    for (const section of container.querySelectorAll(YT.itemSection)) {
+      if (!section.querySelector(playlistLink)) continue;
+      const sentinel = section.querySelector<HTMLElement>(YT.continuation);
+      if (sentinel) return sentinel;
+    }
+    return null;
+  },
+
+  requestMore(continuation, nudge = false) {
+    // YouTube loads the next batch when the sentinel *becomes* visible, so a
+    // nudge scrolls it out of view; the next request scrolls it back in.
+    const view = continuation.ownerDocument.defaultView;
+    if (nudge && view) view.scrollBy(0, -view.innerHeight);
+    else continuation.scrollIntoView({ block: 'end' });
+  },
+
+  readExpectedCount(doc) {
+    for (const selector of YT.headerCount) {
+      for (const el of doc.querySelectorAll(selector)) {
+        const count = parseVideoCount(el.textContent ?? '');
+        if (count !== null) return count;
+      }
+    }
+    return null;
   },
 
   requestIdentityRefresh(doc) {

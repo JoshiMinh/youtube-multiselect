@@ -108,6 +108,18 @@ button:focus-visible {
   outline-offset: -3px;
 }
 
+.ytms-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ytms-progress progress {
+  width: 96px;
+  height: 6px;
+  accent-color: var(--accent);
+}
+
 .ytms-badge {
   font-size: 12px;
   color: var(--muted);

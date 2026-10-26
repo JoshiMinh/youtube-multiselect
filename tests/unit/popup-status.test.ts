@@ -11,6 +11,9 @@ const session: SessionSnapshot = {
   identity: 'occurrence',
   theme: 'light',
   listFound: true,
+  hasMore: false,
+  expected: 10,
+  load: { status: 'idle' },
   notice: null,
 };
 
@@ -39,5 +42,12 @@ describe('describeStatus', () => {
     expect(ok).toMatchObject({ tone: 'ok', title: 'Active on Mix', lines: ['10 entries loaded, 2 selected.'] });
     const positional = describeStatus({ kind: 'status', status: { enabled: true, page, session: { ...session, identity: 'positional' } } }, true);
     expect(positional.lines).toHaveLength(2);
+  });
+
+  it('mentions Load all when more entries exist', () => {
+    const page = { kind: 'playlist' as const, playlistId: 'PL1', title: 'Mix' };
+    const view = describeStatus({ kind: 'status', status: { enabled: true, page, session: { ...session, hasMore: true, expected: 300 } } }, true);
+    expect(view.lines[0]).toBe('10 of ~300 entries loaded, 2 selected.');
+    expect(view.lines).toContain('Use “Load all” in the page toolbar to load the rest.');
   });
 });
