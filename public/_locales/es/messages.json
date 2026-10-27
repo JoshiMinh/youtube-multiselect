@@ -90,7 +90,7 @@
       "message": "Mueva, ordenar y copiar videos en sus playlists de forma más rápida y sencilla."
    },
    "extensionName": {
-      "message": "Múltiselección para YouTube™"
+      "message": "Youtube Multiselect"
    },
    "filterHelpTooltip": {
       "message": "Sintaxis de expresiones regulares"
@@ -120,7 +120,7 @@
       "message": "En esta versión, el portapapeles es una pequeña memoria dentro de la extensión y no el portapapeles del sistema operativo"
    },
    "hint106": {
-      "message": "El tema (oscuro/claro) se adopta automáticamente de YouTube™"
+      "message": "El tema (oscuro/claro) se adopta automáticamente de YouTube"
    },
    "hint200": {
       "message": "Selección de vídeos"
@@ -270,7 +270,7 @@
       "message": "Mover al principio"
    },
    "news": {
-      "message": "\u003Ch2>en la versión 3.5\u003C/h2>\u003Cspan>🔧 Detección de video fijo\u003C/span>\u003Ch2>en la versión 3.4\u003C/h2>\u003Cspan><s>✔️ Opción no documentada: Bloquear anuncios</s>\u003C/span>\u003Cspan>🎁 Agregar videos de archivos a listas de reproducción\u003C/span>\u003Cspan>🎁 Guardar selección en archivo\u003C/span>\u003Cspan>🎁 Seleccionar videos vistos usando el filtro\u003C/span>\u003Cspan>🎁 Coloque libremente la barra de acción y el filtro\u003C/span>\u003Ch2>en la versión 3.3\u003C/h2>\u003Cspan>🔧 Se corrigió la adición a la nueva lista de reproducción\u003C/span>\u003Cspan>✔️ Opción: Encuentra duplicados al revés\u003C/span>\u003Ch2>en la versión 3.2\u003C/h2>\u003Cspan>🔧 Detección de video fijo\u003C/span>\u003Cspan>✔️ Opción: Eliminar sin consulta de seguridad\u003C/span>\u003Cspan>✨ Cargar toda la lista de reproducción\u003C/span>\u003Cspan>🎁 Seleccionar videos por nombre de canal\u003C/span>\u003Cspan>🎁 Menú contextual completo\u003C/span>\u003Ch2>en la versión 3.1\u003C/h2>\u003Cspan>🔨 Iconos invisibles fijos en la barra de acción\u003C/span>\u003Cspan>🔨 Menú fijo de 3 puntos en la barra de acción\u003C/span>\u003Cspan>🎁 Posición alternativa de la barra de acción, abajo a la izquierda\u003C/span>\u003Ch2>en la versión 3.0\u003C/h2>\u003Cspan>✔️ Admite la nueva interfaz Manifest V3\u003C/span>\u003Cspan>✔️ La experiencia del usuario se ha rediseñado desde cero\u003C/span>\u003Cspan>✔️ Misma pantalla oscura/clara que en YouTube™\u003C/span>\u003Cspan>✔️ Los videos seleccionados están claramente resaltados\u003C/span>\u003Cspan>✔️ Botón de icono para activar o desactivar la selección múltiple\u003C/span>\u003Cspan>✔️ Barra de acción\u003C/span>\u003Cspan>✔️ Menú contextual\u003C/span>\u003Cspan>🚀 Navegación por teclado\u003C/span>\u003Cspan>🚀 Copiar, cortar y pegar videos\u003C/span>\u003Cspan>✨ Encuentra duplicados\u003C/span>\u003Cspan>🎁 Seleccionar videos con el filtro\u003C/span>"
+      "message": "<h2>en la versión 3.5</h2><span>🔧 Detección de video fijo</span><h2>en la versión 3.4</h2><span><s>✔️ Opción no documentada: Bloquear anuncios</s></span><span>🎁 Agregar videos de archivos a listas de reproducción</span><span>🎁 Guardar selección en archivo</span><span>🎁 Seleccionar videos vistos usando el filtro</span><span>🎁 Coloque libremente la barra de acción y el filtro</span><h2>en la versión 3.3</h2><span>🔧 Se corrigió la adición a la nueva lista de reproducción</span><span>✔️ Opción: Encuentra duplicados al revés</span><h2>en la versión 3.2</h2><span>🔧 Detección de video fijo</span><span>✔️ Opción: Eliminar sin consulta de seguridad</span><span>✨ Cargar toda la lista de reproducción</span><span>🎁 Seleccionar videos por nombre de canal</span><span>🎁 Menú contextual completo</span><h2>en la versión 3.1</h2><span>🔨 Iconos invisibles fijos en la barra de acción</span><span>🔨 Menú fijo de 3 puntos en la barra de acción</span><span>🎁 Posición alternativa de la barra de acción, abajo a la izquierda</span><h2>en la versión 3.0</h2><span>✔️ Admite la nueva interfaz Manifest V3</span><span>✔️ La experiencia del usuario se ha rediseñado desde cero</span><span>✔️ Misma pantalla oscura/clara que en YouTube</span><span>✔️ Los videos seleccionados están claramente resaltados</span><span>✔️ Botón de icono para activar o desactivar la selección múltiple</span><span>✔️ Barra de acción</span><span>✔️ Menú contextual</span><span>🚀 Navegación por teclado</span><span>🚀 Copiar, cortar y pegar videos</span><span>✨ Encuentra duplicados</span><span>🎁 Seleccionar videos con el filtro</span>"
    },
    "noDuplicatesFound": {
       "message": "No se encontraron duplicados"
@@ -288,7 +288,7 @@
       "message": "Mantener la selección después de copiar"
    },
    "reloadRequired": {
-      "message": "\u003Cp>La extensión ha sido actualizada.\u003C/p>\u003Cp>Vuelva a cargar esta página por favor.\u003C/p>"
+      "message": "<p>La extensión ha sido actualizada.</p><p>Vuelva a cargar esta página por favor.</p>"
    },
    "remove": {
       "message": "Eliminar"

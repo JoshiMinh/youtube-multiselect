@@ -90,7 +90,7 @@
       "message": "Przenieś, sortuj i kopiuj filmy z playlist szybciej i łatwiej."
    },
    "extensionName": {
-      "message": "Wielowybierać dla YouTube™"
+      "message": "Youtube Multiselect"
    },
    "filterHelpTooltip": {
       "message": "Składnia wyrażeń regularnych"
@@ -120,7 +120,7 @@
       "message": "W tej wersji schowek jest małą pamięcią w rozszerzeniu, a nie schowkiem systemu operacyjnego"
    },
    "hint106": {
-      "message": "Motyw (ciemny/jasny) jest automatycznie przejmowany z serwisu YouTube™"
+      "message": "Motyw (ciemny/jasny) jest automatycznie przejmowany z serwisu YouTube"
    },
    "hint200": {
       "message": "Wybieranie filmów"
@@ -270,7 +270,7 @@
       "message": "Przenieś na początek"
    },
    "news": {
-      "message": "\u003Ch2>w wersji 3.5\u003C/h2>\u003Cspan>🔧 Naprawiono wykrywanie wideo\u003C/span>\u003Ch2>w wersji 3.4\u003C/h2>\u003Cspan><s>✔️ Opcja nieudokumentowana: Blokuj reklamy</s>\u003C/span>\u003Cspan>🎁 Dodawaj filmy z plików do list odtwarzania\u003C/span>\u003Cspan>🎁 Zapisz wybór do pliku\u003C/span>\u003Cspan>🎁 Wybierz obejrzane filmy za pomocą filtra\u003C/span>\u003Cspan>🎁 Dowolnie ustawiaj pasek akcji i filtr\u003C/span>\u003Ch2>w wersji 3.3\u003C/h2>\u003Cspan>🔧 Naprawiono dodanie do nowej listy odtwarzania\u003C/span>\u003Cspan>✔️ Opcja: Znajdź duplikaty wstecz\u003C/span>\u003Ch2>w wersji 3.2\u003C/h2>\u003Cspan>🔧 Naprawiono wykrywanie wideo\u003C/span>\u003Cspan>✔️ Opcja: Usuń bez zapytania zabezpieczającego\u003C/span>\u003Cspan>✨ Załaduj całą listę odtwarzania\u003C/span>\u003Cspan>🎁 Wybierz filmy według nazwy kanału\u003C/span>\u003Cspan>🎁 Pełne menu kontekstowe\u003C/span>\u003Ch2>w wersji 3.1\u003C/h2>\u003Cspan>🔨 Naprawiono niewidoczne ikony na pasku akcji\u003C/span>\u003Cspan>🔨 Naprawiono menu z trzema kropkami na pasku akcji\u003C/span>\u003Cspan>🎁 Alternatywna pozycja paska akcji, lewy dolny róg\u003C/span>\u003Ch2>w wersji 3.0\u003C/h2>\u003Cspan>✔️ Obsługuje nowy interfejs Manifest V3\u003C/span>\u003Cspan>✔️ Doświadczenie użytkownika zostało przeprojektowane od podstaw\u003C/span>\u003Cspan>✔️ Ten sam ciemny/jasny wyświetlacz jak w YouTube™\u003C/span>\u003Cspan>✔️ Wybrane filmy są wyraźnie podświetlone\u003C/span>\u003Cspan>✔️ Ikona przycisku włączania/wyłączania wielokrotnego wyboru\u003C/span>\u003Cspan>✔️ Pasek akcji\u003C/span>\u003Cspan>✔️ Menu kontekstowe\u003C/span>\u003Cspan>🚀 Nawigacja za pomocą klawiatury\u003C/span>\u003Cspan>🚀 Kopiuj, wycinaj i wklejaj filmy\u003C/span>\u003Cspan>✨ Znajdź duplikaty\u003C/span>\u003Cspan>🎁 Wybierz filmy z filtrem\u003C/span>"
+      "message": "<h2>w wersji 3.5</h2><span>🔧 Naprawiono wykrywanie wideo</span><h2>w wersji 3.4</h2><span><s>✔️ Opcja nieudokumentowana: Blokuj reklamy</s></span><span>🎁 Dodawaj filmy z plików do list odtwarzania</span><span>🎁 Zapisz wybór do pliku</span><span>🎁 Wybierz obejrzane filmy za pomocą filtra</span><span>🎁 Dowolnie ustawiaj pasek akcji i filtr</span><h2>w wersji 3.3</h2><span>🔧 Naprawiono dodanie do nowej listy odtwarzania</span><span>✔️ Opcja: Znajdź duplikaty wstecz</span><h2>w wersji 3.2</h2><span>🔧 Naprawiono wykrywanie wideo</span><span>✔️ Opcja: Usuń bez zapytania zabezpieczającego</span><span>✨ Załaduj całą listę odtwarzania</span><span>🎁 Wybierz filmy według nazwy kanału</span><span>🎁 Pełne menu kontekstowe</span><h2>w wersji 3.1</h2><span>🔨 Naprawiono niewidoczne ikony na pasku akcji</span><span>🔨 Naprawiono menu z trzema kropkami na pasku akcji</span><span>🎁 Alternatywna pozycja paska akcji, lewy dolny róg</span><h2>w wersji 3.0</h2><span>✔️ Obsługuje nowy interfejs Manifest V3</span><span>✔️ Doświadczenie użytkownika zostało przeprojektowane od podstaw</span><span>✔️ Ten sam ciemny/jasny wyświetlacz jak w YouTube</span><span>✔️ Wybrane filmy są wyraźnie podświetlone</span><span>✔️ Ikona przycisku włączania/wyłączania wielokrotnego wyboru</span><span>✔️ Pasek akcji</span><span>✔️ Menu kontekstowe</span><span>🚀 Nawigacja za pomocą klawiatury</span><span>🚀 Kopiuj, wycinaj i wklejaj filmy</span><span>✨ Znajdź duplikaty</span><span>🎁 Wybierz filmy z filtrem</span>"
    },
    "noDuplicatesFound": {
       "message": "Nie znaleziono duplikatów"
@@ -288,7 +288,7 @@
       "message": "Zachowaj wybór po skopiowaniu"
    },
    "reloadRequired": {
-      "message": "\u003Cp>To rozszerzenie zostało zaktualizowane.\u003C/p>\u003Cp>Załaduj ponownie tę stronę.\u003C/p>"
+      "message": "<p>To rozszerzenie zostało zaktualizowane.</p><p>Załaduj ponownie tę stronę.</p>"
    },
    "remove": {
       "message": "Usunąć"

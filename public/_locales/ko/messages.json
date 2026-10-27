@@ -90,7 +90,7 @@
       "message": "재생 목록의 비디오를 빠르고 쉽게 이동, 정렬 및 복사합니다."
    },
    "extensionName": {
-      "message": "YouTube™ 용 다중 선택"
+      "message": "Youtube Multiselect"
    },
    "filterHelpTooltip": {
       "message": "정규 표현식 구문"
@@ -120,7 +120,7 @@
       "message": "이 버전에서 클립보드는 운영 체제 클립보드가 아닌 확장 프로그램 내의 작은 메모리입니다."
    },
    "hint106": {
-      "message": "테마(어두움/밝음)는 YouTube™에서 자동으로 채택됩니다."
+      "message": "테마(어두움/밝음)는 YouTube에서 자동으로 채택됩니다."
    },
    "hint200": {
       "message": "동영상 선택"
@@ -270,7 +270,7 @@
       "message": "맨 위로 이동"
    },
    "news": {
-      "message": "\u003Ch2>버전 3.5에서\u003C/h2>\u003Cspan>🔧 고정 비디오 감지\u003C/span>\u003Ch2>버전 3.4에서\u003C/h2>\u003Cspan><s>✔️ 문서화되지 않은 옵션: 광고 차단</s>\u003C/span>\u003Cspan>🎁 파일의 비디오를 재생 목록에 추가\u003C/span>\u003Cspan>🎁 선택 항목을 파일에 저장\u003C/span>\u003Cspan>🎁 필터를 사용하여 시청한 동영상을 선택하세요\u003C/span>\u003Cspan>🎁 작업 표시줄과 필터의 위치를 ​​자유롭게 지정하세요\u003C/span>\u003Ch2>버전 3.3에서\u003C/h2>\u003Cspan>🔧 새 재생 목록에 추가하는 문제를 수정했습니다\u003C/span>\u003Cspan>✔️ 옵션: 거꾸로 중복 찾기\u003C/span>\u003Ch2>버전 3.2에서\u003C/h2>\u003Cspan>🔧 고정 비디오 감지\u003C/span>\u003Cspan>✔️ 옵션: 보안 쿼리 없이 삭제\u003C/span>\u003Cspan>✨ 전체 재생목록 로드\u003C/span>\u003Cspan>🎁 채널 이름으로 동영상 선택\u003C/span>\u003Cspan>🎁 전체 상황에 맞는 메뉴\u003C/span>\u003Ch2>버전 3.1에서\u003C/h2>\u003Cspan>🔨 작업 표시줄의 보이지 않는 아이콘 수정\u003C/span>\u003Cspan>🔨 작업 표시줄의 고정 3점 메뉴\u003C/span>\u003Cspan>🎁 작업 표시줄의 대체 위치, 왼쪽 하단\u003C/span>\u003Ch2>버전 3.0에서\u003C/h2>\u003Cspan>✔️ 새로운 인터페이스 매니페스트 V3 지원\u003C/span>\u003Cspan>✔️ 사용자 경험이 처음부터 새롭게 디자인되었습니다\u003C/span>\u003Cspan>✔️ YouTube™에서와 동일한 디스플레이 다크/라이트\u003C/span>\u003Cspan>✔️ 선택한 동영상이 명확하게 강조 표시됩니다\u003C/span>\u003Cspan>✔️ 다중 선택 켜기/끄기를 전환하는 아이콘 버튼\u003C/span>\u003Cspan>✔️ 액션바\u003C/span>\u003Cspan>✔️ 상황에 맞는 메뉴\u003C/span>\u003Cspan>🚀 키보드 탐색\u003C/span>\u003Cspan>🚀 비디오 복사, 잘라내기 및 붙여넣기\u003C/span>\u003Cspan>✨ 중복 찾기\u003C/span>\u003Cspan>🎁 필터로 동영상 선택\u003C/span>"
+      "message": "<h2>버전 3.5에서</h2><span>🔧 고정 비디오 감지</span><h2>버전 3.4에서</h2><span><s>✔️ 문서화되지 않은 옵션: 광고 차단</s></span><span>🎁 파일의 비디오를 재생 목록에 추가</span><span>🎁 선택 항목을 파일에 저장</span><span>🎁 필터를 사용하여 시청한 동영상을 선택하세요</span><span>🎁 작업 표시줄과 필터의 위치를 ​​자유롭게 지정하세요</span><h2>버전 3.3에서</h2><span>🔧 새 재생 목록에 추가하는 문제를 수정했습니다</span><span>✔️ 옵션: 거꾸로 중복 찾기</span><h2>버전 3.2에서</h2><span>🔧 고정 비디오 감지</span><span>✔️ 옵션: 보안 쿼리 없이 삭제</span><span>✨ 전체 재생목록 로드</span><span>🎁 채널 이름으로 동영상 선택</span><span>🎁 전체 상황에 맞는 메뉴</span><h2>버전 3.1에서</h2><span>🔨 작업 표시줄의 보이지 않는 아이콘 수정</span><span>🔨 작업 표시줄의 고정 3점 메뉴</span><span>🎁 작업 표시줄의 대체 위치, 왼쪽 하단</span><h2>버전 3.0에서</h2><span>✔️ 새로운 인터페이스 매니페스트 V3 지원</span><span>✔️ 사용자 경험이 처음부터 새롭게 디자인되었습니다</span><span>✔️ YouTube에서와 동일한 디스플레이 다크/라이트</span><span>✔️ 선택한 동영상이 명확하게 강조 표시됩니다</span><span>✔️ 다중 선택 켜기/끄기를 전환하는 아이콘 버튼</span><span>✔️ 액션바</span><span>✔️ 상황에 맞는 메뉴</span><span>🚀 키보드 탐색</span><span>🚀 비디오 복사, 잘라내기 및 붙여넣기</span><span>✨ 중복 찾기</span><span>🎁 필터로 동영상 선택</span>"
    },
    "noDuplicatesFound": {
       "message": "중복이 없습니다"
@@ -288,7 +288,7 @@
       "message": "복사 후 선택 유지"
    },
    "reloadRequired": {
-      "message": "\u003Cp>이 확장 프로그램이 업데이트되었습니다.\u003C/p>\u003Cp>이 페이지를 새로고침하세요.\u003C/p>"
+      "message": "<p>이 확장 프로그램이 업데이트되었습니다.</p><p>이 페이지를 새로고침하세요.</p>"
    },
    "remove": {
       "message": "제거하다"

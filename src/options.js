@@ -23,7 +23,7 @@
       },
     ],
     e = (t) => n.find((o) => o.id === t),
-    i = o.i18n.getMessage("extensionName") || "Multiselect for YouTube™",
+    i = o.i18n.getMessage("extensionName") || "Youtube Multiselect",
     c = -1 !== navigator.userAgent.indexOf("Firefox/"),
     s = -1 !== navigator.userAgent.indexOf("Edg/"),
     a = "/popup.html" === location.pathname,
@@ -142,4 +142,19 @@
         })(),
         t.addEventListener("change", d, !0);
     })();
+  const links = [...t.querySelectorAll(".page-header nav a")];
+  if (links.length) {
+    const sections = links.map((a) => t.querySelector(a.hash));
+    const show = () => {
+      const index = Math.max(0, links.findIndex((a) => a.hash === location.hash));
+      links.forEach((a, i) => {
+        a.classList.toggle("active", i === index);
+        a.setAttribute("aria-current", i === index ? "page" : "false");
+        sections[i].classList.toggle("active", i === index);
+      });
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener("hashchange", show);
+    show();
+  }
 })(document);

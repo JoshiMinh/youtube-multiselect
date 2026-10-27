@@ -90,7 +90,7 @@
       "message": "Verschieben, sortieren und kopieren Sie Videos in Ihren Wiedergabelisten schneller und einfacher."
    },
    "extensionName": {
-      "message": "Mehrfachauswahl für YouTube™"
+      "message": "Youtube Multiselect"
    },
    "filterHelpTooltip": {
       "message": "Syntax regulärer Ausdrücke"
@@ -120,7 +120,7 @@
       "message": "In dieser Version ist die Zwischenablage ein kleiner Speicher innerhalb der Erweiterung und nicht die Zwischenablage des Betriebssystems"
    },
    "hint106": {
-      "message": "Das Design (dunkel/hell) wird automatisch von YouTube™ übernommen"
+      "message": "Das Design (dunkel/hell) wird automatisch von YouTube übernommen"
    },
    "hint200": {
       "message": "Videos auswählen"
@@ -270,7 +270,7 @@
       "message": "An den Anfang verschieben"
    },
    "news": {
-      "message": "\u003Ch2>in Version 3.5\u003C/h2>\u003Cspan>🔧 Videoerkennung wurde korrigiert\u003C/span>\u003Ch2>in Version 3.4\u003C/h2>\u003Cspan><s>✔️ Undokumentierte Option: Werbung blockieren</s>\u003C/span>\u003Cspan>🎁 Videos aus Dateien zu Playlists hinzufügen\u003C/span>\u003Cspan>🎁 Auswahl in Datei speichern\u003C/span>\u003Cspan>🎁 Angeschaute Videos mit dem Filter auswählen\u003C/span>\u003Cspan>🎁 Aktionsleiste und Filter frei positionieren\u003C/span>\u003Ch2>in Version 3.3\u003C/h2>\u003Cspan>🔧 Zu neuer Playlist hinzufügen wurde korrigiert\u003C/span>\u003Cspan>✔️ Option: Duplikate rückwärts finden\u003C/span>\u003Ch2>in Version 3.2\u003C/h2>\u003Cspan>🔧 Videoerkennung wurde korrigiert\u003C/span>\u003Cspan>✔️ Option: Löschen ohne Sicherheitsabfrage\u003C/span>\u003Cspan>✨ Gesamte Playlist laden\u003C/span>\u003Cspan>🎁 Videos nach Kanalnamen auswählen\u003C/span>\u003Cspan>🎁 Vollständiges Kontextmenü\u003C/span>\u003Ch2>in Version 3.1\u003C/h2>\u003Cspan>🔨 Unsichtbare Symbole in der Aktionsleiste korrigiert\u003C/span>\u003Cspan>🔨 3-Punkte-Menü in der Aktionsleiste korrigiert\u003C/span>\u003Cspan>🎁 Alternative Position der Aktionsleiste, unten links\u003C/span>\u003Ch2>in Version 3.0\u003C/h2>\u003Cspan>✔️ Unterstützt die neue Schnittstelle Manifest V3\u003C/span>\u003Cspan>✔️ Das Benutzererlebnis wurde von Grund auf neu gestaltet\u003C/span>\u003Cspan>✔️ Gleiche Darstellung Dunkel/Hell wie in YouTube™\u003C/span>\u003Cspan>✔️ Ausgewählte Videos werden deutlich hervorgehoben\u003C/span>\u003Cspan>✔️ Symbolschaltfläche zum Ein-/Ausschalten der Mehrfachauswahl\u003C/span>\u003Cspan>✔️ Aktionsleiste\u003C/span>\u003Cspan>✔️ Kontextmenü\u003C/span>\u003Cspan>🚀 Tastaturnavigation\u003C/span>\u003Cspan>🚀 Videos kopieren, ausschneiden und einfügen\u003C/span>\u003Cspan>✨ Duplikate finden\u003C/span>\u003Cspan>🎁 Videos mit dem Filter auswählen\u003C/span>"
+      "message": "<h2>in Version 3.5</h2><span>🔧 Videoerkennung wurde korrigiert</span><h2>in Version 3.4</h2><span><s>✔️ Undokumentierte Option: Werbung blockieren</s></span><span>🎁 Videos aus Dateien zu Playlists hinzufügen</span><span>🎁 Auswahl in Datei speichern</span><span>🎁 Angeschaute Videos mit dem Filter auswählen</span><span>🎁 Aktionsleiste und Filter frei positionieren</span><h2>in Version 3.3</h2><span>🔧 Zu neuer Playlist hinzufügen wurde korrigiert</span><span>✔️ Option: Duplikate rückwärts finden</span><h2>in Version 3.2</h2><span>🔧 Videoerkennung wurde korrigiert</span><span>✔️ Option: Löschen ohne Sicherheitsabfrage</span><span>✨ Gesamte Playlist laden</span><span>🎁 Videos nach Kanalnamen auswählen</span><span>🎁 Vollständiges Kontextmenü</span><h2>in Version 3.1</h2><span>🔨 Unsichtbare Symbole in der Aktionsleiste korrigiert</span><span>🔨 3-Punkte-Menü in der Aktionsleiste korrigiert</span><span>🎁 Alternative Position der Aktionsleiste, unten links</span><h2>in Version 3.0</h2><span>✔️ Unterstützt die neue Schnittstelle Manifest V3</span><span>✔️ Das Benutzererlebnis wurde von Grund auf neu gestaltet</span><span>✔️ Gleiche Darstellung Dunkel/Hell wie in YouTube</span><span>✔️ Ausgewählte Videos werden deutlich hervorgehoben</span><span>✔️ Symbolschaltfläche zum Ein-/Ausschalten der Mehrfachauswahl</span><span>✔️ Aktionsleiste</span><span>✔️ Kontextmenü</span><span>🚀 Tastaturnavigation</span><span>🚀 Videos kopieren, ausschneiden und einfügen</span><span>✨ Duplikate finden</span><span>🎁 Videos mit dem Filter auswählen</span>"
    },
    "noDuplicatesFound": {
       "message": "Keine Duplikate gefunden"
@@ -288,7 +288,7 @@
       "message": "Auswahl nach dem Kopieren beibehalten"
    },
    "reloadRequired": {
-      "message": "\u003Cp>Die Erweiterung wurde aktualisiert.\u003C/p>\u003Cp>Bitte laden Sie diese Seite neu.\u003C/p>"
+      "message": "<p>Die Erweiterung wurde aktualisiert.</p><p>Bitte laden Sie diese Seite neu.</p>"
    },
    "remove": {
       "message": "Entfernen"

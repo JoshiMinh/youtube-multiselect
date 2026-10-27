@@ -90,7 +90,7 @@
       "message": "更快，更轻松地移动，排序和复制播放列表中的视频。"
    },
    "extensionName": {
-      "message": "YouTube™ 的多种选择"
+      "message": "Youtube Multiselect"
    },
    "filterHelpTooltip": {
       "message": "正则表达式语法"
@@ -120,7 +120,7 @@
       "message": "在此版本中，剪贴板是扩展中的一个小内存，而不是操作系统剪贴板"
    },
    "hint106": {
-      "message": "主题（深色/浅色）自动采用 YouTube™"
+      "message": "主题（深色/浅色）自动采用 YouTube"
    },
    "hint200": {
       "message": "选择视频"
@@ -270,7 +270,7 @@
       "message": "移至顶部"
    },
    "news": {
-      "message": "\u003Ch2>在 3.5 版本中\u003C/h2>\u003Cspan>🔧 固定视频检测\u003C/span>\u003Ch2>在 3.4 版本中\u003C/h2>\u003Cspan><s>✔️ 未记录的选项：屏蔽广告</s>\u003C/span>\u003Cspan>🎁 将文件中的视频添加到播放列表\u003C/span>\u003Cspan>🎁 将选择保存到文件\u003C/span>\u003Cspan>🎁 使用过滤器选择观看的视频\u003C/span>\u003Cspan>🎁 自由定位操作栏和过滤器\u003C/span>\u003Ch2>在 3.3 版本中\u003C/h2>\u003Cspan>🔧 修复了添加到新播放列表的问题\u003C/span>\u003Cspan>✔️ 选项：向后查找重复项\u003C/span>\u003Ch2>在 3.2 版本中\u003C/h2>\u003Cspan>🔧 固定视频检测\u003C/span>\u003Cspan>✔️ 选项：删除时无需安全查询\u003C/span>\u003Cspan>✨ 加载整个播放列表\u003C/span>\u003Cspan>🎁 按频道名称选择视频\u003C/span>\u003Cspan>🎁 完整的上下文菜单\u003C/span>\u003Ch2>在 3.1 版本中\u003C/h2>\u003Cspan>🔨 修复了操作栏中不可见的图标\u003C/span>\u003Cspan>🔨 修复了操作栏中的三点菜单\u003C/span>\u003Cspan>🎁操作栏的备用位置，左下角\u003C/span>\u003Ch2>在 3.0 版本中\u003C/h2>\u003Cspan>✔️ 支持新接口Manifest V3\u003C/span>\u003Cspan>✔️ 用户体验已从头开始重新设计\u003C/span>\u003Cspan>✔️ 与 YouTube™ 中相同的暗/亮显示\u003C/span>\u003Cspan>✔️ 所选视频清晰突出\u003C/span>\u003Cspan>✔️ 用于打开/关闭多项选择的图标按钮\u003C/span>\u003Cspan>✔️ 动作条\u003C/span>\u003Cspan>✔️ 上下文菜单\u003C/span>\u003Cspan>🚀 键盘导航\u003C/span>\u003Cspan>🚀 复制、剪切和粘贴视频\u003C/span>\u003Cspan>✨ 查找重复项\u003C/span>\u003Cspan>🎁 使用过滤器选择视频\u003C/span>"
+      "message": "<h2>在 3.5 版本中</h2><span>🔧 固定视频检测</span><h2>在 3.4 版本中</h2><span><s>✔️ 未记录的选项：屏蔽广告</s></span><span>🎁 将文件中的视频添加到播放列表</span><span>🎁 将选择保存到文件</span><span>🎁 使用过滤器选择观看的视频</span><span>🎁 自由定位操作栏和过滤器</span><h2>在 3.3 版本中</h2><span>🔧 修复了添加到新播放列表的问题</span><span>✔️ 选项：向后查找重复项</span><h2>在 3.2 版本中</h2><span>🔧 固定视频检测</span><span>✔️ 选项：删除时无需安全查询</span><span>✨ 加载整个播放列表</span><span>🎁 按频道名称选择视频</span><span>🎁 完整的上下文菜单</span><h2>在 3.1 版本中</h2><span>🔨 修复了操作栏中不可见的图标</span><span>🔨 修复了操作栏中的三点菜单</span><span>🎁操作栏的备用位置，左下角</span><h2>在 3.0 版本中</h2><span>✔️ 支持新接口Manifest V3</span><span>✔️ 用户体验已从头开始重新设计</span><span>✔️ 与 YouTube 中相同的暗/亮显示</span><span>✔️ 所选视频清晰突出</span><span>✔️ 用于打开/关闭多项选择的图标按钮</span><span>✔️ 动作条</span><span>✔️ 上下文菜单</span><span>🚀 键盘导航</span><span>🚀 复制、剪切和粘贴视频</span><span>✨ 查找重复项</span><span>🎁 使用过滤器选择视频</span>"
    },
    "noDuplicatesFound": {
       "message": "没有找到重复项"
@@ -288,7 +288,7 @@
       "message": "复制后保留选择"
    },
    "reloadRequired": {
-      "message": "\u003Cp>此扩展已更新。\u003C/p>\u003Cp>请重新加载此页面。\u003C/p>"
+      "message": "<p>此扩展已更新。</p><p>请重新加载此页面。</p>"
    },
    "remove": {
       "message": "消除"

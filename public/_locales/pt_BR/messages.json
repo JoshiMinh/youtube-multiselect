@@ -90,7 +90,7 @@
       "message": "Mova, classifique e copie vídeos em suas listas de reprodução com mais rapidez e facilidade."
    },
    "extensionName": {
-      "message": "Múltiseleção para YouTube™"
+      "message": "Youtube Multiselect"
    },
    "filterHelpTooltip": {
       "message": "Sintaxe de expressão regular"
@@ -120,7 +120,7 @@
       "message": "Nesta versão, a área de transferência é uma pequena memória dentro da extensão e não a área de transferência do sistema operacional"
    },
    "hint106": {
-      "message": "O tema (escuro/claro) é automaticamente adotado do YouTube™"
+      "message": "O tema (escuro/claro) é automaticamente adotado do YouTube"
    },
    "hint200": {
       "message": "Selecionando vídeos"
@@ -270,7 +270,7 @@
       "message": "Mover para o início"
    },
    "news": {
-      "message": "\u003Ch2>na versão 3.5\u003C/h2>\u003Cspan>🔧 Detecção de vídeo fixa\u003C/span>\u003Ch2>na versão 3.4\u003C/h2>\u003Cspan><s>✔️ Opção não documentada: Bloquear anúncios</s>\u003C/span>\u003Cspan>🎁 Adicione vídeos de arquivos a listas de reprodução\u003C/span>\u003Cspan>🎁 Salvar seleção em arquivo\u003C/span>\u003Cspan>🎁 Selecione os vídeos assistidos usando o filtro\u003C/span>\u003Cspan>🎁 Posicione livremente a barra de ação e o filtro\u003C/span>\u003Ch2>na versão 3.3\u003C/h2>\u003Cspan>🔧 Corrigido adicionar à nova lista de reprodução\u003C/span>\u003Cspan>✔️ Opção: Encontre duplicatas para trás\u003C/span>\u003Ch2>na versão 3.2\u003C/h2>\u003Cspan>🔧 Detecção de vídeo fixa\u003C/span>\u003Cspan>✔️ Opção: Excluir sem consulta de segurança\u003C/span>\u003Cspan>✨ Carregar lista de reprodução inteira\u003C/span>\u003Cspan>🎁 Selecionar vídeos pelo nome do canal\u003C/span>\u003Cspan>🎁 Menu de contexto completo\u003C/span>\u003Ch2>na versão 3.1\u003C/h2>\u003Cspan>🔨 Ícones invisíveis corrigidos na barra de ação\u003C/span>\u003Cspan>🔨 Menu fixo de 3 pontos na barra de ação\u003C/span>\u003Cspan>🎁 Posição alternativa da barra de ação, canto inferior esquerdo\u003C/span>\u003Ch2>na versão 3.0\u003C/h2>\u003Cspan>✔️ Suporta a nova interface Manifest V3\u003C/span>\u003Cspan>✔️ A experiência do usuário foi totalmente redesenhada\u003C/span>\u003Cspan>✔️ Mesma tela escura/clara do YouTube™\u003C/span>\u003Cspan>✔️ Os vídeos selecionados são claramente destacados\u003C/span>\u003Cspan>✔️ Botão de ícone para ativar/desativar a seleção múltipla\u003C/span>\u003Cspan>✔️ Barra de ação\u003C/span>\u003Cspan>✔️ Menu de contexto\u003C/span>\u003Cspan>🚀 Navegação pelo teclado\u003C/span>\u003Cspan>🚀 Copie, recorte e cole vídeos\u003C/span>\u003Cspan>✨ Encontrar duplicatas\u003C/span>\u003Cspan>🎁 Selecione vídeos com o filtro\u003C/span>"
+      "message": "<h2>na versão 3.5</h2><span>🔧 Detecção de vídeo fixa</span><h2>na versão 3.4</h2><span><s>✔️ Opção não documentada: Bloquear anúncios</s></span><span>🎁 Adicione vídeos de arquivos a listas de reprodução</span><span>🎁 Salvar seleção em arquivo</span><span>🎁 Selecione os vídeos assistidos usando o filtro</span><span>🎁 Posicione livremente a barra de ação e o filtro</span><h2>na versão 3.3</h2><span>🔧 Corrigido adicionar à nova lista de reprodução</span><span>✔️ Opção: Encontre duplicatas para trás</span><h2>na versão 3.2</h2><span>🔧 Detecção de vídeo fixa</span><span>✔️ Opção: Excluir sem consulta de segurança</span><span>✨ Carregar lista de reprodução inteira</span><span>🎁 Selecionar vídeos pelo nome do canal</span><span>🎁 Menu de contexto completo</span><h2>na versão 3.1</h2><span>🔨 Ícones invisíveis corrigidos na barra de ação</span><span>🔨 Menu fixo de 3 pontos na barra de ação</span><span>🎁 Posição alternativa da barra de ação, canto inferior esquerdo</span><h2>na versão 3.0</h2><span>✔️ Suporta a nova interface Manifest V3</span><span>✔️ A experiência do usuário foi totalmente redesenhada</span><span>✔️ Mesma tela escura/clara do YouTube</span><span>✔️ Os vídeos selecionados são claramente destacados</span><span>✔️ Botão de ícone para ativar/desativar a seleção múltipla</span><span>✔️ Barra de ação</span><span>✔️ Menu de contexto</span><span>🚀 Navegação pelo teclado</span><span>🚀 Copie, recorte e cole vídeos</span><span>✨ Encontrar duplicatas</span><span>🎁 Selecione vídeos com o filtro</span>"
    },
    "noDuplicatesFound": {
       "message": "Nenhuma duplicata encontrada"
@@ -288,7 +288,7 @@
       "message": "Manter a seleção após a cópia"
    },
    "reloadRequired": {
-      "message": "\u003Cp>Esta extensão foi atualizada.\u003C/p>\u003Cp>Por favor, recarregue esta página.\u003C/p>"
+      "message": "<p>Esta extensão foi atualizada.</p><p>Por favor, recarregue esta página.</p>"
    },
    "remove": {
       "message": "Remover"

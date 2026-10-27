@@ -90,7 +90,7 @@
       "message": "Sposta, ordina e copia i video nelle tue playlist in modo più semplice e veloce."
    },
    "extensionName": {
-      "message": "Multiselezione per YouTube™"
+      "message": "Youtube Multiselect"
    },
    "filterHelpTooltip": {
       "message": "Sintassi delle espressioni regolari"
@@ -120,7 +120,7 @@
       "message": "In questa versione, gli appunti sono una piccola memoria all'interno dell'estensione e non gli appunti del sistema operativo"
    },
    "hint106": {
-      "message": "Il tema (scuro/chiaro) viene adottato automaticamente da YouTube™"
+      "message": "Il tema (scuro/chiaro) viene adottato automaticamente da YouTube"
    },
    "hint200": {
       "message": "Selezione dei video"
@@ -270,7 +270,7 @@
       "message": "Sposta in alto"
    },
    "news": {
-      "message": "\u003Ch2>nella versione 3.5\u003C/h2>\u003Cspan>🔧 Rilevamento video fisso\u003C/span>\u003Ch2>nella versione 3.4\u003C/h2>\u003Cspan><s>✔️ Opzione non documentata: Blocca gli annunci</s>\u003C/span>\u003Cspan>🎁 Aggiungi video dai file alle playlist\u003C/span>\u003Cspan>🎁 Salva la selezione su file\u003C/span>\u003Cspan>🎁 Seleziona i video guardati utilizzando il filtro\u003C/span>\u003Cspan>🎁 Posiziona liberamente la barra delle azioni e filtra\u003C/span>\u003Ch2>nella versione 3.3\u003C/h2>\u003Cspan>🔧 Risolto il problema con l'aggiunta alla nuova playlist\u003C/span>\u003Cspan>✔️ Opzione: Trova i duplicati all'indietro\u003C/span>\u003Ch2>nella versione 3.2\u003C/h2>\u003Cspan>🔧 Rilevamento video fisso\u003C/span>\u003Cspan>✔️ Opzione: Elimina senza richiesta di sicurezza\u003C/span>\u003Cspan>✨ Scarica l'intera playlist\u003C/span>\u003Cspan>🎁 Seleziona i video in base al nome del canale\u003C/span>\u003Cspan>🎁 Menu contestuale completo\u003C/span>\u003Ch2>nella versione 3.1\u003C/h2>\u003Cspan>🔨 Risolte le icone invisibili nella barra delle azioni\u003C/span>\u003Cspan>🔨 Risolto il problema con il menu a 3 punti nella barra delle azioni\u003C/span>\u003Cspan>🎁 Posizione alternativa della barra delle azioni, in basso a sinistra\u003C/span>\u003Ch2>nella versione 3.0\u003C/h2>\u003Cspan>✔️ Supporta la nuova interfaccia Manifest V3\u003C/span>\u003Cspan>✔️ L'esperienza utente è stata riprogettata da zero\u003C/span>\u003Cspan>✔️ Stesso display scuro/chiaro di YouTube™\u003C/span>\u003Cspan>✔️ I video selezionati sono chiaramente evidenziati\u003C/span>\u003Cspan>✔️ Pulsante icona per attivare/disattivare la selezione multipla\u003C/span>\u003Cspan>✔️ Barra delle azioni\u003C/span>\u003Cspan>✔️ Menu contestuale\u003C/span>\u003Cspan>🚀 Navigazione da tastiera\u003C/span>\u003Cspan>🚀 Copia, taglia e incolla video\u003C/span>\u003Cspan>✨ Trova duplicati\u003C/span>\u003Cspan>🎁 Seleziona i video con il filtro\u003C/span>"
+      "message": "<h2>nella versione 3.5</h2><span>🔧 Rilevamento video fisso</span><h2>nella versione 3.4</h2><span><s>✔️ Opzione non documentata: Blocca gli annunci</s></span><span>🎁 Aggiungi video dai file alle playlist</span><span>🎁 Salva la selezione su file</span><span>🎁 Seleziona i video guardati utilizzando il filtro</span><span>🎁 Posiziona liberamente la barra delle azioni e filtra</span><h2>nella versione 3.3</h2><span>🔧 Risolto il problema con l'aggiunta alla nuova playlist</span><span>✔️ Opzione: Trova i duplicati all'indietro</span><h2>nella versione 3.2</h2><span>🔧 Rilevamento video fisso</span><span>✔️ Opzione: Elimina senza richiesta di sicurezza</span><span>✨ Scarica l'intera playlist</span><span>🎁 Seleziona i video in base al nome del canale</span><span>🎁 Menu contestuale completo</span><h2>nella versione 3.1</h2><span>🔨 Risolte le icone invisibili nella barra delle azioni</span><span>🔨 Risolto il problema con il menu a 3 punti nella barra delle azioni</span><span>🎁 Posizione alternativa della barra delle azioni, in basso a sinistra</span><h2>nella versione 3.0</h2><span>✔️ Supporta la nuova interfaccia Manifest V3</span><span>✔️ L'esperienza utente è stata riprogettata da zero</span><span>✔️ Stesso display scuro/chiaro di YouTube</span><span>✔️ I video selezionati sono chiaramente evidenziati</span><span>✔️ Pulsante icona per attivare/disattivare la selezione multipla</span><span>✔️ Barra delle azioni</span><span>✔️ Menu contestuale</span><span>🚀 Navigazione da tastiera</span><span>🚀 Copia, taglia e incolla video</span><span>✨ Trova duplicati</span><span>🎁 Seleziona i video con il filtro</span>"
    },
    "noDuplicatesFound": {
       "message": "Nessun duplicato trovato"
@@ -288,7 +288,7 @@
       "message": "Mantieni la selezione dopo la copia"
    },
    "reloadRequired": {
-      "message": "\u003Cp>L'estensione è stata aggiornata.\u003C/p>\u003Cp>Si prega di ricaricare questa pagina.\u003C/p>"
+      "message": "<p>L'estensione è stata aggiornata.</p><p>Si prega di ricaricare questa pagina.</p>"
    },
    "remove": {
       "message": "Rimuovi"

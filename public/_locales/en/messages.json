@@ -90,7 +90,7 @@
       "message": "Move, sort, and copy videos in your playlists faster and easier."
    },
    "extensionName": {
-      "message": "Multiselect for YouTube™"
+      "message": "Youtube Multiselect"
    },
    "filterHelpTooltip": {
       "message": "Regular expression syntax"
@@ -123,7 +123,7 @@
       "message": "In this version, the clipboard is a small memory within the extension and not the operating system clipboard"
    },
    "hint106": {
-      "message": "The theme (dark/light) is automatically adopted from YouTube™"
+      "message": "The theme (dark/light) is automatically adopted from YouTube"
    },
    "hint200": {
       "message": "Selecting videos"
@@ -273,7 +273,7 @@
       "message": "Move to top"
    },
    "news": {
-      "message": "\u003Ch2>in version 3.5\u003C/h2>\u003Cspan>🔧 Fixed video detection\u003C/span>\u003Ch2>in version 3.4\u003C/h2>\u003Cspan><s>✔️ Undocumented option: Block ads</s>\u003C/span>\u003Cspan>🎁 Add videos from files to playlists\u003C/span>\u003Cspan>🎁 Save selection to file\u003C/span>\u003Cspan>🎁 Select watched videos using the filter\u003C/span>\u003Cspan>🎁 Freely position the action bar and filter\u003C/span>\u003Ch2>in version 3.3\u003C/h2>\u003Cspan>🔧 Fixed: Save videos to new playlist\u003C/span>\u003Cspan>✔️ Option: Find duplicates backwards\u003C/span>\u003Ch2>in version 3.2\u003C/h2>\u003Cspan>🔧 Fixed video detection\u003C/span>\u003Cspan>✔️ Option: Delete without security query\u003C/span>\u003Cspan>✨ Load entire playlist\u003C/span>\u003Cspan>🎁 Select videos by channel name\u003C/span>\u003Cspan>🎁 Full context menu\u003C/span>\u003Ch2>in version 3.1\u003C/h2>\u003Cspan>🔨 Fixed invisible icons in action bar\u003C/span>\u003Cspan>🔨 Fixed 3-dot menu in action bar\u003C/span>\u003Cspan>🎁 Alternate position of the action bar, bottom left\u003C/span>\u003Ch2>in version 3.0\u003C/h2>\u003Cspan>✔️ Supports the new interface Manifest V3\u003C/span>\u003Cspan>✔️ The user experience has been redesigned from the ground up\u003C/span>\u003Cspan>✔️ Same display dark/light as in YouTube™\u003C/span>\u003Cspan>✔️ Selected videos are clearly highlighted\u003C/span>\u003Cspan>✔️ Icon button to toggle multiple selection on/off\u003C/span>\u003Cspan>✔️ Action bar\u003C/span>\u003Cspan>✔️ Context menu\u003C/span>\u003Cspan>🚀 Keyboard navigation\u003C/span>\u003Cspan>🚀 Copy, cut and paste videos\u003C/span>\u003Cspan>✨ Find duplicates\u003C/span>\u003Cspan>🎁 Select videos with the filter\u003C/span>"
+      "message": "<h2>in version 3.5</h2><span>🔧 Fixed video detection</span><h2>in version 3.4</h2><span><s>✔️ Undocumented option: Block ads</s></span><span>🎁 Add videos from files to playlists</span><span>🎁 Save selection to file</span><span>🎁 Select watched videos using the filter</span><span>🎁 Freely position the action bar and filter</span><h2>in version 3.3</h2><span>🔧 Fixed: Save videos to new playlist</span><span>✔️ Option: Find duplicates backwards</span><h2>in version 3.2</h2><span>🔧 Fixed video detection</span><span>✔️ Option: Delete without security query</span><span>✨ Load entire playlist</span><span>🎁 Select videos by channel name</span><span>🎁 Full context menu</span><h2>in version 3.1</h2><span>🔨 Fixed invisible icons in action bar</span><span>🔨 Fixed 3-dot menu in action bar</span><span>🎁 Alternate position of the action bar, bottom left</span><h2>in version 3.0</h2><span>✔️ Supports the new interface Manifest V3</span><span>✔️ The user experience has been redesigned from the ground up</span><span>✔️ Same display dark/light as in YouTube</span><span>✔️ Selected videos are clearly highlighted</span><span>✔️ Icon button to toggle multiple selection on/off</span><span>✔️ Action bar</span><span>✔️ Context menu</span><span>🚀 Keyboard navigation</span><span>🚀 Copy, cut and paste videos</span><span>✨ Find duplicates</span><span>🎁 Select videos with the filter</span>"
    },
    "noDuplicatesFound": {
       "message": "No duplicates found"
@@ -291,7 +291,7 @@
       "message": "Keep selection after copying"
    },
    "reloadRequired": {
-      "message": "\u003Cp>The extension has been updated.\u003C/p>\u003Cp>Please reload this page.\u003C/p>"
+      "message": "<p>The extension has been updated.</p><p>Please reload this page.</p>"
    },
    "remove": {
       "message": "Remove"
@@ -331,6 +331,12 @@
    },
    "tabHints": {
       "message": "Hints"
+   },
+   "tabManual": {
+      "message": "Manual"
+   },
+   "tabUpdates": {
+      "message": "Updates"
    },
    "tabSettings": {
       "message": "Settings"
