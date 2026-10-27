@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import type { SessionStore } from '../controller/session';
 import type { ExportFormat } from '../core/export';
+import { hasCriteria } from '../core/filter';
 
 /** Close `onClose` on outside pointer-down. `inside` lists the elements that count as inside. */
 function useDismissOutside(active: boolean, inside: () => (HTMLElement | null)[], onClose: () => void) {
@@ -109,16 +110,47 @@ const isolateKeys = {
   onKeyPress: (event: { stopPropagation(): void }) => event.stopPropagation(),
 };
 
+/** Blank or invalid text is "not set"; otherwise a non-negative number scaled by `factor`. */
+function parseBound(text: string, factor = 1, integer = false): number | undefined {
+  const value = Number(text.trim().replace(',', '.'));
+  if (text.trim() === '' || !Number.isFinite(value) || value < 0) return undefined;
+  return integer ? Math.round(value) : Math.round(value * factor);
+}
+
+function RangeFields({ label, from, to, onFrom, onTo, unit }: { label: string; from: string; to: string; onFrom(v: string): void; onTo(v: string): void; unit: string }) {
+  return (
+    <div role="group" aria-label={label} className="ytms-range">
+      <span className="ytms-range-label">
+        {label} <span className="ytms-detail">({unit})</span>
+      </span>
+      <input type="text" inputMode="decimal" value={from} placeholder="from" aria-label={`${label} from`} onChange={(e) => onFrom(e.target.value)} />
+      <span aria-hidden="true">–</span>
+      <input type="text" inputMode="decimal" value={to} placeholder="to" aria-label={`${label} to`} onChange={(e) => onTo(e.target.value)} />
+    </div>
+  );
+}
+
 function FilterPopover({ store, onClose }: { store: SessionStore; onClose: () => void }) {
   const [query, setQuery] = useState('');
   const [caseSensitive, setCaseSensitive] = useState(false);
+  const [minMinutes, setMinMinutes] = useState('');
+  const [maxMinutes, setMaxMinutes] = useState('');
+  const [fromPosition, setFromPosition] = useState('');
+  const [toPosition, setToPosition] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const titleId = useId();
   const hintId = useId();
 
   useEffect(() => inputRef.current?.focus(), []);
 
-  const apply = () => store.selectMatching({ query, caseSensitive });
+  const criteria = {
+    query,
+    caseSensitive,
+    minSeconds: parseBound(minMinutes, 60),
+    maxSeconds: parseBound(maxMinutes, 60),
+    fromPosition: parseBound(fromPosition, 1, true),
+    toPosition: parseBound(toPosition, 1, true),
+  };
 
   return (
     <div
@@ -140,7 +172,7 @@ function FilterPopover({ store, onClose }: { store: SessionStore; onClose: () =>
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          apply();
+          store.selectMatching(criteria);
         }}
       >
         <input
@@ -152,7 +184,7 @@ function FilterPopover({ store, onClose }: { store: SessionStore; onClose: () =>
           aria-describedby={hintId}
           onChange={(event) => setQuery(event.target.value)}
         />
-        <button type="submit" disabled={query.trim() === ''}>
+        <button type="submit" disabled={!hasCriteria(criteria)}>
           Select
         </button>
       </form>
@@ -160,8 +192,10 @@ function FilterPopover({ store, onClose }: { store: SessionStore; onClose: () =>
         <input type="checkbox" checked={caseSensitive} onChange={(event) => setCaseSensitive(event.target.checked)} />
         Case sensitive
       </label>
+      <RangeFields label="Duration" unit="minutes" from={minMinutes} to={maxMinutes} onFrom={setMinMinutes} onTo={setMaxMinutes} />
+      <RangeFields label="Position" unit="as numbered" from={fromPosition} to={toPosition} onFrom={setFromPosition} onTo={setToPosition} />
       <span id={hintId} className="ytms-detail">
-        Adds matching loaded entries to the selection.
+        Adds loaded entries matching every field you fill in.
       </span>
     </div>
   );

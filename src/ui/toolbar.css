@@ -154,6 +154,34 @@ button:focus-visible {
   outline-offset: 1px;
 }
 
+.ytms-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ytms-range-label {
+  flex: none;
+  width: 110px;
+}
+
+.ytms-range input {
+  flex: 1;
+  min-width: 0;
+  width: 0;
+  font: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.ytms-range input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
 .ytms-check {
   display: flex;
   align-items: center;

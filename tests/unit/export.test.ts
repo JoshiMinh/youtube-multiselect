@@ -11,6 +11,7 @@ function entry(overrides: Partial<PlaylistEntry> = {}): PlaylistEntry {
     title: 'A title',
     channel: 'Channel',
     position: 1,
+    durationSeconds: null,
     url: 'https://www.youtube.com/watch?v=abcdefghijk',
     ...overrides,
   };

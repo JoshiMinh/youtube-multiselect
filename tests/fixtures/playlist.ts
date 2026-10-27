@@ -12,6 +12,8 @@ export interface FixtureRow {
   channel?: string;
   /** YouTube's per-occurrence ID, pre-applied as the MAIN-world bridge would. */
   setVideoId?: string;
+  /** Thumbnail duration badge text, e.g. "2:35" or "LIVE". */
+  duration?: string;
   /** Override the playlist ID in the row link (simulates stale rows). */
   list?: string;
 }
@@ -31,11 +33,12 @@ export function rowHtml(row: FixtureRow, position: number, playlistId: string, l
   const href = `/watch?v=${row.videoId}&amp;list=${list}&amp;index=${position}&amp;pp=abc`;
   const bridge = row.setVideoId ? ` data-ytms-set-video-id="${row.setVideoId}" data-ytms-video-id="${row.videoId}"` : '';
   const channel = escapeText(row.channel ?? 'Some Channel');
+  const badge = row.duration ? `<badge-shape class="ytBadgeShapeThumbnailBadge"><div class="badge-shape-wiz__text">${escapeText(row.duration)}</div></badge-shape>` : '';
   if (layout === 'lockup') {
     return `
     <div><yt-lockup-view-model class="ytLockupViewModelWrapper"${bridge}>
       <div class="ytLockupViewModelHost ytLockupViewModelHorizontal content-id-${row.videoId}">
-        <a class="ytLockupViewModelContentImage" href="${href}" tabindex="-1" aria-hidden="true"></a>
+        <a class="ytLockupViewModelContentImage" href="${href}" tabindex="-1" aria-hidden="true">${badge}</a>
         <div class="ytLockupViewModelMetadata"><yt-lockup-metadata-view-model>
           <h3 title="${escapeAttr(row.title)}"><a class="ytLockupMetadataViewModelTitle" href="${href}"><span>${escapeText(row.title)}</span></a></h3>
           <yt-content-metadata-view-model><div class="ytContentMetadataViewModelMetadataRow"><span><a href="/@channel">${channel}</a></span></div></yt-content-metadata-view-model>
@@ -47,7 +50,7 @@ export function rowHtml(row: FixtureRow, position: number, playlistId: string, l
     <ytd-playlist-video-renderer class="style-scope ytd-playlist-video-list-renderer"${bridge}>
       <div id="index-container"><yt-formatted-string id="index">${position}</yt-formatted-string></div>
       <div id="content">
-        <a id="thumbnail" href="${href}"></a>
+        <a id="thumbnail" href="${href}"><ytd-thumbnail-overlay-time-status-renderer>${badge}</ytd-thumbnail-overlay-time-status-renderer></a>
         <div id="meta">
           <h3><a id="video-title" title="${escapeAttr(row.title)}" href="${href}">${escapeText(row.title)}</a></h3>
           <ytd-channel-name><div id="text-container"><a href="/@channel">${channel}</a></div></ytd-channel-name>

@@ -21,6 +21,8 @@ export const YT = {
   titleAttr: 'a#video-title[title], h3[title]',
   channelLink: 'ytd-channel-name a, #channel-name a, .ytContentMetadataViewModelMetadataRow a',
   index: '#index',
+  /** Thumbnail badges; the one that parses as a clock time is the duration ("2:35"). */
+  durationBadge: 'ytd-thumbnail-overlay-time-status-renderer .badge-shape-wiz__text, badge-shape .badge-shape-wiz__text, badge-shape',
   /** Sentinel YouTube renders at the end of a partially loaded list; scrolled into view, it loads more. */
   continuation: 'ytd-continuation-item-renderer, yt-continuation-item-view-model',
   /**

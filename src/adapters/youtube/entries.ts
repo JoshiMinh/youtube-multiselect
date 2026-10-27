@@ -42,6 +42,7 @@ export function readRow(row: HTMLElement, playlistId: string, domIndex: number):
     title,
     channel,
     position,
+    durationSeconds: readDuration(row),
     url: `${ORIGIN}/watch?v=${encodeURIComponent(videoId)}`,
   };
 }
@@ -59,6 +60,21 @@ export function readRows(container: HTMLElement, playlistId: string): EntryRow[]
     rows.push({ element, entry });
   });
   return rows;
+}
+
+/** "2:35" or "1:02:03" to seconds; anything else (LIVE, Shorts, badges) is null. */
+export function parseClock(text: string | null | undefined): number | null {
+  const match = text?.trim().match(/^(?:(\d+):)?(\d{1,2}):(\d{2})$/);
+  if (!match) return null;
+  return Number(match[1] ?? 0) * 3600 + Number(match[2]) * 60 + Number(match[3]);
+}
+
+function readDuration(row: HTMLElement): number | null {
+  for (const badge of row.querySelectorAll(YT.durationBadge)) {
+    const seconds = parseClock(badge.textContent);
+    if (seconds !== null) return seconds;
+  }
+  return null;
 }
 
 function parsePosition(text: string | null | undefined): number | null {

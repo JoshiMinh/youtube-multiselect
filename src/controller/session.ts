@@ -1,7 +1,7 @@
 import type { EntryRow, IdentityKind, PageInfo, PlatformAdapter, PlaylistEntry, Theme } from '../adapters/types';
 import { HOST_ATTR } from '../adapters/youtube/selectors';
 import { buildExport, toText, type ExportFile, type ExportFormat } from '../core/export';
-import { findDuplicates, matchesFilter, type TextFilter } from '../core/filter';
+import { findDuplicates, hasCriteria, matchesFilter, type FilterCriteria } from '../core/filter';
 import { isSelectAll, navigate } from '../core/keyboard';
 import { SelectionModel } from '../core/selection';
 import { RowControl } from '../ui/rowControl';
@@ -36,7 +36,7 @@ export interface SessionStore {
   getSnapshot(): SessionSnapshot;
   subscribe(listener: () => void): () => void;
   selectLoaded(): void;
-  selectMatching(filter: TextFilter): void;
+  selectMatching(filter: FilterCriteria): void;
   selectDuplicates(): void;
   clear(): void;
   loadAll(): Promise<void>;
@@ -232,9 +232,9 @@ export class PageSession implements SessionStore {
     this.selection.clear();
   };
 
-  /** Add loaded entries whose title or channel contains the query to the selection. */
-  selectMatching = (filter: TextFilter): void => {
-    if (filter.query.trim() === '') return this.setNotice('Type some text to filter by.');
+  /** Add loaded entries that match every set criterion to the selection. */
+  selectMatching = (filter: FilterCriteria): void => {
+    if (!hasCriteria(filter)) return this.setNotice('Enter text, a duration or a position range to filter by.');
     const matches = this.loadedEntries().filter((entry) => matchesFilter(entry, filter));
     this.selection.selectAll(matches.map((entry) => entry.key));
     const partial = this.hasMore ? ' Load all first to search the whole playlist.' : '';

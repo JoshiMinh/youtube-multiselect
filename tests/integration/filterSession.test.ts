@@ -56,7 +56,26 @@ describe('selectMatching', () => {
     expect(session.getSnapshot().notice).toBe('No loaded entries match.');
     session.selectMatching({ query: ' ', caseSensitive: false });
     expect(session.getSnapshot().selected).toBe(0);
-    expect(session.getSnapshot().notice).toBe('Type some text to filter by.');
+    expect(session.getSnapshot().notice).toBe('Enter text, a duration or a position range to filter by.');
+  });
+
+  it('combines text, duration and position criteria', async () => {
+    await start([
+      { videoId: 'aaaaaaaaaaa', title: 'Song A', duration: '3:00', setVideoId: 'S1' },
+      { videoId: 'bbbbbbbbbbb', title: 'Song B', duration: '10:00', setVideoId: 'S2' },
+      { videoId: 'ccccccccccc', title: 'Song C', duration: '4:00', setVideoId: 'S3' },
+      { videoId: 'ddddddddddd', title: 'Talk D', duration: '4:00', setVideoId: 'S4' },
+      { videoId: 'eeeeeeeeeee', title: 'Song E', duration: 'LIVE', setVideoId: 'S5' },
+    ]);
+    const ids = () => session.selectedEntries().map((e) => e.occurrenceId);
+    session.selectMatching({ query: '', caseSensitive: false, minSeconds: 240 });
+    expect(ids()).toEqual(['S2', 'S3', 'S4']);
+    session.clear();
+    session.selectMatching({ query: 'song', caseSensitive: false, maxSeconds: 240, fromPosition: 2 });
+    expect(ids()).toEqual(['S3']);
+    session.clear();
+    session.selectMatching({ query: '', caseSensitive: false, fromPosition: 2, toPosition: 3 });
+    expect(ids()).toEqual(['S2', 'S3']);
   });
 
   it('warns that only loaded entries were searched when more remain', async () => {

@@ -91,6 +91,22 @@ describe('youtubeAdapter rows', () => {
     ]);
   });
 
+  it.each(['legacy', 'lockup'] as const)('reads the duration badge (%s layout), ignoring non-time badges', (layout) => {
+    loadPlaylistPage(
+      document,
+      PL,
+      [
+        { videoId: 'aaaaaaaaaaa', title: 'Short', duration: '2:35', setVideoId: 'S1' },
+        { videoId: 'bbbbbbbbbbb', title: 'Long', duration: '1:02:03', setVideoId: 'S2' },
+        { videoId: 'ccccccccccc', title: 'Live', duration: 'LIVE', setVideoId: 'S3' },
+        { videoId: 'ddddddddddd', title: 'None', setVideoId: 'S4' },
+      ],
+      { layout },
+    );
+    const rows = youtubeAdapter.readRows(youtubeAdapter.findListContainer(document)!, page);
+    expect(rows.map((r) => r.entry.durationSeconds)).toEqual([155, 3723, null, null]);
+  });
+
   it('distinguishes duplicate videos by occurrence ID', () => {
     loadPlaylistPage(document, PL, [
       { videoId: 'dupdupdupdu', title: 'Dup', setVideoId: 'S1' },

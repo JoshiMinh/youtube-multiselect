@@ -25,6 +25,8 @@ export interface PlaylistEntry {
   channel: string | null;
   /** 1-based position as shown by the site, when available. */
   position: number | null;
+  /** Video length from the thumbnail badge; null for live streams or when not shown. */
+  durationSeconds: number | null;
   url: string;
 }
 

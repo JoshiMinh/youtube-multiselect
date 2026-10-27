@@ -147,8 +147,22 @@ toolbar's ⋮ menu (`src/core/filter.ts`). Duplicates keep the first copy and ar
 for groups where every copy has occurrence identity; positional groups are counted and
 reported but not acted on. Covered by unit, session and toolbar tests.
 
-**Not done:** unavailable/private filter, duration filter, position range, and checking
-against a real signed-in playlist with repeats (see the identity check above).
+**Also done (2026-10-27):** duration (min/max minutes) and position-range criteria in the
+same filter popover. All set criteria must match; rows with an unknown duration (LIVE) or
+position never match a criterion on it. Duration comes from the thumbnail badge; checked
+live on the legacy layout, and covered by fixtures for both layouts. The lockup layout's
+real badge markup has not been observed signed in.
+
+**Not done:** unavailable/private filter. Unavailable rows currently have no usable link and
+are skipped by the adapter, so selecting them needs their markup observed on a playlist that
+actually contains one (none of the account's playlists did on 2026-10-27).
+
+**Signed-in identity check (2026-10-27), read-only fetch of each playlist's first page
+(`ytInitialData`), 17 non-empty playlists incl. Watch Later:** every row had a `setVideoId`
+(1–100 rows per playlist) and all IDs were distinct within each playlist. None contained a
+repeated video, so whether two copies of one video get distinct IDs is still unverified.
+To settle it, add the same video twice to a throwaway playlist (a deliberate write, done by
+the account owner) and re-run `scripts/identity-probe.js`.
 
 ## Next concrete milestone
 

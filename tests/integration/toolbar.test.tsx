@@ -86,6 +86,20 @@ describe('Toolbar', () => {
     act(() => button('Select').click());
     expect(mountPoint.textContent).toContain('1 selected');
 
+    const setField = (label: string, value: string) => {
+      const field = dialog.querySelector<HTMLInputElement>(`input[aria-label="${label}"]`)!;
+      act(() => {
+        setValue.call(field, value);
+        field.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+    };
+    setField('Filter text', '');
+    expect(button('Select').disabled).toBe(true);
+    setField('Position from', '3');
+    expect(button('Select').disabled).toBe(false);
+    act(() => button('Select').click());
+    expect(mountPoint.textContent).toContain('2 selected');
+
     act(() => dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
     expect(mountPoint.querySelector('[role="dialog"]')).toBeNull();
   });
