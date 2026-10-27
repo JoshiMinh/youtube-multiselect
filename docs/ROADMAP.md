@@ -140,8 +140,20 @@ Outcomes:
 - No IDs: Phase 4 needs another identity source (e.g. reading the playlist via the write
   backend chosen in Phase 3). Duplicate actions stay disabled meanwhile.
 
+## Phase 2b status (2026-10-27)
+
+**Done:** text filter (title/channel, case-sensitive option) and *Select duplicates* in the
+toolbar's ⋮ menu (`src/core/filter.ts`). Duplicates keep the first copy and are offered only
+for groups where every copy has occurrence identity; positional groups are counted and
+reported but not acted on. Covered by unit, session and toolbar tests.
+
+**Not done:** unavailable/private filter, duration filter, position range, and checking
+against a real signed-in playlist with repeats (see the identity check above).
+
 ## Next concrete milestone
 
 1. Finish the signed-in identity check above.
-2. Phase 2b: filtering (text, unavailable) and duplicate grouping on top of Load all, with
-   duplicate *actions* enabled only for occurrence identity.
+2. Remaining Phase 2b filters (unavailable, duration, position range).
+3. Keyboard layer: **done** (2026-10-27): arrows, Home/End, Ctrl+←/→ between selected rows,
+   Ctrl/Cmd+A toggle (`src/core/keyboard.ts`; unit, session and Chromium e2e tests).
+   Delete/cut/paste shortcuts wait for Phase 4.

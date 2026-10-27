@@ -7,6 +7,8 @@ import { HOST_ATTR } from '../adapters/youtube/selectors';
  */
 export interface RowControlEvents {
   onToggle(key: string, checked: boolean, range: boolean): void;
+  /** Called for every keydown on the checkbox, before it is contained in the shadow root. */
+  onKeyDown?(key: string, event: KeyboardEvent): void;
 }
 
 const STYLE = `
@@ -49,6 +51,7 @@ export class RowControl {
     }
     this.input.addEventListener('keydown', (event) => {
       if (event.key === ' ') this.keyboardRange = event.shiftKey;
+      events.onKeyDown?.(this.key, event);
     });
     this.input.addEventListener('click', (event) => {
       const range = event.shiftKey || this.keyboardRange;

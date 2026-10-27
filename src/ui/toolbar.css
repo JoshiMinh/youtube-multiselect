@@ -108,6 +108,58 @@ button:focus-visible {
   outline-offset: -3px;
 }
 
+.ytms-popover-anchor {
+  display: contents;
+}
+
+.ytms-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 280px;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.ytms-popover-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ytms-popover form {
+  display: flex;
+  gap: 8px;
+}
+
+.ytms-popover input[type='text'] {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+}
+
+.ytms-popover input[type='text']:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.ytms-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .ytms-progress {
   display: flex;
   align-items: center;

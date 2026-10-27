@@ -136,6 +136,40 @@ test('keyboard: a focused checkbox shows a focus ring and Space toggles it', asy
   await expect(checkboxes(page).first()).toHaveAccessibleName('Select: Video 1');
 });
 
+test('keyboard layer: arrows, Home/End, Ctrl+Left/Right and Ctrl+A work across shadow roots', async ({ page }) => {
+  servePlaylist('PLnav', sampleRows(5));
+  await page.goto('https://www.youtube.com/playlist?list=PLnav');
+  await expect(checkboxes(page)).toHaveCount(5);
+  const focusedName = () => page.evaluate(() => {
+    let el: Element | null = document.activeElement;
+    while (el?.shadowRoot?.activeElement) el = el.shadowRoot.activeElement;
+    return el?.getAttribute('aria-label') ?? null;
+  });
+
+  await checkboxes(page).nth(1).focus();
+  await page.keyboard.press('ArrowDown');
+  expect(await focusedName()).toBe('Select: Video 3');
+  await page.keyboard.press('End');
+  expect(await focusedName()).toBe('Select: Video 5');
+  await page.keyboard.press('Home');
+  expect(await focusedName()).toBe('Select: Video 1');
+
+  await page.keyboard.press('Space');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Space');
+  await expect(toolbar(page)).toContainText('2 selected');
+  await page.keyboard.press('Control+ArrowLeft');
+  expect(await focusedName()).toBe('Select: Video 1');
+  await page.keyboard.press('Control+ArrowRight');
+  expect(await focusedName()).toBe('Select: Video 3');
+
+  await page.keyboard.press('Control+a');
+  await expect(toolbar(page)).toContainText('5 selected');
+  await page.keyboard.press('Control+a');
+  await expect(toolbar(page)).toContainText('0 selected');
+});
+
 test('bridge reads per-occurrence IDs across worlds so duplicates stay distinct', async ({ page }) => {
   servePlaylist('PLdup', [
     { videoId: 'dupdupdupdu', title: 'Same video' },

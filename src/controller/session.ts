@@ -1,6 +1,8 @@
 import type { EntryRow, IdentityKind, PageInfo, PlatformAdapter, PlaylistEntry, Theme } from '../adapters/types';
 import { HOST_ATTR } from '../adapters/youtube/selectors';
 import { buildExport, toText, type ExportFile, type ExportFormat } from '../core/export';
+import { findDuplicates, matchesFilter, type TextFilter } from '../core/filter';
+import { isSelectAll, navigate } from '../core/keyboard';
 import { SelectionModel } from '../core/selection';
 import { RowControl } from '../ui/rowControl';
 import { loadAll, type LoadOptions, type LoadState } from './loadAll';
@@ -23,6 +25,10 @@ export interface SessionSnapshot {
   /** Entry count advertised by the site (approximate; may include unavailable videos). */
   expected: number | null;
   load: LoadState;
+  /** Loaded entries that repeat an earlier video and can be acted on (occurrence identity). */
+  duplicateExtras: number;
+  /** Repeated entries that are reported only, because their identity is positional. */
+  duplicatesBlocked: number;
   notice: string | null;
 }
 
@@ -30,6 +36,8 @@ export interface SessionStore {
   getSnapshot(): SessionSnapshot;
   subscribe(listener: () => void): () => void;
   selectLoaded(): void;
+  selectMatching(filter: TextFilter): void;
+  selectDuplicates(): void;
   clear(): void;
   loadAll(): Promise<void>;
   cancelLoad(): void;
@@ -115,6 +123,7 @@ export class PageSession implements SessionStore {
       },
       signal,
     );
+    doc.addEventListener('keydown', this.onDocumentKeyDown, { signal });
     this.scan();
     const toolbar = await this.deps.mountToolbar(this);
     if (this.disposed) toolbar.remove();
@@ -223,6 +232,34 @@ export class PageSession implements SessionStore {
     this.selection.clear();
   };
 
+  /** Add loaded entries whose title or channel contains the query to the selection. */
+  selectMatching = (filter: TextFilter): void => {
+    if (filter.query.trim() === '') return this.setNotice('Type some text to filter by.');
+    const matches = this.loadedEntries().filter((entry) => matchesFilter(entry, filter));
+    this.selection.selectAll(matches.map((entry) => entry.key));
+    const partial = this.hasMore ? ' Load all first to search the whole playlist.' : '';
+    this.setNotice(
+      matches.length === 0
+        ? `No loaded entries match.${partial}`
+        : `Matched ${matches.length} ${plural(matches.length, 'entry', 'entries')}.${partial}`,
+    );
+  };
+
+  /** Add every repeat of an earlier video (keeping the first) to the selection. */
+  selectDuplicates = (): void => {
+    const { extras, blocked } = findDuplicates(this.loadedEntries());
+    this.selection.selectAll(extras);
+    const partial = this.hasMore ? ' Load all first to check the whole playlist.' : '';
+    const skipped = blocked > 0 ? ` ${blocked} more skipped: their identity is position-based.` : '';
+    this.setNotice(
+      extras.length === 0 ? `No duplicates to select.${skipped}${partial}` : `Selected ${extras.length} ${plural(extras.length, 'duplicate', 'duplicates')}.${skipped}${partial}`,
+    );
+  };
+
+  private loadedEntries(): PlaylistEntry[] {
+    return this.order.map((key) => this.registry.get(key)).filter((entry): entry is PlaylistEntry => entry !== undefined);
+  }
+
   selectedEntries(): PlaylistEntry[] {
     const loadedIndex = new Map(this.order.map((key, i) => [key, i]));
     return this.selection
@@ -258,6 +295,39 @@ export class PageSession implements SessionStore {
     this.selection.click(key, checked, this.order, { range });
   };
 
+  /** Arrow/Home/End move focus between rows; Ctrl+←/→ jump between selected rows. */
+  private onRowKeyDown = (key: string, event: KeyboardEvent): void => {
+    const target = navigate(event, key, this.order, (k) => this.selection.has(k));
+    if (!target) return;
+    event.preventDefault();
+    if (target.kind === 'toggle-all') this.toggleAll();
+    else this.focusKey(target.key);
+  };
+
+  /** Ctrl+A anywhere on the page, except while typing in a field. */
+  private onDocumentKeyDown = (event: KeyboardEvent): void => {
+    if (event.defaultPrevented || !isSelectAll(event) || this.order.length === 0) return;
+    const origin = event.composedPath()[0];
+    if (origin instanceof Element && origin.matches('input, textarea, select, [contenteditable=""], [contenteditable="true"]')) return;
+    event.preventDefault();
+    this.toggleAll();
+  };
+
+  /** Select every loaded entry, or clear the selection when they all already are. */
+  private toggleAll(): void {
+    if (this.order.length > 0 && this.order.every((key) => this.selection.has(key))) this.selection.clear();
+    else this.selection.selectAll(this.order);
+  }
+
+  private focusKey(key: string): void {
+    for (const [element, control] of this.controls) {
+      if (control.currentKey !== key) continue;
+      control.checkbox.focus();
+      element.scrollIntoView?.({ block: 'nearest' });
+      return;
+    }
+  }
+
   private reconcile(rows: EntryRow[]): void {
     const live = new Set<HTMLElement>();
     for (const { element, entry } of rows) {
@@ -271,7 +341,7 @@ export class PageSession implements SessionStore {
           if (!this.selection.has(control.currentKey)) this.registry.delete(control.currentKey);
         }
       } else {
-        control = new RowControl(this.deps.doc, entry, { onToggle: this.onToggle });
+        control = new RowControl(this.deps.doc, entry, { onToggle: this.onToggle, onKeyDown: this.onRowKeyDown });
         this.controls.set(element, control);
       }
       this.registry.set(entry.key, entry);
@@ -355,6 +425,7 @@ export class PageSession implements SessionStore {
     if (kinds.size > 1) identity = 'mixed';
     else if (kinds.has('occurrence')) identity = 'occurrence';
     else if (kinds.has('positional')) identity = 'positional';
+    const duplicates = findDuplicates(this.loadedEntries());
     return {
       playlistId: this.page.playlistId,
       playlistTitle: this.page.title,
@@ -367,6 +438,8 @@ export class PageSession implements SessionStore {
       hasMore: this.hasMore,
       expected: this.expected,
       load: this.load,
+      duplicateExtras: duplicates.extras.length,
+      duplicatesBlocked: duplicates.blocked,
       notice: this.notice,
     };
   }

@@ -14,6 +14,8 @@ const session: SessionSnapshot = {
   hasMore: false,
   expected: 10,
   load: { status: 'idle' },
+  duplicateExtras: 0,
+  duplicatesBlocked: 0,
   notice: null,
 };
 

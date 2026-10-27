@@ -67,4 +67,26 @@ describe('Toolbar', () => {
     act(() => menu.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
     expect(mountPoint.querySelector('[role="menu"]')).toBeNull();
   });
+
+  it('offers a filter popover from the More menu and selects matches', () => {
+    act(() => button('⋮').click());
+    const items = [...mountPoint.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')];
+    expect(items.map((i) => i.textContent)).toEqual(['Select duplicates', 'Select with filter…']);
+    expect(items[0]!.disabled).toBe(true);
+    act(() => items[1]!.click());
+    expect(mountPoint.querySelector('[role="menu"]')).toBeNull();
+
+    const dialog = mountPoint.querySelector('[role="dialog"]')!;
+    const input = dialog.querySelector<HTMLInputElement>('input[type="text"]')!;
+    const setValue = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!;
+    act(() => {
+      setValue.call(input, 'video 2');
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    act(() => button('Select').click());
+    expect(mountPoint.textContent).toContain('1 selected');
+
+    act(() => dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
+    expect(mountPoint.querySelector('[role="dialog"]')).toBeNull();
+  });
 });

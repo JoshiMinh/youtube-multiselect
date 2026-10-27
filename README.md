@@ -13,6 +13,13 @@ Chrome and Edge; a Firefox build is produced but not yet tested.
 - **Select loaded** / **Clear**, with a small toolbar showing the count
 - **Load all**: scrolls the playlist until every entry is loaded, with progress and Cancel,
   then returns you to where you were
+- **⋮ menu**: *Select with filter…* (title or channel text, optional case-sensitive) and
+  *Select duplicates* (keeps the first copy; only offered when every copy has a stable
+  per-occurrence ID). Both act on loaded entries, so use Load all first for a full list
+- **Keyboard** (with a row checkbox focused): ↑/↓ move between rows, Home/End jump to the
+  first/last loaded row, Ctrl+←/→ jump to the previous/next selected row, Space toggles
+  (Shift+Space extends a range). Ctrl/Cmd+A selects all loaded entries, or clears when they
+  all are selected; it works anywhere on the page except in text fields
 - Selection survives more rows loading as you scroll
 - Handles YouTube's in-page navigation: no duplicate controls, no stale selection
 - Duplicate videos in one playlist are separate entries (see *Limitations*)
