@@ -11,6 +11,7 @@
       { default: !1, id: "sortPlaylistNames" },
       { default: !1, id: "noRemovalConfirmation" },
       { default: !1, id: "findDuplicatesBackwards" },
+      { default: !0, id: "openOptionsOnUpdate" },
       {
         default: "center",
         id: "positioning",

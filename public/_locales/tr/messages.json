@@ -26,9 +26,6 @@
    "callout3": {
       "message": "Burada işlem çubuğunu tekrar kapatabilirsiniz."
    },
-   "callout4": {
-      "message": "Bu uzantıyı beğendiyseniz, küçük bir bağış için minnettar olurum."
-   },
    "callout5": {
       "message": "Burada kaç tane video seçtiğinizi görebilirsiniz."
    },
@@ -79,9 +76,6 @@
    },
    "deselectAllVideos": {
       "message": "Tüm videoların seçimini kaldır"
-   },
-   "donate": {
-      "message": "Bağış yapmak"
    },
    "downloadSelection": {
       "message": "Seçimi dosyaya kaydet"

@@ -26,9 +26,6 @@
    "callout3": {
       "message": "Tutaj możesz ponownie zamknąć pasek akcji."
    },
-   "callout4": {
-      "message": "Jeśli podoba Ci się to rozszerzenie, będę wdzięczny za niewielką darowiznę."
-   },
    "callout5": {
       "message": "Tutaj możesz zobaczyć, ile filmów wybrałeś."
    },
@@ -79,9 +76,6 @@
    },
    "deselectAllVideos": {
       "message": "Odznacz wszystkie filmy"
-   },
-   "donate": {
-      "message": "Podarować"
    },
    "downloadSelection": {
       "message": "Zapisz wybór do pliku"

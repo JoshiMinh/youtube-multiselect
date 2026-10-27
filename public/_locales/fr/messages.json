@@ -26,9 +26,6 @@
    "callout3": {
       "message": "Ici, vous pouvez refermer la barre d'action."
    },
-   "callout4": {
-      "message": "Si vous aimez cette extension, j'apprécierais un petit don."
-   },
    "callout5": {
       "message": "Ici, vous pouvez voir combien de vidéos vous avez sélectionnées."
    },
@@ -79,9 +76,6 @@
    },
    "deselectAllVideos": {
       "message": "Désélectionner toutes les vidéos"
-   },
-   "donate": {
-      "message": "Donner"
    },
    "downloadSelection": {
       "message": "Enregistrer la sélection dans un fichier"

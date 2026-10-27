@@ -26,9 +26,6 @@
    "callout3": {
       "message": "ここで、アクション バーを再び閉じることができます。"
    },
-   "callout4": {
-      "message": "この拡張機能が気に入ったら、少額の寄付をお願いします。"
-   },
    "callout5": {
       "message": "ここでは、選択したビデオの数を確認できます。"
    },
@@ -79,9 +76,6 @@
    },
    "deselectAllVideos": {
       "message": "すべての動画の選択を解除"
-   },
-   "donate": {
-      "message": "寄付"
    },
    "downloadSelection": {
       "message": "選択範囲をファイルに保存"

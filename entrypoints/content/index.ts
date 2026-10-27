@@ -18,9 +18,9 @@ const PAGE_PERSISTED = new Set(['blacklisted', 'callout', 'counts', 'handle', 'b
 
 const MESSAGE_KEYS = [
   'addToPlaylist', 'addToQueue', 'addToWatchLater', 'addVideosFromFile',
-  'callout1', 'callout2', 'callout3', 'callout4', 'callout5', 'callout6', 'callout7', 'callout8',
+  'callout1', 'callout2', 'callout3', 'callout5', 'callout6', 'callout7', 'callout8',
   'cancel', 'caseSensitive', 'channelName', 'chooseOutputFormat', 'clickToClose', 'close',
-  'confirmRemoveContent', 'copy', 'cut', 'deselectAllVideos', 'donate', 'downloadSelection',
+  'confirmRemoveContent', 'copy', 'cut', 'deselectAllVideos','downloadSelection',
   'extensionName', 'filterHelpTooltip', 'invalidData', 'invalidFilter', 'keys',
   'loadEntirePlaylist', 'loadingEntirePlaylist', 'localeDir', 'moveAfter', 'moveToBottom',
   'moveToTop', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',

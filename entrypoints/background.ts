@@ -44,7 +44,8 @@ export default defineBackground(() => {
           await browser.storage.local.remove('actionBarLeft');
         }
       }
-      void browser.runtime.openOptionsPage();
+      const { openOptionsOnUpdate = true } = await browser.storage.local.get('openOptionsOnUpdate');
+      if (openOptionsOnUpdate) void browser.runtime.openOptionsPage();
     }
   });
 

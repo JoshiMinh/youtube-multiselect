@@ -10,8 +10,6 @@
     s = "msfy",
     d = s + "-inner-message",
     l = s + "-outer-message",
-    p = s + "-donate-button-" + c,
-    u = s + "-donate-icon-" + c,
     f = s + "-penalty-icon-" + c,
     h = s + "-wrapper-" + c,
     m = s + "-dialog-" + c,
@@ -76,7 +74,13 @@
     Y = () => !!N(),
     H = (t, e) =>
       t.playlistId ? (t[e] = t.videos?.[0]?.childVideoRenderer?.[e]) : t[e],
-    LK = "yt-lockup-view-model",
+    // A Short is rendered as -v2 wrapping the plain element; only the outer one gets a checkbox.
+    LKN = [
+      "yt-lockup-view-model",
+      "ytm-shorts-lockup-view-model-v2",
+      "ytm-shorts-lockup-view-model:not(ytm-shorts-lockup-view-model-v2 > ytm-shorts-lockup-view-model)",
+    ],
+    LK = LKN.join(", "),
     lkId = (r) => {
       const u = r.querySelector('a[href*="/watch?v="], a[href^="/shorts/"]')?.getAttribute("href");
       return (u?.match(/[?&]v=([\w-]{11})/) || u?.match(/^\/shorts\/([\w-]{11})/))?.[1];
@@ -86,6 +90,9 @@
         pct = parseFloat(r.querySelector('[class*="WatchedProgressBarSegment"]')?.style.width);
       return {
         videoId: lkId(r),
+        get setVideoId() {
+          return svid(lkId(r));
+        },
         isPlayable: true,
         title: runs("h3"),
         shortBylineText: runs("yt-content-metadata-view-model a, yt-content-metadata-view-model span"),
@@ -103,8 +110,11 @@
         },
       }),
     j = (t) => {
-      const r = t?.parentElement?.parentElement || t?.__dataHost?.__dataHost;
-      return r?.localName === LK ? lk(r) : r;
+      const r =
+        t?.parentElement?.parentElement ||
+        t?.__dataHost?.__dataHost ||
+        t?.getRootNode?.()?.host?.parentElement;
+      return r?.matches?.(LK) ? lk(r) : r;
     },
     F = (t) => H(j(t).data, "videoId"),
     U = (t) => H(j(t).data, "setVideoId"),
@@ -114,8 +124,19 @@
     Q = () =>
       q()?.header?.playlistHeaderRenderer ??
       e.querySelector(b + '[page-subtype="playlist"] ytd-playlist-video-list-renderer')?.data,
-    J = () => Q()?.playlistId,
-    X = () => Q()?.isEditable || D(),
+    // Playlist pages now list lockupViewModel items instead of playlistVideoListRenderer.
+    PL = () =>
+      q()?.contents?.twoColumnBrowseResultsRenderer?.tabs?.[0]?.tabRenderer?.content?.sectionListRenderer
+        ?.contents?.[0]?.itemSectionRenderer?.contents,
+    svid = (id) => {
+      const item = id && PL()?.find?.((x) => x.lockupViewModel?.contentId === id);
+      return item ? JSON.stringify(item).match(/"setVideoId":"([^"]+)"/)?.[1] : void 0;
+    },
+    J = () => Q()?.playlistId ?? (R() ? new URLSearchParams(t.location.search).get("list") : void 0),
+    X = () =>
+      Q()?.isEditable ||
+      D() ||
+      (R() && ("WL" === J() || JSON.stringify(PL()?.[0]?.lockupViewModel ?? "").includes('"setVideoId"'))),
     W = () => "LL" === J(),
     Z = Y,
     K = () => V.o && !D() && X(),
@@ -124,16 +145,8 @@
       `<yt-icon-button id="${t}"><yt-icon icon="${e}"></yt-icon></yt-icon-button>`,
     nt = (t, e) =>
       `<tp-yt-paper-tooltip for="${t}" position="top">${e}</tp-yt-paper-tooltip>`,
-    ot = (t = !1, e = 24) => {
-      const n = t ? "currentColor" : "#065fd4";
-      return `<svg viewBox="0 0 24 24" style="width: ${e}px; height: ${e}px">${`<path d="M2,4H0v18c0,1.1 0.9,2 2,2H20V22H2Z" fill="${n}"/>`}${
-        t
-          ? `<path d="M22,18H6V2H22M22,0H6C4.9,0 4,0.9 4,2v16c0,1.1 0.9,2 2,2h16c1.1,0 2,-0.9 2,-2V2C24,0.9 23.1,0 22,0Z" fill="${n}"/>`
-          : `<path d="M22,0H6C4.9,0 4,0.9 4,2v16c0,1.1 0.9,2 2,2h16c1.1,0 2,-0.9 2,-2V2C24,0.9 23.1,0 22,0Z" fill="${n}"/>`
-      }${`<path d="M12,11 9,8 7,10 12,15 21,6 19,4Z" fill="${
-        t ? "currentColor" : "#ffffff"
-      }"/>`}</svg>`;
-    },
+    ot = (t = !1, e = 24) =>
+      `<svg viewBox="0 0 128 128" style="width: ${e}px; height: ${e}px"><rect width="128" height="128" rx="28" fill="#212121"/><rect x="16" y="28" width="96" height="62" rx="14" fill="#e62117"/><path d="M54 46v26l24-13z" fill="#fff" stroke="#fff" stroke-width="6" stroke-linejoin="round"/><circle cx="94" cy="92" r="20" fill="#3ea6ff" stroke="#212121" stroke-width="6"/><path d="M85 92l7 7 12-13" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
     it = (t) => (t.preventDefault(), t.stopPropagation()),
     rt = (e, n = d, o = t) => o.dispatchEvent(new CustomEvent(n, e)),
     at = (t, e) => rt({ detail: JSON.stringify({ type: t, value: e }) }),
@@ -227,14 +240,36 @@
           },
           r = { playlistId: e, actions: n.map((e) => ({ [o]: e, action: t })) };
         return (
-          "addedVideoId" !== o && (r.params = "CAFAAQ%3D%3D"),
+          "setVideoId" === o && (r.params = "CAFAAQ%3D%3D"),
           { commandMetadata: i, playlistEditEndpoint: r }
         );
       }
       return {
-        p: (t, e = n) => e.resolveCommand(t),
-        u: (t) => n.handleServiceRequest_(n, t),
-        h: (t) => n.sendServiceAjax_(n, t),
+        p(t, e = n) {
+          const edit = t?.playlistEditEndpoint;
+          if (!edit) return e.resolveCommand(t);
+          if (!edit.actions?.length) return;
+          // resolveCommand no longer performs playlist edits, so send them directly.
+          const { clientActions, ...request } = edit;
+          const done = () => (
+              clientActions &&
+                n.resolveCommand({
+                  signalServiceEndpoint: { signal: "CLIENT_SIGNAL", actions: clientActions },
+                }),
+              this.$()
+            ),
+            fail = (err) => {
+              console.warn("[multi-select] Playlist edit failed:", err, JSON.stringify(request));
+              Kt("👎   " + (err?.message || L.messages.invalidData));
+            };
+          return serviceRequest({ playlistEditEndpoint: request }).then(done, (err) => {
+            const { clientActions: _, ...alt } = t.fallback?.playlistEditEndpoint ?? {};
+            if (!alt.actions) return fail(err);
+            console.warn("[multi-select] Retrying removal by video id:", err);
+            return serviceRequest({ playlistEditEndpoint: alt }).then(done, fail);
+          });
+        },
+        h: (t) => serviceRequest(t),
         m(t, e = null, o = !0, i = n) {
           if (!e || void 0 !== e[0]) {
             const n = {
@@ -316,8 +351,10 @@
           },
           O(t) {
             const e = this.M;
-            (z.counts.cut += e.length), t && (V.t = this.L);
+            if ((z.counts.cut += e.length), t && (V.t = this.L), e.some((t) => !t))
+              return i("ACTION_REMOVE_VIDEO_BY_VIDEO_ID", this.A, this.L, "removedVideoId");
             const n = i("ACTION_REMOVE_VIDEO", this.A, e);
+            n.fallback = i("ACTION_REMOVE_VIDEO_BY_VIDEO_ID", this.A, this.L, "removedVideoId");
             return (
               (n.playlistEditEndpoint.clientActions = [
                 { playlistRemoveVideosAction: { setVideoIds: [...e] } },
@@ -410,7 +447,7 @@
           const t = et(I, "close") + nt(I, L.messages.close),
             i = `<header>${`<span id="title">${L.messages.loadingEntirePlaylist}</span>`}${t}</header>`;
           (o.innerHTML = `${i}<div></div>`),
-            o.querySelector("#" + I).addEventListener("tap", () => (n = !0)),
+            o.querySelector("#" + I).addEventListener("click", () => (n = !0)),
             e.body.appendChild(o);
         }
         const i = Math.min(100, Math.round(100 * t)) + "%";
@@ -424,9 +461,10 @@
       const i = (t) =>
           t?.contents?.twoColumnBrowseResultsRenderer?.tabs?.[0]?.tabRenderer
             ?.content?.sectionListRenderer?.contents?.[0]?.itemSectionRenderer
-            ?.contents?.[0]?.playlistVideoListRenderer,
+            ?.contents?.[0]?.playlistVideoListRenderer ?? { contents: PL() },
         r = (t) =>
-          t?.[t.length - 1]?.continuationItemRenderer?.continuationEndpoint;
+          t?.[t.length - 1]?.continuationItemRenderer?.continuationEndpoint ??
+          t?.[t.length - 1]?.continuationItemViewModel?.continuationCommand?.innertubeCommand;
       async function a() {
         t = !0;
         const e = q(),
@@ -437,7 +475,8 @@
                 const e = +t.text?.replace(/[. , ]/g, "");
                 if (!isNaN(e)) return e;
               }
-            return 5e3;
+            const n = JSON.stringify(t?.header ?? "").match(/"(\d[\d.,]*) videos?"/i)?.[1];
+            return n ? +n.replace(/[.,]/g, "") : 5e3;
           })(e),
           c = i(e);
         let s = c?.contents,
@@ -445,13 +484,15 @@
           l = (s?.length || 0) - (d ? 1 : 0);
         const p = d && o(l / a),
           u = location.href;
+        // Scrolling to the end lets YouTube fetch and render the next page itself.
         for (; !n && d && location.href === u; ) {
-          const t = await bt.h(d);
-          (s =
-            t?.actions?.[0]?.appendContinuationItemsAction?.continuationItems),
-            (d = r(s)),
-            (l += (s?.length || 0) - (d ? 1 : 0)),
-            o(d ? l / a : 1);
+          const count = () => document.querySelectorAll(LK).length,
+            before = count();
+          document.documentElement.scrollTop = document.documentElement.scrollHeight;
+          for (let tries = 0; tries < 40 && count() === before; tries++)
+            await new Promise((resolve) => setTimeout(resolve, 250));
+          if (count() === before) break;
+          (s = i(q())?.contents), (d = r(s)), (l = (s?.length || 0) - (d ? 1 : 0)), o(d ? l / a : 1);
         }
         !(function (e) {
           e
@@ -599,7 +640,7 @@
       ];
       function f(t) {
         t.stopPropagation();
-        const e = t.target.id;
+        const e = t.target.closest?.(`.${y} > div`)?.id;
         if (e) {
           const t = u.find((t) => t.id === e);
           t && (gt.et(), t.handler() && lt());
@@ -672,18 +713,18 @@
                   (i = [...o.querySelectorAll(`.${y} > div`)]);
               })(_, h, x),
               e.addEventListener("keydown", m, !0),
-              o.addEventListener("tap", f, !0),
+              o.addEventListener("click", f, !0),
               o.addEventListener("contextmenu", it, !0),
-              t.addEventListener("tap", b),
+              setTimeout(() => o && t.addEventListener("click", b)),
               t.addEventListener("resize", g, !0));
           }
         },
         et() {
           o &&
             (e.removeEventListener("keydown", m, !0),
-            o.removeEventListener("tap", f, !0),
+            o.removeEventListener("click", f, !0),
             o.removeEventListener("contextmenu", it, !0),
-            t.removeEventListener("tap", b),
+            t.removeEventListener("click", b),
             t.removeEventListener("resize", g, !0),
             o.remove(),
             (o = i = null));
@@ -708,8 +749,8 @@
               })());
             const n = o.querySelector("button#cancel"),
               i = o.querySelector("button#submit");
-            n.addEventListener("tap", (t) => a(!1)),
-              i.addEventListener("tap", (t) => a(!0)),
+            n.addEventListener("click", (t) => a(!1)),
+              i.addEventListener("click", (t) => a(!0)),
               (r = (t) => {
                 switch (t.key) {
                   case "Escape":
@@ -754,10 +795,10 @@
       const o = (o) => {
         if (o) {
           (n = e.createElement("div")), (n.id = t);
-          const i = ot(z.outlineIcon),
+          const i = `<svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M3.5 5.5l1.5 1.5l2.5-2.5M3.5 11.5l1.5 1.5l2.5-2.5M3.5 17.5l1.5 1.5l2.5-2.5M11 6h9M11 12h9M11 18h9"/></svg>`,
             r = L.messages.extensionName;
           (n.innerHTML = `<yt-icon-button id="button">${i}</yt-icon-button><tp-yt-paper-tooltip>${r}</tp-yt-paper-tooltip>`),
-            n.firstElementChild.addEventListener("tap", (t) => Et(), !0),
+            n.firstElementChild.addEventListener("click", (t) => Et(), !0),
             o.insertBefore(n, o.firstElementChild);
         }
       };
@@ -822,17 +863,6 @@
             tooltip: () => L.messages.close,
             html() {
               return et(this.id, this.icon) + nt(this.id, L.messages.close);
-            },
-          },
-          {
-            html() {
-              const t = `<yt-icon id="${u}" icon="${i}-heart"></yt-icon>`;
-              return `${(function () {
-                const t = n,
-                  e = (t, e) =>
-                    `<input type="hidden" name="${t}" value="${e}">`;
-                return ``;
-              })()}${t}`;
             },
           },
           {
@@ -916,13 +946,11 @@
                 e.body.appendChild(r),
                 h.forEach((t) => (t.node = r.querySelector("#" + t.id))),
                 m(),
-                $(),
-                mt(e.querySelector(`#${u}`)),
-                mt(e.querySelector(`#${p}`));
+                $();
             })(),
             r.addEventListener("contextmenu", it, !0),
             h.forEach(
-              (t) => t.handler && t.node.addEventListener("tap", t.handler, !0)
+              (t) => t.handler && t.node.addEventListener("click", t.handler, !0)
             ),
             b());
         },
@@ -931,7 +959,7 @@
             (r.removeEventListener("contextmenu", it, !0),
             h.forEach(
               (t) =>
-                t.handler && t.node.removeEventListener("tap", t.handler, !0)
+                t.handler && t.node.removeEventListener("click", t.handler, !0)
             ),
             r.remove(),
             (r = null));
@@ -1120,13 +1148,15 @@
           `#${kt.dt} { display: block; }`,
           `${h}, #index.ytd-playlist-video-renderer { display: flex; }`,
           `${h}:hover { background-color: var(--yt-spec-10-percent-layer); }`,
-          `#${vt.dt} > #button { border-radius: 50%; background-color: cyan; }`,
-          `#${vt.dt} > #button:hover { background-color: rgb(0, 204, 204); }`,
-          `#${vt.dt} > #button > button:focus { border-radius: 50%; background-color: rgb(191, 255, 255); }`,
+          `#${vt.dt} > #button { border-radius: 50%; background-color: var(--yt-spec-10-percent-layer); color: var(--yt-spec-call-to-action, #3ea6ff); }`,
+          `#${vt.dt} > #button:hover { background-color: var(--${s}-spec-20-percent-layer); }`,
+          `#${vt.dt} > #button > button:focus { border-radius: 50%; background-color: var(--${s}-spec-20-percent-layer); }`,
           "ytd-playlist-video-renderer { position: relative; }",
           "ytd-radio-renderer { pointer-events: none; }",
-          `${LK} { position: relative; }`,
-          `${LK} > :not(${h}), ${LK} > :not(${h}) * { pointer-events: none !important; }`,
+          ...LKN.flatMap((n) => [
+            `${n} { position: relative; }`,
+            `${n} > :not(${h}), ${n} > :not(${h}) * { pointer-events: none !important; }`,
+          ]),
           "#content.ytd-playlist-video-renderer, #dismissible.ytd-video-renderer, #dismissible.ytd-rich-grid-media, #dismissible.ytd-grid-video-renderer, #dismissible.ytd-compact-video-renderer { pointer-events: none; }",
           "#menu.ytd-playlist-video-renderer, #menu.ytd-video-renderer, #menu.ytd-rich-grid-media, #menu.ytd-grid-video-renderer, #menu.ytd-compact-video-renderer, #menu.ytd-reel-shelf-renderer { pointer-events: none; opacity: 0; }",
           "#reorder.ytd-playlist-video-renderer, #mouseover-overlay.ytd-thumbnail, #hover-overlays.ytd-thumbnail { display: none; }",
@@ -1197,13 +1227,13 @@
         },
         a = (n, i) => {
           t[n] = i;
-          const r = i.content?.lastElementChild;
+          const r = i?.content?.lastElementChild;
           r && r.insertAdjacentHTML("afterend", o),
             ((t) => {
               const n = e.querySelectorAll(t);
               n.length &&
                 (n.length,
-                n.forEach((t) => t.insertAdjacentHTML("beforeend", o)));
+                n.forEach((t) => t.querySelector(":scope > " + h) || t.insertAdjacentHTML("beforeend", o)));
             })(n);
         };
       return {
@@ -1242,14 +1272,15 @@
           n[t] && (Tt.st(t), delete n[t]);
         };
       let r, a;
-      // yt-lockup-view-model is not a Polymer element, so its wrappers are inserted directly.
+      // Lockups are not Polymer elements, and YouTube's Polymer renderers no longer expose their
+      // templates, so wrappers are inserted directly into whatever is on the page.
       const c = () => {
         a = 0;
         Tt.ct();
-        e.querySelectorAll(LK).forEach((t) => {
-          !t.querySelector(":scope > " + h) &&
-            lkId(t) &&
-            t.insertAdjacentHTML("beforeend", `<${h}></${h}>`);
+        e.querySelectorAll(`${LK}, ${t.join(", ")}`).forEach((n) => {
+          !n.querySelector(":scope > " + h) &&
+            (n.matches(LK) ? lkId(n) : !0) &&
+            n.insertAdjacentHTML("beforeend", `<${h}></${h}>`);
         });
       };
       return {
@@ -1275,15 +1306,92 @@
       };
     })();
   function At() {
-    const t = j(N());
-    if (t && t.resolveCommand) {
+    if (G().length) {
       const e = bt.T.C;
-      return t.resolveCommand(e), ct(), !z.preserveSelection;
+      return bt.p(e), ct(), !z.preserveSelection;
     }
   }
+  async function innertube(path, payload) {
+    const cfg = t.ytcfg,
+      origin = location.origin,
+      cookie = (n) => (e.cookie.match(new RegExp(`(?:^|;\\s*)${n}=([^;]+)`)) || [])[1],
+      sapisid = cookie("SAPISID") || cookie("__Secure-3PAPISID");
+    if (!cfg || !sapisid)
+      throw new Error(`missing session data (ytcfg: ${!!cfg}, SAPISID: ${!!sapisid})`);
+    const ts = Math.floor(Date.now() / 1e3),
+      sha1 = async (s) =>
+        [...new Uint8Array(await crypto.subtle.digest("SHA-1", new TextEncoder().encode(s)))]
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join(""),
+      auth = (
+        await Promise.all(
+          [
+            ["SAPISIDHASH", sapisid],
+            ["SAPISID1PHASH", cookie("__Secure-1PAPISID")],
+            ["SAPISID3PHASH", cookie("__Secure-3PAPISID")],
+          ]
+            .filter(([, v]) => v)
+            .map(async ([n, v]) => `${n} ${ts}_${await sha1(`${ts} ${v} ${origin}`)}`)
+        )
+      ).join(" "),
+      context = cfg.get("INNERTUBE_CONTEXT"),
+      res = await fetch(
+        `${path}?key=${cfg.get("INNERTUBE_API_KEY")}&prettyPrint=false`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "content-type": "application/json",
+            authorization: auth,
+            "x-goog-authuser": String(cfg.get("SESSION_INDEX") ?? 0),
+            "x-origin": origin,
+            "x-youtube-client-name": String(cfg.get("INNERTUBE_CONTEXT_CLIENT_NAME") ?? 1),
+            "x-youtube-client-version": cfg.get("INNERTUBE_CONTEXT_CLIENT_VERSION") ?? context?.client?.clientVersion,
+          },
+          body: JSON.stringify({ context, ...payload }),
+        }
+      ),
+      body = await res.json().catch(() => ({}));
+    if (!res.ok || body.error || (body.status && "STATUS_SUCCEEDED" !== body.status))
+      throw new Error(`HTTP ${res.status}: ${JSON.stringify(body.error || body.status || body).slice(0, 300)}`);
+    return body;
+  }
+  // Replaces the removed ytd-app.sendServiceAjax_ for the endpoints this extension builds.
+  async function serviceRequest(endpoint) {
+    const cont = endpoint?.continuationCommand,
+      edit = endpoint?.playlistEditEndpoint;
+    if (cont)
+      return innertube(
+        endpoint.commandMetadata?.webCommandMetadata?.apiUrl || "/youtubei/v1/browse",
+        { continuation: cont.token }
+      ).then((r) => ({ ...r, actions: r.onResponseReceivedActions ?? r.actions }));
+    if (edit) return innertube("/youtubei/v1/browse/edit_playlist", edit);
+    throw new Error("unsupported service endpoint");
+  }
+  function watchLaterRequest(ids) {
+    if (!ids.length) return Promise.reject(new Error("no videos selected"));
+    return innertube("/youtubei/v1/browse/edit_playlist", {
+      playlistId: "WL",
+      actions: ids.map((id) => ({ addedVideoId: id, action: o })),
+    });
+  }
   function zt() {
-    const t = bt.T.V;
-    return bt.p(t), ct(), !z.preserveSelection;
+    const n = bt.T.V,
+      ids = G();
+    return (
+      watchLaterRequest(ids)
+        .then((res) => {
+          console.info("[multi-select] Watch later saved:", ids, res);
+          Kt(`✔️   ${L.messages.addToWatchLater} (${ids.length})`);
+        })
+        .catch((err) => {
+          console.warn("[multi-select] Watch later request failed, falling back:", err);
+          Kt("👎   " + L.messages.addToWatchLater);
+          bt.p(n);
+        }),
+      ct(),
+      !z.preserveSelection
+    );
   }
   function Lt() {
     const t = bt.T.D;
@@ -1301,9 +1409,11 @@
     const t = G();
     if (t.length) {
       M = !0;
-      const e = { addToPlaylistServiceEndpoint: { videoId: t[0] } };
-      bt.u(e)?.ajaxPromise?.then((e) => {
-        const n = e?.data?.contents?.find?.(
+      innertube("/youtubei/v1/playlist/get_add_to_playlist", {
+        videoIds: [t[0]],
+        excludeWatchLater: !1,
+      }).then((e) => {
+        const n = e?.contents?.find?.(
           (t) => t.addToPlaylistRenderer
         )?.addToPlaylistRenderer;
         if (n) {
@@ -1335,6 +1445,9 @@
           };
           bt.m("yt-open-popup-action", [c, bt.v]);
         }
+      }).catch((err) => {
+        M = !1;
+        console.warn("[multi-select] Save to playlist failed:", err);
       });
     }
   }
@@ -1492,8 +1605,8 @@
             })());
           const n = o.querySelector("button#cancel"),
             i = o.querySelector("button#submit");
-          n.addEventListener("tap", (t) => d(-1)),
-            i.addEventListener("tap", (t) => d(a())),
+          n.addEventListener("click", (t) => d(-1)),
+            i.addEventListener("click", (t) => d(a())),
             (r = (t) => {
               switch ((t.key, t.key)) {
                 case "Escape":
@@ -1664,7 +1777,7 @@
           if (n) {
             const t = 600,
               e = "24px",
-              o = `0px 0px 10px 5px ${_}`,
+              o = "0 4px 32px 0 rgba(0, 0, 0, 0.3)",
               i = `var(--${s}-popup-layer)`,
               r = "var(--paper-listbox-color, var(--primary-text-color))",
               a = "var(--yt-spec-10-percent-layer)",
@@ -1680,15 +1793,10 @@
               M = 52,
               C = M / 2,
               O = [
-                `html { --${s}-spec-20-percent-layer: rgba(0, 0, 0, 0.2); --${s}-popup-layer: rgb(247, 247, 247); }`,
-                `html[dark] { --${s}-spec-20-percent-layer: rgba(255, 255, 255, 0.2); --${s}-popup-layer: rgb(40, 40, 40); }`,
-                `@keyframes ${A} { 0%, 50% { transform: scale(1); } 25% { transform: scale(2); } }`,
-                `#${u} { color: red; pointer-events: none; animation: ${A} linear 1s infinite; }`,
+                `html { --${s}-spec-20-percent-layer: rgba(0, 0, 0, 0.2); --${s}-popup-layer: #fff; }`,
+                `html[dark] { --${s}-spec-20-percent-layer: rgba(255, 255, 255, 0.2); --${s}-popup-layer: #282828; }`,
                 `@keyframes ${z} { 0%, 50% { transform: scale(1); } 25% { transform: scale(4); } }`,
                 `#${f} { font-size: 64px; position: fixed; top: 50vh; left: 50vw; z-index: 10000; pointer-events: none; animation: ${z} linear 1s infinite; }`,
-                `#${p}:hover + #${u} { animation-duration: 0.4s; }`,
-                `#${p} > button { background-color: #ffc24c; color: black; font-size: 16px; font-weight: 700; height: 35px; padding: 0px 20px; border-radius: 26px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration-line: none; }`,
-                `#${p} > button:hover { box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.9); }`,
                 `.${m} { font-size: 14px; border-radius: ${k}; border: ${d}; box-shadow: ${o}; background-color: ${i}; color: ${r}; padding: 0; user-select: none; }`,
                 `.${m} > form > header { margin: 24px; font-size: 16px; letter-spacing: 0.1px; }`,
                 `.${m} > form > section { margin: 24px; color: var(--yt-spec-text-secondary, #aaa); letter-spacing: 0.2px; }`,
@@ -1716,18 +1824,18 @@
                 `#${T} > header { display: flex; align-items: center; padding-bottom: 8px; }`,
                 `#${T} > header > #${I} { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; margin-left: 20px; }`,
                 `#${T} > header > #${I}:hover { background-color: ${a}; border-radius: 50%; }`,
-                `#${T} > div { padding: 8px 0; background-color: limegreen; color: #fff; text-align: center; }`,
+                `#${T} > div { padding: 8px 0; background-color: var(--yt-spec-call-to-action, #065fd4); color: #fff; text-align: center; border-radius: 8px; }`,
                 `@keyframes ${
                   E + "-fade-in-out"
                 } { 0%, 100% { bottom: 100px; opacity: 0; } 20%, 80% { bottom: 130px; opacity: 1; } }`,
                 `#${E} { font-size: 18px; position: fixed; bottom: 130px; left: 50vw; transform: translateX(-50%); z-index: 10000; box-shadow: ${o}; background-color: ${i}; color: ${r}; text-align: center; white-space: pre; border-radius: ${k}; border: ${d}; padding: 15px 20px; }`,
                 `#${E}.show { animation: ${E + "-fade-in-out"} 4000ms; }`,
-                `#${b} { padding: 0 20px 15px; opacity: 0.9; font-size: 16px; position: fixed; z-index: 2029; box-shadow: ${o}; background-color: ${i}; color: ${r}; text-align: center; border-radius: ${k}; border: ${d}; }`,
+                `#${b} { padding: 0 16px 12px; font-family: Roboto, Arial, sans-serif; font-size: 14px; position: fixed; z-index: 2029; box-shadow: ${o}; background-color: ${i}; color: ${r}; text-align: center; border-radius: ${k}; border: ${d}; }`,
                 `#${b}[position=center] { bottom: 130px; left: 50vw; transform: translateX(-50%); }`,
                 `#${b}[position=left] { bottom: 130px; left: 50px; }`,
                 `#${b}[position=custom] { left: clamp(0px, var(--x), calc(100vw - var(--right-offset))); top: clamp(1px, var(--y), calc(100vh - var(--bottom-offset))); }`,
-                `#${b} > #drag-handle { visibility: hidden; position: relative; cursor: move; margin: 0 auto; padding: 4px 0; width: 50%; }`,
-                `#${b} > #drag-handle > hr { border-style: inset; border-width: 1px; }`,
+                `#${b} > #drag-handle { visibility: hidden; position: relative; cursor: move; margin: 0 auto; padding: 6px 0; width: 50%; }`,
+                `#${b} > #drag-handle > hr { border: 0; height: 2px; border-radius: 1px; background-color: ${a}; }`,
                 `#${b} > #drag-handle > hr:first-child { margin: 0; }`,
                 `#${b} > #drag-handle > hr:last-child { margin: 3px 0 0; }`,
                 `#${b}[position=custom] > #drag-handle { visibility: visible; }`,
@@ -1748,28 +1856,28 @@
                 `#${b} > #content > footer > div > label { cursor: pointer; padding-left: 10px; }`,
                 `#${b} > #content yt-icon-button { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; }`,
                 `#${b} > #content yt-icon-button:hover { background-color: ${a}; border-radius: 50%; }`,
-                `#${w} { display: none; position: fixed; padding: 0 20px 15px; border-radius: ${k}; border: ${d}; box-shadow: ${o}; background-color: ${i}; color: ${r}; opacity: 0.9; font-size: 16px; max-width: ${t}px; z-index: 2030; }`,
+                `#${w} { display: none; position: fixed; padding: 8px; border-radius: ${k}; border: ${d}; box-shadow: ${o}; background-color: ${i}; color: ${r}; font-family: Roboto, Arial, sans-serif; font-size: 14px; max-width: ${t}px; z-index: 2030; }`,
                 `#${w}[position=center] { bottom: 30px; left: 50vw; transform: translateX(-50%); }`,
                 `#${w}[position=left] { bottom: 30px; left: 50px; }`,
                 `#${w}[position=custom] { left: clamp(0px, var(--x), calc(100vw - var(--right-offset))); top: clamp(1px, var(--y), calc(100vh - var(--bottom-offset))); }`,
-                `#${w} > #drag-handle { visibility: hidden; position: relative; cursor: move; margin: 0 auto; padding: 4px 0; width: 50%; }`,
-                `#${w} > #drag-handle > hr { border-style: inset; border-width: 1px; }`,
+                `#${w} > #drag-handle { visibility: hidden; position: absolute; top: 0; left: 50%; transform: translateX(-50%); cursor: move; padding: 3px 12px; width: 24px; }`,
+                `#${w} > #drag-handle > hr { border: 0; height: 2px; border-radius: 1px; background-color: var(--yt-spec-text-secondary, #aaa); }`,
                 `#${w} > #drag-handle > hr:first-child { margin: 0; }`,
-                `#${w} > #drag-handle > hr:last-child { margin: 3px 0 0; }`,
+                `#${w} > #drag-handle > hr:last-child { margin: 2px 0 0; }`,
                 `#${w}[position=custom] > #drag-handle { visibility: visible; }`,
-                `#${w} > #content { display: flex; align-items: center; column-gap: 10px; }`,
-                `#${w} > #content > #selection { width: 100px; text-align: end; pointer-events: none; }`,
-                `#${w} > #content > span { pointer-events: none; }`,
+                `#${w} > #content { display: flex; align-items: center; column-gap: 4px; outline: none; }`,
+                `#${w} > #content > #selection { min-width: 4.5em; margin-left: 12px; text-align: end; white-space: nowrap; pointer-events: none; font-weight: 500; font-variant-numeric: tabular-nums; }`,
+                `#${w} > #content > span { pointer-events: none; margin: 0 12px 0 2px; color: var(--yt-spec-text-secondary, #aaa); }`,
                 `#${w} > #content > yt-icon-button { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; }`,
                 `#${w} > #content > yt-icon-button:hover { background-color: ${a}; border-radius: 50%; }`,
                 `#${w} > #content > yt-icon-button[disabled] { pointer-events: none; cursor: auto; color: var(--paper-icon-button-disabled-text, var(--disabled-text-color)); }`,
                 `.${s}-bar-menu { position: relative; }`,
-                `.${s}-bar-menu > #listbox { position: absolute; left: calc(100% - 50px); bottom: calc(100% + 42px); max-height: calc(100vh - 160px); overflow: auto; }`,
-                `#${w}.right-side > .${s}-bar-menu > #listbox { left: auto; right: 0; }`,
+                `.${s}-bar-menu > #listbox { position: absolute; right: -8px; bottom: calc(100% + 16px); max-height: calc(100vh - 160px); overflow: auto; }`,
+                `#${w}.right-side > .${s}-bar-menu > #listbox { right: -8px; }`,
                 `#${w}.bottom-side > .${s}-bar-menu > #listbox { bottom: auto; }`,
                 `.${s}-context-menu { position: absolute; z-index: 2030; transform: translateX(clamp(5vw, var(--x), calc(100vw - 100% - 40px))) translateY(clamp(5vh, var(--y), calc(100vh - 100% - 30px + var(--scroll-y)))); }`,
                 `.${s}-context-menu > #listbox { max-height: calc(100vh - 100px); overflow: auto; }`,
-                `#listbox.${$} { border-radius: ${k}; border: ${d}; padding: 8px 0px; white-space: nowrap; box-shadow: ${o}; background-color: ${i}; color: ${r}; }`,
+                `#listbox.${$} { border-radius: ${k}; border: ${d}; padding: 8px 0px; font-family: Roboto, Arial, sans-serif; white-space: nowrap; box-shadow: ${o}; background-color: ${i}; color: ${r}; }`,
                 `.${y} > div { cursor: pointer; min-height: 36px; padding: 0 36px 0 16px; font-size: 14px; display: flex; align-items: center; }`,
                 `.${y} > div:focus { background-color: ${a}; outline: 0; }`,
                 `.${y} > div:hover { background-color: ${a}; }`,
@@ -1779,14 +1887,14 @@
                 `@keyframes ${wt.dt} { from { opacity: 1; } to { opacity: 0; transform: scale(2); } }`,
                 `#${wt.dt} { background: ${_}; animation: ${wt.dt} 0.5s linear forwards; position: fixed; left: 50%; top: 50%; width: ${M}px; height: ${M}px; margin-left: -${C}px; margin-top: -${C}px; border-radius: ${C}px; z-index: 2030; pointer-events: none; display: none; }`,
                 `#${wt.dt} #icon { width: 40px; height: 40px; margin: 6px; display: flex; align-items: center; justify-content: center; }`,
-                `${x} { --paper-checkbox-size: 40px; --paper-checkbox-ink-size: 40px; border-radius: ${k}; width: 100%; height: 100%; display: flex; align-items: end; justify-content: end; }`,
-                `${x} > #checkboxContainer { border-bottom-right-radius: ${k}; }`,
-                `${x} > #checkboxContainer > #checkbox { border-bottom-right-radius: ${k}; transition: none; }`,
+                `${x} { --paper-checkbox-size: 24px; --paper-checkbox-ink-size: 24px; --paper-checkbox-unchecked-color: transparent; --paper-checkbox-checked-color: var(--yt-spec-call-to-action, #3ea6ff); --paper-checkbox-checkmark-color: #fff; --paper-checkbox-checked-ink-color: transparent; border-radius: ${k}; width: 100%; height: 100%; display: flex; align-items: flex-start; justify-content: flex-start; }`,
+                `${x} > #checkboxContainer { flex: none; box-sizing: border-box; width: 24px; height: 24px; margin: 8px 0 0 8px; }`,
+                `${x} > #checkboxContainer > #checkbox { box-sizing: border-box; width: 24px; height: 24px; min-width: 24px; min-height: 24px; border-radius: 50%; border-width: 2px; border-color: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); transition: none; }`,
                 `${x} > #checkboxContainer > #checkbox > #checkmark { animation: checkmark-expand 40ms ease-out forwards; }`,
                 `${x} > #checkboxLabel { display: none; }`,
                 `${x}:not([checked]) > #checkboxContainer { display: none; }`,
-                `${x}[checked] { background-color: rgba(62, 166, 255, 0.4); }`,
-                `${x}:focus { outline: cyan solid ${l}px; outline-offset: -${l}px }`,
+                `${x}[checked] { background-color: rgba(62, 166, 255, 0.18); box-shadow: inset 0 0 0 3px var(--yt-spec-call-to-action, #3ea6ff); }`,
+                `${x}:focus { outline: var(--yt-spec-text-primary, #fff) solid 2px; outline-offset: -2px }`,
                 `${h} { border-radius: ${k}; position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; cursor: pointer; display: none; }`,
                 `ytd-grid-video-renderer[is-dismissed] > ${h}, ytd-video-renderer[is-hidden] > ${h}, ytd-video-renderer[is-dismissed] > ${h}, ytd-compact-video-renderer[is-dismissed] > ${h}, ytd-reel-item-renderer[is-dismissed] > ${h} { display: none; }`,
               ],
@@ -1820,12 +1928,11 @@
               t.setAttribute("name", s),
               t.setAttribute("size", "24"),
               (t.style.display = "none");
-            const n = `<g id="${s}-heart"><path d="M16.5 2c-1.74 0-3.41.88-4.5 2.28C10.91 2.88 9.24 2 7.5 2 4.42 2 2 4.64 2 7.99c0 4.12 3.4 7.48 8.55 12.58L12 22l1.45-1.44C18.6 15.47 22 12.11 22 7.99 22 4.64 19.58 2 16.5 2Z"></path></g>`,
-              o = `<g id="${s}-help"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"></path></g>`,
+            const o = `<g id="${s}-help"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"></path></g>`,
               i = `<g id="${s}-info"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></g>`,
               r = `<g id="${s}-select-all"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"></path></g>`,
               a = `<g id="${s}-unselect-all"><path d="M1.79 12l5.58 5.59L5.96 19 .37 13.41 1.79 12zm.45-7.78L12.9 14.89l-1.28 1.28L7.44 12l-1.41 1.41L11.62 19l2.69-2.69 4.89 4.89 1.41-1.41L3.65 2.81 2.24 4.22zm14.9 9.27L23.62 7 22.2 5.59l-6.48 6.48 1.42 1.42zM17.96 7l-1.41-1.41-3.65 3.66 1.41 1.41L17.96 7z"></path></g>`;
-            (t.innerHTML = policy.createHTML(`<svg><defs>${n}${o}${i}${r}${a}</defs></svg>`)),
+            (t.innerHTML = policy.createHTML(`<svg><defs>${o}${i}${r}${a}</defs></svg>`)),
               e.head.appendChild(t);
           }
         },
@@ -1976,7 +2083,7 @@
                                 const e = Vt(),
                                   n = e?.parentElement?.parentElement;
                                 n && n.opened && n.close();
-                              });
+                              }, () => {});
                             }
                           })());
                     break;
@@ -2006,9 +2113,10 @@
                           if (!e.querySelector(`#${t}`))
                             try {
                               const n = [
-                                  `@keyframes ${t}-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } }`,
-                                  `#${t} { top: 15px; left: 20px; padding: 12px; font-size: 15px; position: fixed; display: flex; align-items: center; color: var(--yt-spec-text-primary); background-color: var(--yt-spec-menu-background); border-radius: 12px; box-shadow: ${"0px 0px 10px 5px rgba(255, 0, 0, 0.5)"}; z-index: 10000; animation: ${t}-pulse linear 2s infinite; user-select: none; cursor: pointer; }`,
-                                  `#${t} > #info { margin: 0 10px; }`,
+                                  `#${t} { top: 64px; left: 16px; max-width: 320px; padding: 12px 16px; box-sizing: border-box; position: fixed; display: flex; align-items: center; gap: 12px; font-family: Roboto, Arial, sans-serif; font-size: 14px; line-height: 20px; color: var(--yt-spec-text-primary); background-color: var(--yt-spec-menu-background, #282828); border: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.1)); border-radius: 12px; box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.3); z-index: 10000; user-select: none; cursor: pointer; }`,
+                                  `#${t} > svg, #${t} > img { flex: none; width: 32px; height: 32px; }`,
+                                  `#${t} > #info { margin: 0; color: var(--yt-spec-text-secondary, #aaa); }`,
+                                  `#${t} > #info > p { margin: 0 0 2px; font-weight: 500; color: var(--yt-spec-text-primary); }`,
                                   `#${t}[dir="rtl"] { left: auto; right: 25px; }`,
                                 ],
                                 o = Bt.gt().sheet,
@@ -2022,7 +2130,7 @@
                                 (a.onclick = () => (a.style.display = "none")),
                                 (a.innerHTML = `${ot(
                                   !1,
-                                  48
+                                  32
                                 )}<div id="info"><p>${r.extensionName}</p>${
                                   r.reloadRequired
                                 }</div>`),
@@ -2171,13 +2279,6 @@
             content: () => L.messages.callout3,
             style: f,
             child: `#${s}-close`,
-          },
-          {
-            parent: h,
-            dir: "down",
-            content: () => L.messages.callout4,
-            style: f,
-            child: "#" + p,
           },
           {
             parent: h,
@@ -2356,8 +2457,8 @@
         (a.innerHTML = `<div id="drag-handle"><hr><hr></div><div id="content">${f}<div id="choice">${h}${m}${b}</div>${$}${g}</div>`),
           a
             .querySelector("#content > header > #" + i)
-            .addEventListener("tap", () => t.open(r, "_blank")),
-          a.querySelector("#" + o).addEventListener("tap", l);
+            .addEventListener("click", () => t.open(r, "_blank")),
+          a.querySelector("#" + o).addEventListener("click", l);
         let x = z.filter.title;
         const v = a.querySelector("section > input"),
           w = v.nextElementSibling;
@@ -2440,7 +2541,7 @@
         v.addEventListener("keyup", (t) => "Enter" === t.key && E()),
           a
             .querySelector("#content > section > #done")
-            .addEventListener("tap", E),
+            .addEventListener("click", E),
           e.body.appendChild(a),
           e.activeElement,
           d(),
@@ -2473,6 +2574,20 @@
     };
   })();
   function Kt(t) {
+    try {
+      // YouTube's native toast; the emoji prefix is only meaningful in the fallback below.
+      bt.p({
+        openPopupAction: {
+          popupType: "TOAST",
+          popup: {
+            notificationActionRenderer: {
+              responseText: { simpleText: t.replace(/^[^\p{L}\p{N}]+/u, "") },
+            },
+          },
+        },
+      });
+      return;
+    } catch {}
     const n = e.createElement("div");
     (n.id = E),
       (n.textContent = t),

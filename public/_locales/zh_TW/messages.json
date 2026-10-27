@@ -26,9 +26,6 @@
    "callout3": {
       "message": "在這裡您可以再次關閉操作欄。"
    },
-   "callout4": {
-      "message": "如果您喜歡這個擴展，我將不勝感激。"
-   },
    "callout5": {
       "message": "在這裡您可以看到您選擇了多少個視頻。"
    },
@@ -79,9 +76,6 @@
    },
    "deselectAllVideos": {
       "message": "取消選擇所有視頻"
-   },
-   "donate": {
-      "message": "捐"
    },
    "downloadSelection": {
       "message": "將選擇儲存到文件"

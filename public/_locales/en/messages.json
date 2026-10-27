@@ -26,9 +26,6 @@
    "callout3": {
       "message": "Here you can close the action bar again."
    },
-   "callout4": {
-      "message": "If you like this extension, I would appreciate a small donation."
-   },
    "callout5": {
       "message": "Here you can see how many videos you have selected."
    },
@@ -80,9 +77,6 @@
    "deselectAllVideos": {
       "message": "Deselect all videos"
    },
-   "donate": {
-      "message": "Donate"
-   },
    "downloadSelection": {
       "message": "Save selection to file"
    },
@@ -103,6 +97,9 @@
    },
    "findDuplicatesBackwards": {
       "message": "Find duplicates backwards"
+   },
+   "openOptionsOnUpdate": {
+      "message": "Open this page after an update or reload"
    },
    "hint100": {
       "message": "Generally"
