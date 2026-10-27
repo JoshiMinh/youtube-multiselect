@@ -39,6 +39,11 @@ JSON, text), SPA navigation lifecycle, theme following, identity bridge, test py
 | Watch Later / History | not supported (see below) | the same UI paths the site uses |
 | Policy | API Terms of Service and branding rules | must review YouTube ToS for automated use |
 
+**Decision (accepted for a public release): see [ADR 0001](adr/0001-write-backend.md).** Data
+API v3 for playlists the user owns. Read-only features ship publicly first; writes ship only
+after OAuth verification, the quota audit and a published privacy policy. Watch Later is out
+of scope. Facts in the table above were re-checked on 2026-10-27 and are listed there.
+
 The decision gets recorded as an ADR. The `PlaylistGateway` interface
 (`src/adapters/types.ts`) hides the choice from the operation engine. A hybrid is possible:
 API for normal playlists, web client only where the API cannot work.
