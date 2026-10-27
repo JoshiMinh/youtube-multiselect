@@ -1,23 +1,27 @@
 import { defineConfig } from 'wxt';
 
-// See https://wxt.dev/api/config.html
 export default defineConfig({
-  modules: ['@wxt-dev/module-react'],
   manifest: ({ browser }) => ({
-    name: 'YouTube Multiselect',
-    description: 'Select and export YouTube playlist entries in bulk. Read-only prototype.',
+    name: '__MSG_extensionName__',
+    description: '__MSG_extensionDescription__',
+    default_locale: 'en',
+    author: 'Pollux',
     permissions: ['storage'],
-    // Same scope as the content script (no extra install warning); lets the
-    // popup see whether the active tab is YouTube to explain missing status.
-    host_permissions: ['https://www.youtube.com/*'],
-    web_accessible_resources: [
-      {
-        resources: ['youtube-bridge.js'],
-        matches: ['https://www.youtube.com/*'],
+    icons: { 24: 'icons/24.png', 48: 'icons/48.png', 96: 'icons/96.png', 128: 'icons/128.png' },
+    action: { default_icon: { 24: 'icons/24.png', 48: 'icons/48.png' } },
+    commands: {
+      toggleMultiSelectMode: {
+        description: '__MSG_toggleMultiSelectMode__',
+        suggested_key: { default: 'Ctrl+Q' },
       },
-    ],
+      togglePlaylistGuide: {
+        description: 'Playlist-Guide umschalten',
+        suggested_key: { default: 'Ctrl+I' },
+      },
+    },
+    web_accessible_resources: [{ resources: ['js/polymer.js'], matches: ['https://www.youtube.com/*'] }],
     ...(browser === 'firefox' && {
-      browser_specific_settings: { gecko: { id: 'youtube-multiselect@local' } },
+      browser_specific_settings: { gecko: { id: 'pollux-private@local' } },
     }),
   }),
 });

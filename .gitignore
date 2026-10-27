@@ -1,14 +1,4 @@
 node_modules/
 .output/
 .wxt/
-.cache/
-dist/
-coverage/
-test-results/
-playwright-report/
-web-ext.config.ts
 *.log
-.DS_Store
-Thumbs.db
-.env
-.env.*
