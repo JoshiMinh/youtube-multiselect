@@ -1,4 +1,26 @@
+# Dependencies
 node_modules/
-.output/
+
+# WXT
 .wxt/
+.output/
+stats.html
+stats-*.json
+web-ext.config.ts
+
+# Logs
 *.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Env
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
