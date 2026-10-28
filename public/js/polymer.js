@@ -245,7 +245,7 @@
         );
       }
       return {
-        p(t, e = n) {
+        p(t, e = n, refresh = !0) {
           const edit = t?.playlistEditEndpoint;
           if (!edit) return e.resolveCommand(t);
           if (!edit.actions?.length) return;
@@ -256,7 +256,17 @@
                 n.resolveCommand({
                   signalServiceEndpoint: { signal: "CLIENT_SIGNAL", actions: clientActions },
                 }),
-              this.$()
+              (() => {
+                // Navigating re-renders the playlist and discards the user's state; callers that
+                // update the DOM themselves (moves, removals) pass refresh = false.
+                if (!refresh) return;
+                try {
+                  this.$();
+                } catch (err) {
+                  console.warn("[multi-select] Playlist refresh failed:", err);
+                }
+              })(),
+              !0
             ),
             fail = (err) => {
               console.warn("[multi-select] Playlist edit failed:", err, JSON.stringify(request));
@@ -570,14 +580,14 @@
           handler: Mt,
           icon: "vertical_align_top",
           label: () => L.messages.moveToTop,
-          enabled: () => a && c && !d && !r,
+          enabled: () => a && (c || (W() && bt.T.M.every(Boolean))) && !d && !r,
         },
         {
           id: s + "-action-move-to-bottom",
           handler: Ct,
           icon: "vertical_align_bottom",
           label: () => L.messages.moveToBottom,
-          enabled: () => a && c && !d && !r,
+          enabled: () => a && (c || (W() && bt.T.M.every(Boolean))) && !d && !r,
         },
         {
           id: s + "-action-select-duplicates",
@@ -1393,17 +1403,78 @@
       !z.preserveSelection
     );
   }
+  // YouTube no longer re-renders the list after a move, so mirror the server-side result in the DOM.
+  function rowOf(el) {
+    let r = el;
+    if (!r.matches(LK)) return r;
+    while (r.parentElement && r.parentElement.querySelectorAll(LK).length < 2) r = r.parentElement;
+    return r;
+  }
+  // Same for removals: capture the rows now, drop them once the request has succeeded.
+  function removeRows() {
+    const rows = [...S()].map((b) => b.parentElement.parentElement).filter(Boolean).map(rowOf);
+    return (ok) => ok && rows.forEach((r) => r.remove());
+  }
+  // Re-fetches the playlist and hands it to YouTube's own browse element, which re-renders the list
+  // in place (no navigation, no page load); falls back to a soft navigation.
+  async function softRefresh() {
+    const y = t.scrollY,
+      restore = () => setTimeout(() => t.scrollTo(0, y), 400);
+    try {
+      const list = J(),
+        host = e.querySelector(b + '[page-subtype="playlist"]');
+      if (!list || !host) throw new Error("playlist page not found");
+      host.data = await innertube("/youtubei/v1/browse", { browseId: "VL" + list });
+      console.info("[multi-select] Playlist data refreshed in place");
+    } catch (err) {
+      console.warn("[multi-select] In-place refresh failed, navigating:", err);
+      try {
+        bt.$();
+      } catch (err2) {
+        console.warn("[multi-select] Playlist refresh failed:", err2);
+      }
+    }
+    restore();
+  }
+  function moveRows(mode, anchor) {
+    const isRow = (c) => c.localName === sample?.localName,
+      anchorRow = anchor && rowOf(anchor),
+      rows = [...S()]
+        .map((b) => rowOf(b.parentElement.parentElement))
+        .filter((r, i, all) => r !== anchorRow && all.indexOf(r) === i),
+      sample = rows[0],
+      parent = sample?.parentElement;
+    console.info("[multi-select] move", mode, rows.length, "rows");
+    return (ok) => {
+      console.info("[multi-select] move result:", ok, "parent:", !!parent);
+      if (!ok || !parent) return;
+      const frag = e.createDocumentFragment();
+      frag.append(...rows);
+      const siblings = [...parent.children].filter(isRow);
+      if ("top" === mode) parent.insertBefore(frag, siblings[0] ?? null);
+      else if ("bottom" === mode) parent.insertBefore(frag, siblings.at(-1)?.nextSibling ?? null);
+      else if (anchorRow?.parentElement === parent) parent.insertBefore(frag, anchorRow.nextSibling);
+      else parent.insertBefore(frag, siblings[0] ?? null);
+      softRefresh();
+    };
+  }
   function Lt() {
-    const t = bt.T.D;
-    return bt.p(t), ct(), !0;
+    if (!bt.T.M.every(Boolean)) return Kt("👎   " + L.messages.invalidData), !1;
+    const t = bt.T.D,
+      apply = moveRows("after", $t.B?.parentElement?.parentElement);
+    return bt.p(t, void 0, !1)?.then(apply), ct(), !0;
   }
   function Mt() {
-    const t = bt.T.P;
-    return bt.p(t), ct(), !0;
+    if (!bt.T.M.every(Boolean)) return Kt("👎   " + L.messages.invalidData), !1;
+    const t = bt.T.P,
+      apply = moveRows("top");
+    return bt.p(t, void 0, !1)?.then(apply), ct(), !0;
   }
   function Ct() {
-    const t = bt.T.S;
-    return bt.p(t), ct(), !0;
+    if (!bt.T.M.every(Boolean)) return Kt("👎   " + L.messages.invalidData), !1;
+    const t = bt.T.S,
+      apply = moveRows("bottom");
+    return bt.p(t, void 0, !1)?.then(apply), ct(), !0;
   }
   function Ot() {
     const t = G();
@@ -1564,8 +1635,9 @@
             return (z.counts.cut += e.length), ct(), !0;
           })(t)
         : (function (t) {
-            const e = bt.T.O(t);
-            return bt.p(e), ct(), !0;
+            const e = bt.T.O(t),
+              apply = removeRows();
+            return bt.p(e, void 0, !1)?.then(apply), ct(), !0;
           })(t)) && lt();
   }
   function Yt() {
@@ -2576,16 +2648,20 @@
   function Kt(t) {
     try {
       // YouTube's native toast; the emoji prefix is only meaningful in the fallback below.
-      bt.p({
-        openPopupAction: {
-          popupType: "TOAST",
-          popup: {
-            notificationActionRenderer: {
-              responseText: { simpleText: t.replace(/^[^\p{L}\p{N}]+/u, "") },
+      const text = t.replace(/^[^\p{L}\p{N}]+/u, "");
+      bt.m("yt-open-popup-action", [
+        {
+          openPopupAction: {
+            popupType: "TOAST",
+            popup: {
+              notificationActionRenderer: {
+                responseText: { simpleText: text.length > 120 ? text.slice(0, 117) + "..." : text },
+              },
             },
           },
         },
-      });
+        bt.v,
+      ]);
       return;
     } catch {}
     const n = e.createElement("div");
