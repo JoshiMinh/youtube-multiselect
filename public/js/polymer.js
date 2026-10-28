@@ -138,6 +138,8 @@
       D() ||
       (R() && ("WL" === J() || JSON.stringify(PL()?.[0]?.lockupViewModel ?? "").includes('"setVideoId"'))),
     W = () => "LL" === J(),
+    // Saved Shorts: no setVideoIds and not marked editable, but items can be removed by video id.
+    SS = () => "YS" === J(),
     Z = Y,
     K = () => V.o && !D() && X(),
     tt = (t) => t.shiftKey && !t.ctrlKey && !t.altKey,
@@ -573,21 +575,21 @@
           handler: St,
           icon: "delete",
           label: () => L.messages.removeVideos,
-          enabled: () => a && (c || W()),
+          enabled: () => a && (c || W() || SS()),
         },
         {
           id: s + "-action-move-to-top",
           handler: Mt,
           icon: "vertical_align_top",
           label: () => L.messages.moveToTop,
-          enabled: () => a && (c || (W() && bt.T.M.every(Boolean))) && !d && !r,
+          enabled: () => a && (c || W()) && !d && !r,
         },
         {
           id: s + "-action-move-to-bottom",
           handler: Ct,
           icon: "vertical_align_bottom",
           label: () => L.messages.moveToBottom,
-          enabled: () => a && (c || (W() && bt.T.M.every(Boolean))) && !d && !r,
+          enabled: () => a && c && !d && !r,
         },
         {
           id: s + "-action-select-duplicates",
@@ -637,7 +639,7 @@
           handler: Pt,
           icon: "icons:content-cut",
           label: () => L.messages.cut,
-          enabled: () => a && (c || W()),
+          enabled: () => a && (c || W() || SS()),
         },
         {
           id: s + "-action-paste",
@@ -1132,14 +1134,14 @@
                 case "v":
                   return void (n && K() && (_t(t), Rt()));
                 case "x":
-                  return void (n && Y() && (X() || W()) && (_t(t), St(!0)));
+                  return void (n && Y() && (X() || W() || SS()) && (_t(t), St(!0)));
                 case "Insert":
                   return void (n
                     ? Z() && (_t(t), Dt())
                     : o && K() && (_t(t), Rt()));
                 case "Delete":
                   return void (
-                    (X() || W()) &&
+                    (X() || W() || SS()) &&
                     (!Y() && $t.J && (($t.B.checked = !0), $t.U(), kt.l()),
                     Y() && (_t(t), St(o)))
                   );
@@ -1413,18 +1415,27 @@
   // Same for removals: capture the rows now, drop them once the request has succeeded.
   function removeRows() {
     const rows = [...S()].map((b) => b.parentElement.parentElement).filter(Boolean).map(rowOf);
-    return (ok) => ok && rows.forEach((r) => r.remove());
+    return (ok) => ok && (rows.forEach((r) => r.remove()), Kt(`✔️   ${L.messages.removeVideos} (${rows.length})`));
   }
   // Re-fetches the playlist and hands it to YouTube's own browse element, which re-renders the list
   // in place (no navigation, no page load); falls back to a soft navigation.
-  async function softRefresh() {
+  async function softRefresh(expectTop) {
     const y = t.scrollY,
       restore = () => setTimeout(() => t.scrollTo(0, y), 400);
     try {
       const list = J(),
         host = e.querySelector(b + '[page-subtype="playlist"]');
       if (!list || !host) throw new Error("playlist page not found");
-      host.data = await innertube("/youtubei/v1/browse", { browseId: "VL" + list });
+      let fresh;
+      // Liked Videos order lags behind a like by a moment; wait until the moved videos lead the list.
+      for (let tries = 0; tries < 6; tries++) {
+        fresh = await innertube("/youtubei/v1/browse", { browseId: "VL" + list });
+        if (!expectTop) break;
+        const top = [...JSON.stringify(fresh).matchAll(/"contentId":"([\w-]{11})"/g)].map((m) => m[1]);
+        if (expectTop.every((id, i) => top[i] === id)) break;
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }
+      host.data = fresh;
       console.info("[multi-select] Playlist data refreshed in place");
     } catch (err) {
       console.warn("[multi-select] In-place refresh failed, navigating:", err);
@@ -1436,7 +1447,7 @@
     }
     restore();
   }
-  function moveRows(mode, anchor) {
+  function moveRows(mode, anchor, expectTop) {
     const isRow = (c) => c.localName === sample?.localName,
       anchorRow = anchor && rowOf(anchor),
       rows = [...S()]
@@ -1448,6 +1459,7 @@
     return (ok) => {
       console.info("[multi-select] move result:", ok, "parent:", !!parent);
       if (!ok || !parent) return;
+      Kt(`✔️   ${{ top: L.messages.moveToTop, bottom: L.messages.moveToBottom, after: L.messages.moveAfter }[mode]} (${rows.length})`);
       const frag = e.createDocumentFragment();
       frag.append(...rows);
       const siblings = [...parent.children].filter(isRow);
@@ -1455,7 +1467,7 @@
       else if ("bottom" === mode) parent.insertBefore(frag, siblings.at(-1)?.nextSibling ?? null);
       else if (anchorRow?.parentElement === parent) parent.insertBefore(frag, anchorRow.nextSibling);
       else parent.insertBefore(frag, siblings[0] ?? null);
-      softRefresh();
+      softRefresh(expectTop);
     };
   }
   function Lt() {
@@ -1464,7 +1476,33 @@
       apply = moveRows("after", $t.B?.parentElement?.parentElement);
     return bt.p(t, void 0, !1)?.then(apply), ct(), !0;
   }
+  // Liked Videos has no manual order (no setVideoIds); it is sorted by like time, so moving to the
+  // top means un-liking and re-liking, last video first so the selection keeps its order.
+  async function likeToTop(ids, apply) {
+    const send = (path, videoId) => innertube(path, { target: { videoId } });
+    let done = 0;
+    try {
+      for (const id of [...ids].reverse()) {
+        await send("/youtubei/v1/like/removelike", id);
+        try {
+          await send("/youtubei/v1/like/like", id);
+        } catch {
+          await send("/youtubei/v1/like/like", id);
+        }
+        done++;
+      }
+    } catch (err) {
+      console.warn("[multi-select] Liked videos move failed:", err);
+      Kt("👎   " + (err?.message || L.messages.invalidData));
+    }
+    done && apply(!0);
+  }
   function Mt() {
+    if (W()) {
+      const ids = G(),
+        apply = moveRows("top", void 0, ids);
+      return likeToTop(ids, apply), ct(), !0;
+    }
     if (!bt.T.M.every(Boolean)) return Kt("👎   " + L.messages.invalidData), !1;
     const t = bt.T.P,
       apply = moveRows("top");
@@ -1583,6 +1621,47 @@
   function St(t) {
     z.noRemovalConfirmation ? Nt(t) : xt.ot().then((e) => e && Nt(t));
   }
+  // Liked Videos items are removed by un-liking; the lockup rows carry no menu data to read it from.
+  async function unlikeVideos() {
+    const entries = [...S()].map((b) => ({ id: F(b), row: rowOf(b.parentElement.parentElement) }));
+    let removed = 0;
+    for (const { id, row } of entries) {
+      try {
+        await innertube("/youtubei/v1/like/removelike", { target: { videoId: id } });
+        row.remove();
+        removed++;
+      } catch (err) {
+        console.warn("[multi-select] Un-like failed:", err);
+        Kt("👎   " + (err?.message || L.messages.invalidData));
+        break;
+      }
+    }
+    removed && Kt(`✔️   ${L.messages.removeVideos} (${removed})`);
+  }
+  // Saved Shorts has no playlist edit API; each item carries its own "remove" feedback token.
+  async function unsaveShorts() {
+    const items = PL()?.[0]?.richGridRenderer?.contents ?? [],
+      tokenOf = (id) => {
+        const item = items.find((x) => JSON.stringify(x).includes(`"videoId":"${id}"`));
+        return item && JSON.stringify(item).match(/"imageName":"DELETE"[\s\S]*?"feedbackToken":"([^"]+)"/)?.[1];
+      },
+      entries = [...S()].map((b) => ({ id: F(b), row: rowOf(b.parentElement.parentElement) }));
+    let removed = 0;
+    for (const { id, row } of entries) {
+      try {
+        const token = tokenOf(id);
+        if (!token) throw new Error(L.messages.invalidData);
+        await innertube("/youtubei/v1/feedback", { feedbackTokens: [token] });
+        row.remove();
+        removed++;
+      } catch (err) {
+        console.warn("[multi-select] Remove from saved shorts failed:", err);
+        Kt("👎   " + (err?.message || L.messages.invalidData));
+        break;
+      }
+    }
+    removed && Kt(`✔️   ${L.messages.removeVideos} (${removed})`);
+  }
   function Nt(t) {
     t && wt.U("cut"),
       (D()
@@ -1620,19 +1699,13 @@
           })(t)
         : W()
         ? (function (t) {
-            const e = S();
-            t && (V.t = G(e)), e.length;
-            for (let t = 0; t < e.length; t++) {
-              const n = e[t].parentElement?.parentElement,
-                o = n?.data?.menu?.menuRenderer,
-                i = ft(o?.items, [
-                  "menuServiceItemRenderer",
-                  "serviceEndpoint",
-                  "likeEndpoint",
-                ]);
-              i && bt.p({ likeEndpoint: i }, n);
-            }
-            return (z.counts.cut += e.length), ct(), !0;
+            t && (V.t = G()), (z.counts.cut += S().length);
+            return unlikeVideos(), ct(), !0;
+          })(t)
+        : SS()
+        ? (function (t) {
+            t && (V.t = G()), (z.counts.cut += S().length);
+            return unsaveShorts(), ct(), !0;
           })(t)
         : (function (t) {
             const e = bt.T.O(t),
@@ -2649,19 +2722,17 @@
     try {
       // YouTube's native toast; the emoji prefix is only meaningful in the fallback below.
       const text = t.replace(/^[^\p{L}\p{N}]+/u, "");
-      bt.m("yt-open-popup-action", [
-        {
-          openPopupAction: {
-            popupType: "TOAST",
-            popup: {
-              notificationActionRenderer: {
-                responseText: { simpleText: text.length > 120 ? text.slice(0, 117) + "..." : text },
-              },
+      // The popup container's own handler: the only route that still renders a native toast.
+      e.querySelector("ytd-popup-container").handleOpenPopupAction({
+        openPopupAction: {
+          popupType: "TOAST",
+          popup: {
+            notificationActionRenderer: {
+              responseText: { simpleText: text.length > 120 ? text.slice(0, 117) + "..." : text },
             },
           },
         },
-        bt.v,
-      ]);
+      });
       return;
     } catch {}
     const n = e.createElement("div");
