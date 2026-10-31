@@ -662,7 +662,7 @@
           handler: Yt,
           icon: "icons:find-in-page",
           label: () => L.messages.selectDuplicates,
-          enabled: () => !a && c,
+          enabled: () => c,
         },
         {
           id: s + "-action-select-filter",
@@ -676,14 +676,14 @@
           handler: () => selectByType(!0),
           icon: "slow_motion_video",
           label: () => L.messages.selectShortsOnly,
-          enabled: () => !a && P().length > 0,
+          enabled: () => P().length > 0,
         },
         {
           id: s + "-action-select-videos",
           handler: () => selectByType(!1),
           icon: "video_library",
           label: () => L.messages.selectVideosOnly,
-          enabled: () => !a && P().length > 0,
+          enabled: () => P().length > 0,
         },
         {
           id: s + "-action-load-entire-playlist",
