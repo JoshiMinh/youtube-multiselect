@@ -200,7 +200,10 @@
       ) {
         if (n.matches?.("ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer"))
           return !0;
-        return !!n.querySelector?.('a[href^="/shorts/"], a[href*="://www.youtube.com/shorts/"]');
+        if (n.querySelector?.('a[href^="/shorts/"], a[href*="/shorts/"]')) return !0;
+        const data = n.__data?.data;
+        if (data && /["'](?:\/shorts\/|https?:\/\/[^"']+\/shorts\/)/i.test(JSON.stringify(data)))
+          return !0;
       }
     }
     return !1;
@@ -621,6 +624,13 @@
           icon: "watch_later",
           label: () => L.messages.addToWatchLater,
           enabled: () => a && !l && bt.k,
+        },
+        {
+          id: s + "-action-like-videos",
+          handler: likeVideos,
+          icon: "thumb_up",
+          label: () => L.messages.likeVideos || "Like selected videos",
+          enabled: () => a && bt.k,
         },
         {
           id: s + "-action-add-to-playlist",
@@ -1577,6 +1587,28 @@
       ct(),
       !z.preserveSelection
     );
+  }
+  async function likeVideos() {
+    const ids = G().filter(Boolean);
+    const label = L.messages.likeVideos || "Like selected videos";
+    if (!ids.length) {
+      Kt("👎   " + L.messages.invalidData);
+      return;
+    }
+    let liked = 0;
+    for (const videoId of ids) {
+      try {
+        await innertube("/youtubei/v1/like/like", { target: { videoId } });
+        liked++;
+      } catch (err) {
+        console.warn("[multi-select] Like failed:", videoId, err);
+      }
+    }
+    if (liked === ids.length) {
+      Kt(`✔️   ${label} (${liked})`);
+    } else {
+      Kt(`👎   ${label} (${liked}/${ids.length})`);
+    }
   }
   // YouTube no longer re-renders the list after a move, so mirror the server-side result in the DOM.
   function rowOf(el) {

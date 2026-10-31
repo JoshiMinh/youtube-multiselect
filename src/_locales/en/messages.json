@@ -8,6 +8,9 @@
    "addToWatchLater": {
       "message": "Save to Watch later"
    },
+   "likeVideos": {
+      "message": "Like selected videos"
+   },
    "addVideosFromFile": {
       "message": "Add videos from file"
    },
