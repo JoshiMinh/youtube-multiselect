@@ -27,7 +27,7 @@ const MESSAGE_KEYS = [
   'reverseFilter',
   'loadEntirePlaylist', 'loadingEntirePlaylist', 'localeDir', 'moveAfter', 'moveToBottom',
   'moveToTop', 'groupByChannel', 'flipList', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',
-  'selectAllVideos', 'selectDuplicates', 'selectWithFilter', 'selected', 'title', 'watched',
+  'selectAllVideos', 'selectDuplicates', 'selectShortsOnly', 'selectVideosOnly', 'selectWithFilter', 'selected', 'title', 'watched',
 ];
 
 // Port of the original content script (document_end, YouTube and YouTube Music).

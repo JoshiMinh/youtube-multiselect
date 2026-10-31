@@ -281,6 +281,12 @@
    "selectDuplicates": {
       "message": "Select duplicates"
    },
+   "selectShortsOnly": {
+      "message": "Select Shorts only"
+   },
+   "selectVideosOnly": {
+      "message": "Select videos only"
+   },
    "selectWithFilter": {
       "message": "Select with filter"
    },

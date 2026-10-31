@@ -190,6 +190,17 @@
   function lt() {
     st(x, !1), kt.l();
   }
+  function isShortVideo(t) {
+    const n = j(t);
+    return (
+      !!n?.matches?.("ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2") ||
+      !!n?.querySelector?.('a[href^="/shorts/"]') ||
+      !!t.closest?.('a[href^="/shorts/"]')
+    );
+  }
+  function selectByType(t) {
+    P().forEach((e) => (e.checked = isShortVideo(e) === t)), kt.l();
+  }
   function pt(t) {
     if (t && t.getAttribute("position") !== z.positioning)
       return (
@@ -659,6 +670,20 @@
           icon: "icons:filter-list",
           label: () => L.messages.selectWithFilter,
           enabled: () => !Zt.instance,
+        },
+        {
+          id: s + "-action-select-shorts",
+          handler: () => selectByType(!0),
+          icon: "icons:filter-list",
+          label: () => L.messages.selectShortsOnly,
+          enabled: () => !a && P().length > 0,
+        },
+        {
+          id: s + "-action-select-videos",
+          handler: () => selectByType(!1),
+          icon: "icons:filter-list",
+          label: () => L.messages.selectVideosOnly,
+          enabled: () => !a && P().length > 0,
         },
         {
           id: s + "-action-load-entire-playlist",
