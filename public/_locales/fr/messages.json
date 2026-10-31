@@ -17,27 +17,6 @@
    "bottomLeft": {
       "message": "en bas à gauche"
    },
-   "callout1": {
-      "message": "Ici, vous activez et désactivez la sélection multiple ou avec ces"
-   },
-   "callout2": {
-      "message": "Voici la barre d'action pour la sélection multiple."
-   },
-   "callout3": {
-      "message": "Ici, vous pouvez refermer la barre d'action."
-   },
-   "callout5": {
-      "message": "Ici, vous pouvez voir combien de vidéos vous avez sélectionnées."
-   },
-   "callout6": {
-      "message": "Ici, vous pouvez sélectionner toutes les vidéos."
-   },
-   "callout7": {
-      "message": "Ici, vous pouvez à nouveau désélectionner toutes les vidéos sélectionnées."
-   },
-   "callout8": {
-      "message": "Voici un menu avec des fonctions supplémentaires."
-   },
    "cancel": {
       "message": "Annuler"
    },
@@ -97,84 +76,6 @@
    },
    "findDuplicatesBackwards": {
       "message": "Rechercher les doublons à l'envers"
-   },
-   "hint100": {
-      "message": "En général"
-   },
-   "hint101": {
-      "message": "Vous pouvez activer et désactiver la sélection multiple avec le bouton icône bleue dans la barre d'en-tête"
-   },
-   "hint101a": {
-      "message": "Si la sélection multiple est désactivée, les raccourcis clavier sont également désactivés"
-   },
-   "hint102": {
-      "message": "Si vous naviguez vers une autre page, la sélection actuelle est perdue"
-   },
-   "hint103": {
-      "message": "Si vous continuez à naviguer dans le même sens dans un menu ou sur une page, vous passez du premier au dernier et du dernier au premier élément"
-   },
-   "hint104": {
-      "message": "\"Plus\" et \"Moins\" dans le volet de gauche avec les noms de listes de lecture peuvent être développés et réduits avec Ctrl + I"
-   },
-   "hint105": {
-      "message": "Dans cette version, le presse-papiers est une petite mémoire dans l'extension et non le presse-papiers du système d'exploitation"
-   },
-   "hint106": {
-      "message": "Le thème (sombre/clair) est automatiquement adopté depuis YouTube"
-   },
-   "hint200": {
-      "message": "Sélection de vidéos"
-   },
-   "hint201": {
-      "message": "Vous pouvez sélectionner ou désélectionner une vidéo en un clic de souris"
-   },
-   "hint202": {
-      "message": "Vous pouvez sélectionner ou désélectionner une vidéo ciblée avec la barre d'espace/Entrée"
-   },
-   "hint203": {
-      "message": "Une vidéo qui a le focus a une bordure turquoise"
-   },
-   "hint203a": {
-      "message": "Si vous ne voyez pas de focus ou si aucune vidéo n'a encore le focus, appuyez sur une touche de navigation"
-   },
-   "hint204": {
-      "message": "Une vidéo sélectionnée sera surlignée en bleu acier et aura une coche dans le coin inférieur droit"
-   },
-   "hint205": {
-      "message": "Maintenez la touche Maj enfoncée pour sélectionner plusieurs vidéos consécutives"
-   },
-   "hint205a": {
-      "message": "Cliquez ou mettre le focus sur la première vidéo à sélectionner, maintenez la touche Maj enfoncée et cliquez ou mettre le focus sur la dernière vidéo à sélectionner"
-   },
-   "hint206": {
-      "message": "Vous pouvez sélectionner des vidéos avec le filtre"
-   },
-   "hint207": {
-      "message": "Vous pouvez enregistrer les identifiants des vidéos sélectionnées dans un fichier"
-   },
-   "hint207a": {
-      "message": "Formats de sortie: JSON, TEXT, HTML"
-   },
-   "hint300": {
-      "message": "Listes de lecture"
-   },
-   "hint301": {
-      "message": "Vous ne pouvez ajouter des vidéos qu'à vos propres listes de lecture, y compris À regarder plus tard"
-   },
-   "hint302": {
-      "message": "Vous ne pouvez supprimer des vidéos que dans vos propres listes de lecture, y compris À regarder plus tard, Vidéos \"J'aime\" et l'historique"
-   },
-   "hint302a": {
-      "message": "Les vidéos ne sont supprimées que si vous confirmez l'invite de sécurité"
-   },
-   "hint303": {
-      "message": "Les vidéos sont ajoutées en haut ou en bas d'une liste de lecture comme configuré dans les paramètres de la liste de lecture"
-   },
-   "hint304": {
-      "message": "Vous pouvez ajouter des vidéos à partir d'un fichier"
-   },
-   "hint304a": {
-      "message": "Formats d'importation: JSON, TEXT, HTML"
    },
    "home": {
       "message": "Home"
@@ -269,9 +170,6 @@
    "moveToTop": {
       "message": "Placer en première position"
    },
-   "news": {
-      "message": "<h2>dans la version 3.5</h2><span>🔧 Détection vidéo fixe</span><h2>dans la version 3.4</h2><span><s>✔️ Option non documentée: Bloquer les annonces</s></span><span>🎁 Ajouter des vidéos à partir de fichiers aux listes de lecture</span><span>🎁 Enregistrer la sélection dans un fichier</span><span>🎁 Sélectionnez les vidéos regardées à l'aide du filtre</span><span>🎁 Positionnez librement la barre d'action et le filtre</span><h2>dans la version 3.3</h2><span>🔧 Correction de l'ajout à la nouvelle liste de lecture</span><span>✔️ Option: Rechercher les doublons à l'envers</span><h2>dans la version 3.2</h2><span>🔧 Détection vidéo fixe</span><span>✔️ Option: Supprimer sans requête de sécurité</span><span>✨ Charger toute la liste de lecture</span><span>🎁 Sélectionnez des vidéos par nom de chaîne</span><span>🎁 Menu contextuel complet</span><h2>dans la version 3.1</h2><span>🔨 Correction des icônes invisibles dans la barre d'action</span><span>🔨 Correction du menu à 3 points dans la barre d'action</span><span>🎁 Position alternative de la barre d'action, en bas à gauche</span><h2>dans la version 3.0</h2><span>✔️ Prend en charge la nouvelle interface Manifest V3</span><span>✔️ L'expérience utilisateur a été entièrement repensée</span><span>✔️ Même affichage sombre/clair que sur YouTube</span><span>✔️ Les vidéos sélectionnées sont clairement mises en évidence</span><span>✔️ Bouton icône pour activer/désactiver la sélection multiple</span><span>✔️ Barre d'actions</span><span>✔️ Menu contextuel</span><span>🚀 Navigation au clavier</span><span>🚀 Copier, couper et coller des vidéos</span><span>✨ Trouvez les doublons</span><span>🎁 Sélectionnez des vidéos avec le filtre</span>"
-   },
    "noDuplicatesFound": {
       "message": "Aucun doublon trouvé"
    },
@@ -286,9 +184,6 @@
    },
    "preserveSelection": {
       "message": "Conserver la sélection après la copie"
-   },
-   "reloadRequired": {
-      "message": "<p>L'extension a été mise à jour.</p><p>Veuillez recharger cette page.</p>"
    },
    "remove": {
       "message": "Supprimer"
@@ -326,17 +221,11 @@
    "sortPlaylistNames": {
       "message": "Afficher les noms des playlists triés"
    },
-   "tabHints": {
-      "message": "Conseils"
-   },
    "tabSettings": {
       "message": "Paramètres"
    },
    "tabShortcuts": {
       "message": "Raccourcis clavier"
-   },
-   "tabWhatsNew": {
-      "message": "Quoi de neuf"
    },
    "title": {
       "message": "Titre"

@@ -115,16 +115,21 @@ kbd {
   background-color: var(--page);
 }
 
-.settings > ul {
+.settings > ul,
+.settings-slot > ul {
   margin: 0;
   padding: 0;
 }
 .settings > ul > li,
-.settings > ul > div > div {
+.settings > ul > div > div,
+.settings-slot > ul > li,
+.settings-slot > ul > div > div {
   list-style: none;
 }
 .settings > ul > li > label,
-.settings > ul > div > div > label {
+.settings > ul > div > div > label,
+.settings-slot > ul > li > label,
+.settings-slot > ul > div > div > label {
   display: flex;
   align-items: center;
   min-height: 40px;
@@ -132,29 +137,36 @@ kbd {
   cursor: pointer;
 }
 .settings > ul > li > label:hover,
-.settings > ul > div > div > label:hover {
+.settings > ul > div > div > label:hover,
+.settings-slot > ul > li > label:hover,
+.settings-slot > ul > div > div > label:hover {
   background-color: var(--hover);
 }
-.settings > ul > li > label {
+.settings > ul > li > label,
+.settings-slot > ul > li > label {
   flex-direction: row-reverse;
   justify-content: space-between;
   gap: 16px;
 }
-.settings > ul > li > label > span {
+.settings > ul > li > label > span,
+.settings-slot > ul > li > label > span {
   flex: 1;
 }
 
-.settings > ul > div {
+.settings > ul > div,
+.settings-slot > ul > div {
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid var(--divider);
 }
-.settings > ul > div > span {
+.settings > ul > div > span,
+.settings-slot > ul > div > span {
   display: block;
   padding: 8px 16px 4px;
   color: var(--text-secondary);
 }
-.settings > ul > div > div > label {
+.settings > ul > div > div > label,
+.settings-slot > ul > div > div > label {
   gap: 12px;
 }
 
@@ -248,125 +260,243 @@ html[dark] .settings input[type="checkbox"]::before {
 
 /* Options page */
 
+#options {
+  min-width: 320px;
+  background: var(--page);
+}
 .page-header {
   position: sticky;
   top: 0;
-  z-index: 1;
-  background-color: var(--page);
+  z-index: 2;
+  background: color-mix(in srgb, var(--page) 94%, transparent);
   border-bottom: 1px solid var(--divider);
+  backdrop-filter: blur(16px);
 }
 .page-header-inner {
   display: flex;
   align-items: center;
-  gap: 12px;
-  max-width: var(--max-width);
-  height: 56px;
+  gap: 28px;
+  max-width: 1080px;
+  min-height: 72px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 28px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  text-decoration: none;
 }
 .page-title {
-  font-size: 18px;
-  font-weight: 500;
-  margin-right: auto;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 .page-header nav {
   display: flex;
   gap: 4px;
+  margin-left: auto;
 }
 .page-header nav a {
-  padding: 0 14px;
-  line-height: 32px;
-  border-radius: 16px;
+  padding: 8px 13px;
+  border-radius: 8px;
+  color: var(--text-secondary);
   font-weight: 500;
-  color: var(--text);
   text-decoration: none;
-  background-color: var(--button);
 }
 .page-header nav a:hover {
-  background-color: var(--button-hover);
+  color: var(--text);
+  background: var(--hover);
 }
 .page-header nav a.active {
-  color: var(--card);
-  background-color: var(--text);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
 }
-
 main {
   box-sizing: border-box;
-  max-width: var(--max-width);
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 0 24px 96px;
+  padding: 52px 28px 96px;
 }
-
 .page-section {
   display: none;
-  padding-top: 32px;
 }
 .page-section.active {
   display: block;
 }
-.page-section > h2 {
-  margin: 0 0 16px;
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 500;
+.section-heading {
+  max-width: 680px;
+  margin-bottom: 32px;
 }
-.page-section h3 {
-  margin: 24px 0 8px;
-  font-size: 16px;
-  font-weight: 500;
+.eyebrow {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
-.page-section h4 {
-  margin: 0 0 4px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  grid-column: span 2;
-}
-.manual-subhead {
-  margin-top: 40px !important;
-  padding-top: 24px;
-  border-top: 1px solid var(--divider);
-}
-
-.updates > section > span {
-  font-size: 16px;
-  font-weight: 500;
-  display: block;
-  padding: 12px 0 4px;
-}
-
-.hints ul {
+.section-heading h1 {
   margin: 0;
-  padding-inline-start: 20px;
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
 }
-.hints ul ul {
-  list-style-type: circle;
+.section-intro {
+  max-width: 600px;
+  margin: 14px 0 0;
   color: var(--text-secondary);
+  font-size: 16px;
+  line-height: 1.55;
 }
-.hints li {
-  padding: 3px 0;
-  user-select: text;
-}
-
-.shortcuts > div {
+.settings-layout {
   display: grid;
-  grid-template-columns: minmax(160px, 1fr) 2fr;
-  grid-row-gap: 8px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 20px;
+  align-items: start;
+}
+.settings-card,
+.info-card,
+.guide-card,
+.shortcut-card {
+  border: 1px solid var(--divider);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.settings-card {
+  padding: 24px 28px;
+}
+.card-heading {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--divider);
+}
+.card-heading h2,
+.info-card h2,
+.guide-card h2,
+.shortcut-group h2 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 24px;
+}
+.card-heading p,
+.info-card p,
+.guide-card p {
+  margin: 5px 0 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.card-icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.card-icon svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+.info-card {
+  padding: 24px;
+}
+.info-card > img {
+  display: block;
+  margin-bottom: 20px;
+}
+.info-card .muted {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--divider);
+  font-size: 13px;
+}
+#options .settings-slot > ul,
+#options .settings-slot > #options-buttons {
+  max-width: none;
+  margin: 20px 0 0;
+}
+#options .settings-slot > ul > li > label,
+#options .settings-slot > ul > div > div > label {
+  min-height: 48px;
+  padding: 0;
+}
+#options .settings-slot > ul > li > label:hover,
+#options .settings-slot > ul > div > div > label:hover {
+  background: none;
+}
+.guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.guide-card {
+  min-height: 190px;
+  padding: 24px;
+}
+.guide-card .card-icon {
   margin-bottom: 24px;
 }
-.shortcuts .space-bar {
-  line-height: 0;
-  font-size: 24px;
-  position: relative;
-  top: -4px;
+.shortcut-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 28px;
 }
-
-#options .settings > ul,
-#options .settings > #options-buttons {
-  max-width: 420px;
-  margin-left: -16px;
+.shortcut-group + .shortcut-group {
+  padding-left: 32px;
+  border-left: 1px solid var(--divider);
 }
-#options .settings > #options-buttons {
-  margin-left: 0;
+.shortcut-group h2 {
+  margin-bottom: 18px;
+}
+.shortcut-row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 10px;
+  align-items: center;
+  min-height: 38px;
+  color: var(--text-secondary);
+}
+.shortcut-row kbd {
+  justify-self: start;
+}
+@media (max-width: 720px) {
+  .page-header-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px 12px;
+  }
+  .page-header nav {
+    width: 100%;
+    margin-left: 0;
+    overflow-x: auto;
+  }
+  .page-header nav a {
+    white-space: nowrap;
+  }
+  main {
+    padding: 36px 20px 72px;
+  }
+  .settings-layout,
+  .guide-grid,
+  .shortcut-card {
+    grid-template-columns: 1fr;
+  }
+  .shortcut-group + .shortcut-group {
+    padding: 24px 0 0;
+    border-top: 1px solid var(--divider);
+    border-left: 0;
+  }
 }

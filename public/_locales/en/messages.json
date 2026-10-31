@@ -18,25 +18,43 @@
       "message": "bottom left"
    },
    "callout1": {
-      "message": "Here you switch the multiple selection on and off or with these"
+      "message": "Turn Multiselect on when you want to work with more than one video. You can also configure browser shortcuts."
    },
    "callout2": {
-      "message": "Here is the action bar for multiple selection."
+      "message": "This action bar appears when Multiselect is on. It contains the tools for your current selection."
    },
    "callout3": {
-      "message": "Here you can close the action bar again."
+      "message": "Use this button to hide the action bar. Your selection stays available until you leave the page."
    },
    "callout5": {
-      "message": "Here you can see how many videos you have selected."
+      "message": "This count shows how many videos are selected."
    },
    "callout6": {
-      "message": "Here you can select all videos."
+      "message": "Select every loaded video with this button."
    },
    "callout7": {
-      "message": "Here you can deselect all selected videos again."
+      "message": "Clear the current selection with this button."
    },
    "callout8": {
-      "message": "Here is a menu with additional functions."
+      "message": "Open this menu for filters, file actions, playlist tools, and more."
+   },
+   "onboardingTitle": {
+      "message": "Multiselect tour"
+   },
+   "onboardingStep": {
+      "message": "Step $1 of $2"
+   },
+   "onboardingNext": {
+      "message": "Next"
+   },
+   "onboardingSkip": {
+      "message": "Skip tour"
+   },
+   "onboardingFinish": {
+      "message": "Done"
+   },
+   "onboardingShortcuts": {
+      "message": "Shortcuts"
    },
    "cancel": {
       "message": "Cancel"
@@ -92,6 +110,36 @@
    "extensionName": {
       "message": "Youtube Multiselect"
    },
+   "optionsSections": {
+      "message": "Options sections"
+   },
+   "settingsEyebrow": {
+      "message": "Extension preferences"
+   },
+   "settingsTitle": {
+      "message": "Make every playlist easier to manage"
+   },
+   "settingsIntro": {
+      "message": "Choose how selection, playlist actions, and the action bar behave on YouTube. Changes are saved automatically."
+   },
+   "settingsGeneral": {
+      "message": "General settings"
+   },
+   "settingsGeneralDescription": {
+      "message": "Tune the controls you use while managing videos."
+   },
+   "languageNotice": {
+      "message": "The interface follows your browser language and YouTube theme."
+   },
+   "shortcutsEyebrow": {
+      "message": "Keyboard"
+   },
+   "shortcutsTitle": {
+      "message": "Move quickly without the mouse"
+   },
+   "shortcutsIntro": {
+      "message": "These are the shortcuts used most often. The complete browser shortcut list can be opened from the button below."
+   },
    "filterHelpTooltip": {
       "message": "Regular expression syntax"
    },
@@ -99,85 +147,7 @@
       "message": "Find duplicates backwards"
    },
    "openOptionsOnUpdate": {
-      "message": "Open this page after an update or reload"
-   },
-   "hint100": {
-      "message": "Generally"
-   },
-   "hint101": {
-      "message": "You can enable and disable multiple selection with the blue icon button in the header bar"
-   },
-   "hint101a": {
-      "message": "If multiple selection is disabled, key bindings are also disabled"
-   },
-   "hint102": {
-      "message": "If you navigate to another page, the current selection is lost"
-   },
-   "hint103": {
-      "message": "If you continue navigating in the same direction in a menu or on a page, you go from first to last and from last to first item"
-   },
-   "hint104": {
-      "message": "“Watch more” and “Show less” in the left pane with playlist names can be expanded and collapsed with Ctrl+I"
-   },
-   "hint105": {
-      "message": "In this version, the clipboard is a small memory within the extension and not the operating system clipboard"
-   },
-   "hint106": {
-      "message": "The theme (dark/light) is automatically adopted from YouTube"
-   },
-   "hint200": {
-      "message": "Selecting videos"
-   },
-   "hint201": {
-      "message": "You can select or deselect a video with a mouse click"
-   },
-   "hint202": {
-      "message": "You can select or deselect a focused video with Spacebar/Enter"
-   },
-   "hint203": {
-      "message": "A focused video has a turquoise border"
-   },
-   "hint203a": {
-      "message": "If you don't see a focus or no video has been focused yet, press a navigation key"
-   },
-   "hint204": {
-      "message": "A selected video will be highlighted in steel blue and will have a check mark in the bottom right corner"
-   },
-   "hint205": {
-      "message": "Hold down the Shift key to select multiple consecutive videos"
-   },
-   "hint205a": {
-      "message": "Click or focus on the first video to select, hold Shift and click or focus on the last video to select"
-   },
-   "hint206": {
-      "message": "You can select videos with the filter"
-   },
-   "hint207": {
-      "message": "You can save the IDs of the selected videos to a file"
-   },
-   "hint207a": {
-      "message": "Output formats: JSON, TEXT, HTML"
-   },
-   "hint300": {
-      "message": "Playlists"
-   },
-   "hint301": {
-      "message": "You can only add videos to your own playlists, including Watch later"
-   },
-   "hint302": {
-      "message": "You can only delete videos in your own playlists, including Watch later, Liked videos, and History"
-   },
-   "hint302a": {
-      "message": "Videos are only deleted if you confirm the security prompt"
-   },
-   "hint303": {
-      "message": "Videos are added to the top or bottom of a playlist as configured in the playlist settings"
-   },
-   "hint304": {
-      "message": "You can add videos from a file"
-   },
-   "hint304a": {
-      "message": "Import formats: JSON, TEXT, HTML"
+      "message": "Open settings after an extension update"
    },
    "home": {
       "message": "Home"
@@ -272,14 +242,11 @@
    "moveToTop": {
       "message": "Move to top"
    },
-   "news": {
-      "message": "<h2>in version 3.5</h2><span>🔧 Fixed video detection</span><h2>in version 3.4</h2><span><s>✔️ Undocumented option: Block ads</s></span><span>🎁 Add videos from files to playlists</span><span>🎁 Save selection to file</span><span>🎁 Select watched videos using the filter</span><span>🎁 Freely position the action bar and filter</span><h2>in version 3.3</h2><span>🔧 Fixed: Save videos to new playlist</span><span>✔️ Option: Find duplicates backwards</span><h2>in version 3.2</h2><span>🔧 Fixed video detection</span><span>✔️ Option: Delete without security query</span><span>✨ Load entire playlist</span><span>🎁 Select videos by channel name</span><span>🎁 Full context menu</span><h2>in version 3.1</h2><span>🔨 Fixed invisible icons in action bar</span><span>🔨 Fixed 3-dot menu in action bar</span><span>🎁 Alternate position of the action bar, bottom left</span><h2>in version 3.0</h2><span>✔️ Supports the new interface Manifest V3</span><span>✔️ The user experience has been redesigned from the ground up</span><span>✔️ Same display dark/light as in YouTube</span><span>✔️ Selected videos are clearly highlighted</span><span>✔️ Icon button to toggle multiple selection on/off</span><span>✔️ Action bar</span><span>✔️ Context menu</span><span>🚀 Keyboard navigation</span><span>🚀 Copy, cut and paste videos</span><span>✨ Find duplicates</span><span>🎁 Select videos with the filter</span>"
-   },
    "noDuplicatesFound": {
       "message": "No duplicates found"
    },
    "noRemovalConfirmation": {
-      "message": "Delete without security query"
+      "message": "Skip removal confirmation"
    },
    "paste": {
       "message": "Paste"
@@ -290,14 +257,14 @@
    "preserveSelection": {
       "message": "Keep selection after copying"
    },
-   "reloadRequired": {
-      "message": "<p>The extension has been updated.</p><p>Please reload this page.</p>"
-   },
    "remove": {
       "message": "Remove"
    },
    "removeVideos": {
       "message": "Remove from this list"
+   },
+   "reverseFilter": {
+      "message": "Invert filter"
    },
    "resetCallouts": {
       "message": "Repeat introductory tour"
@@ -329,23 +296,11 @@
    "sortPlaylistNames": {
       "message": "Show playlist names sorted"
    },
-   "tabHints": {
-      "message": "Hints"
-   },
-   "tabManual": {
-      "message": "Manual"
-   },
-   "tabUpdates": {
-      "message": "Updates"
-   },
    "tabSettings": {
       "message": "Settings"
    },
    "tabShortcuts": {
       "message": "Key bindings"
-   },
-   "tabWhatsNew": {
-      "message": "What's new"
    },
    "title": {
       "message": "Title"

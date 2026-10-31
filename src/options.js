@@ -27,7 +27,8 @@
     c = -1 !== navigator.userAgent.indexOf("Firefox/"),
     s = -1 !== navigator.userAgent.indexOf("Edg/"),
     a = "/popup.html" === location.pathname,
-    u = t.querySelector(".settings");
+    u = t.querySelector(".settings"),
+    settingsSlot = t.querySelector(".settings-slot") || u;
   function r(o, n) {
     const e = t.getElementById(o);
     e && (e.checked = n);
@@ -58,7 +59,9 @@
         r(n.group ? n.group.find((t) => t.value === e)?.id : o, e);
       }
     }
-    t.dark && location.reload();
+    if (Object.prototype.hasOwnProperty.call(t, "dark")) {
+      document.documentElement.toggleAttribute("dark", Boolean(t.dark.newValue));
+    }
   }),
     (async function () {
       const e = await o.storage.local.get();
@@ -86,6 +89,9 @@
               .forEach(
                 (t) => (t.innerHTML = o.i18n.getMessage(t.dataset.html))
               )),
+            t
+              .querySelectorAll("[data-aria]")
+              .forEach((t) => t.setAttribute("aria-label", o.i18n.getMessage(t.dataset.aria))),
         (function (e) {
           const i = (t) => `<span>${o.i18n.getMessage(t) || t}</span>`,
             c = t.createElement("ul");
@@ -110,7 +116,7 @@
                   )}</label></li>`
             )
             .join("")),
-            u.appendChild(c);
+            settingsSlot.appendChild(c);
           for (const t of n) {
             const o = e.hasOwnProperty(t.id) ? e[t.id] : t.default;
             r(t.group ? t.group.find((t) => t.value === o)?.id : t.id, o);
@@ -138,7 +144,7 @@
                 "click",
                 () => (o.storage.local.set({ callout: 0 }), a && window.close())
               ),
-            u.appendChild(n);
+            settingsSlot.appendChild(n);
         })(),
         t.addEventListener("change", d, !0);
     })();

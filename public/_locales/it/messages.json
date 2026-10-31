@@ -17,27 +17,6 @@
    "bottomLeft": {
       "message": "in basso a sinistra"
    },
-   "callout1": {
-      "message": "Qui puoi attivare e disattivare la selezione multipla o con questi"
-   },
-   "callout2": {
-      "message": "Ecco la barra delle azioni per la selezione multipla."
-   },
-   "callout3": {
-      "message": "Qui puoi chiudere di nuovo la barra delle azioni."
-   },
-   "callout5": {
-      "message": "Qui puoi vedere quanti video hai selezionato."
-   },
-   "callout6": {
-      "message": "Qui puoi selezionare tutti i video."
-   },
-   "callout7": {
-      "message": "Qui puoi deselezionare nuovamente tutti i video selezionati."
-   },
-   "callout8": {
-      "message": "Ecco un menu con funzioni aggiuntive."
-   },
    "cancel": {
       "message": "Annulla"
    },
@@ -97,84 +76,6 @@
    },
    "findDuplicatesBackwards": {
       "message": "Trova i duplicati all'indietro"
-   },
-   "hint100": {
-      "message": "Generalmente"
-   },
-   "hint101": {
-      "message": "È possibile abilitare e disabilitare la selezione multipla con il pulsante con l'icona blu nella barra dell'intestazione"
-   },
-   "hint101a": {
-      "message": "Se la selezione multipla è disabilitata, anche le combinazioni di tasti sono disabilitate"
-   },
-   "hint102": {
-      "message": "Se si passa a un'altra pagina, la selezione corrente viene persa"
-   },
-   "hint103": {
-      "message": "Se continui a navigare nella stessa direzione in un menu o in una pagina, vai dal primo all'ultimo e dall'ultimo al primo elemento"
-   },
-   "hint104": {
-      "message": "\"Mostra altro\" e \"Mostra meno\" nel riquadro a sinistra con i nomi delle playlist possono essere espansi e compressi con Ctrl+I"
-   },
-   "hint105": {
-      "message": "In questa versione, gli appunti sono una piccola memoria all'interno dell'estensione e non gli appunti del sistema operativo"
-   },
-   "hint106": {
-      "message": "Il tema (scuro/chiaro) viene adottato automaticamente da YouTube"
-   },
-   "hint200": {
-      "message": "Selezione dei video"
-   },
-   "hint201": {
-      "message": "Puoi selezionare o deselezionare un video con un clic del mouse"
-   },
-   "hint202": {
-      "message": "Puoi selezionare o deselezionare un video focalizzato con la barra spaziatrice/Invio"
-   },
-   "hint203": {
-      "message": "Un video mirato ha un bordo turchese"
-   },
-   "hint203a": {
-      "message": "Se non vedi un focus o nessun video è stato ancora focalizzato, premi un tasto di navigazione"
-   },
-   "hint204": {
-      "message": "Un video selezionato verrà evidenziato in blu acciaio e avrà un segno di spunta nell'angolo in basso a destra"
-   },
-   "hint205": {
-      "message": "Tieni premuto il tasto Maiusc per selezionare più video consecutivi"
-   },
-   "hint205a": {
-      "message": "Fai clic o concentrati sul primo video da selezionare, tieni premuto Maiusc e fai clic o concentrati sull'ultimo video da selezionare"
-   },
-   "hint206": {
-      "message": "Puoi selezionare i video con il filtro"
-   },
-   "hint207": {
-      "message": "È possibile salvare gli ID dei video selezionati in un file"
-   },
-   "hint207a": {
-      "message": "Formati di output: JSON, TEXT, HTML"
-   },
-   "hint300": {
-      "message": "Playlist"
-   },
-   "hint301": {
-      "message": "Puoi solo aggiungere video alle tue playlist, incluso Guarda più tardi"
-   },
-   "hint302": {
-      "message": "Puoi eliminare solo i video nelle tue playlist, inclusi Guarda più tardi, Video piaciuti e Cronologia"
-   },
-   "hint302a": {
-      "message": "I video vengono eliminati solo se confermi la richiesta di sicurezza"
-   },
-   "hint303": {
-      "message": "I video vengono aggiunti all'inizio o alla fine di una playlist come configurato nelle impostazioni della playlist"
-   },
-   "hint304": {
-      "message": "Puoi aggiungere video da un file"
-   },
-   "hint304a": {
-      "message": "Formati di importazione: JSON, TEXT, HTML"
    },
    "home": {
       "message": "Home"
@@ -269,9 +170,6 @@
    "moveToTop": {
       "message": "Sposta in alto"
    },
-   "news": {
-      "message": "<h2>nella versione 3.5</h2><span>🔧 Rilevamento video fisso</span><h2>nella versione 3.4</h2><span><s>✔️ Opzione non documentata: Blocca gli annunci</s></span><span>🎁 Aggiungi video dai file alle playlist</span><span>🎁 Salva la selezione su file</span><span>🎁 Seleziona i video guardati utilizzando il filtro</span><span>🎁 Posiziona liberamente la barra delle azioni e filtra</span><h2>nella versione 3.3</h2><span>🔧 Risolto il problema con l'aggiunta alla nuova playlist</span><span>✔️ Opzione: Trova i duplicati all'indietro</span><h2>nella versione 3.2</h2><span>🔧 Rilevamento video fisso</span><span>✔️ Opzione: Elimina senza richiesta di sicurezza</span><span>✨ Scarica l'intera playlist</span><span>🎁 Seleziona i video in base al nome del canale</span><span>🎁 Menu contestuale completo</span><h2>nella versione 3.1</h2><span>🔨 Risolte le icone invisibili nella barra delle azioni</span><span>🔨 Risolto il problema con il menu a 3 punti nella barra delle azioni</span><span>🎁 Posizione alternativa della barra delle azioni, in basso a sinistra</span><h2>nella versione 3.0</h2><span>✔️ Supporta la nuova interfaccia Manifest V3</span><span>✔️ L'esperienza utente è stata riprogettata da zero</span><span>✔️ Stesso display scuro/chiaro di YouTube</span><span>✔️ I video selezionati sono chiaramente evidenziati</span><span>✔️ Pulsante icona per attivare/disattivare la selezione multipla</span><span>✔️ Barra delle azioni</span><span>✔️ Menu contestuale</span><span>🚀 Navigazione da tastiera</span><span>🚀 Copia, taglia e incolla video</span><span>✨ Trova duplicati</span><span>🎁 Seleziona i video con il filtro</span>"
-   },
    "noDuplicatesFound": {
       "message": "Nessun duplicato trovato"
    },
@@ -286,9 +184,6 @@
    },
    "preserveSelection": {
       "message": "Mantieni la selezione dopo la copia"
-   },
-   "reloadRequired": {
-      "message": "<p>L'estensione è stata aggiornata.</p><p>Si prega di ricaricare questa pagina.</p>"
    },
    "remove": {
       "message": "Rimuovi"
@@ -326,17 +221,11 @@
    "sortPlaylistNames": {
       "message": "Mostra i nomi delle playlist ordinati"
    },
-   "tabHints": {
-      "message": "Suggerimenti"
-   },
    "tabSettings": {
       "message": "Impostazioni"
    },
    "tabShortcuts": {
       "message": "Associazioni chiave"
-   },
-   "tabWhatsNew": {
-      "message": "Cosa c'è di nuovo"
    },
    "title": {
       "message": "Titolo"

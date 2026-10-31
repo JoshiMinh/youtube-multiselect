@@ -22,7 +22,6 @@
     w = `${v}[checked]`,
     _ = "rgba(0, 0, 0, 0.5)",
     k = "12px",
-    E = s + "-toast",
     T = s + "-progress-bar",
     I = T + "-close",
     A = ["application/json", "text/plain", "text/html"],
@@ -1022,6 +1021,15 @@
                   for (let i = t; i <= n; i++) e.at(i).checked = o;
                   kt.l();
                 },
+                g = (t, n) => {
+                  const o = e.indexOf(t),
+                    i = e.indexOf(n);
+                  if (o < 0 || i < 0) return;
+                  const a = Math.min(o, i),
+                    c = Math.max(o, i);
+                  for (let t = a; t <= c; t++) e.at(t).checked = !0;
+                  kt.l();
+                },
                 a = (t, n) => {
                   let o;
                   for (; (o = e.at(t)); ) {
@@ -1078,9 +1086,14 @@
                 f = (t, n, i = o) => {
                   e = [...P()];
                   const r = e.indexOf(t);
-                  if (-1 !== r)
-                    $t.j(n(r)),
-                      i && (c = t) && ((c.checked = !c.checked), kt.l());
+                  if (-1 !== r) {
+                    $t.j(n(r));
+                    if (i) {
+                      const n = $t.G;
+                      o && n && e.includes(n) ? g(n, t) : (t.checked = !t.checked);
+                      kt.l();
+                    }
+                  }
                   else {
                     const n = $t.B;
                     $t.j(
@@ -1101,10 +1114,9 @@
                     n
                       ? r && a.scrollIntoView({ block: "center" })
                       : a.scrollIntoView(!1),
-                    o)
-                  ) {
+                    o) {
                     const n = e.indexOf(t);
-                    -1 !== n && i(n, e.indexOf(a));
+                    -1 !== n && (o ? g(t, a) : i(n, e.indexOf(a)));
                   }
                   e = null;
                 },
@@ -1199,39 +1211,73 @@
         n = h,
         o = `<${n}></${n}>`,
         i = (t = n) => {
-          customElements.get(t) ||
-            Polymer({
-              is: t,
-              _template: () => {
-                const t = e.createElement("template");
-                return (
-                  (t.innerHTML = `<tp-yt-paper-checkbox id="${g}" class="${g}" on-tap="onTap" on-contextmenu="onContextMenu"></tp-yt-paper-checkbox>`),
-                  t
-                );
-              },
-              attached() {
-                !O && kt.l();
-              },
-              detached() {
-                !O && kt.l();
-              },
-              onTap(t) {
-                $t.j(),
-                  tt(t.detail.sourceEvent) &&
-                    ((t = $t.B) => {
-                      const e = $t.G,
-                        n = [...P()];
-                      let o = e ? n.indexOf(e) : 0,
-                        i = n.indexOf(t);
-                      -1 === o && (o = 0), o > i && ([o, i] = [i, o]);
-                      for (let e = o; e <= i; e++) n[e].checked = t.checked;
-                    })(t.target),
-                  kt.l();
-              },
-              onContextMenu(t) {
-                $t.j(), _t(t), gt.ot(t.clientX, t.clientY);
-              },
-            });
+          if (customElements.get(t)) return;
+          const n = {
+            is: t,
+            _template: () => {
+              const t = e.createElement("template");
+              return (
+                (t.innerHTML = `<tp-yt-paper-checkbox id="${g}" class="${g}" on-tap="onTap" on-contextmenu="onContextMenu"></tp-yt-paper-checkbox>`),
+                t
+              );
+            },
+            attached() {
+              !O && kt.l();
+            },
+            detached() {
+              !O && kt.l();
+            },
+            onTap(t) {
+              $t.j(),
+                tt(t.detail.sourceEvent) &&
+                  ((t = $t.B) => {
+                    const e = $t.G,
+                      n = [...P()];
+                    let o = e ? n.indexOf(e) : 0,
+                      i = n.indexOf(t);
+                    -1 === o && (o = 0), o > i && ([o, i] = [i, o]);
+                    for (let e = o; e <= i; e++) n[e].checked = t.checked;
+                  })(t.target),
+                kt.l();
+            },
+            onContextMenu(t) {
+              $t.j(), _t(t), gt.ot(t.clientX, t.clientY);
+            },
+          };
+          if ("function" == typeof Polymer) {
+            Polymer(n);
+            return;
+          }
+          customElements.define(
+            t,
+            class extends HTMLElement {
+              constructor() {
+                super();
+                this.append(n._template().content.cloneNode(true));
+                this.addEventListener("click", (t) => {
+                  this.checked = !this.checked;
+                  n.onTap({ detail: { sourceEvent: t }, target: this });
+                });
+                this.addEventListener("contextmenu", (t) => n.onContextMenu(t));
+              }
+
+              connectedCallback() {
+                n.attached.call(this);
+              }
+
+              disconnectedCallback() {
+                n.detached.call(this);
+              }
+
+              get checked() {
+                return this.hasAttribute("checked");
+              }
+
+              set checked(value) {
+                this.toggleAttribute("checked", Boolean(value));
+              }
+            }
+          );
         },
         r = (t) => {
           const e = customElements.get(t)?.generatedFrom?._template;
@@ -1382,14 +1428,28 @@
   }
   function watchLaterRequest(ids) {
     if (!ids.length) return Promise.reject(new Error("no videos selected"));
-    return innertube("/youtubei/v1/browse/edit_playlist", {
-      playlistId: "WL",
-      actions: ids.map((id) => ({ addedVideoId: id, action: o })),
-    });
+    const chunkSize = 50;
+    return ids.reduce(
+      (request, _, index) =>
+        index % chunkSize
+          ? request
+          : request.then(() =>
+              innertube("/youtubei/v1/browse/edit_playlist", {
+                playlistId: "WL",
+                actions: ids
+                  .slice(index, index + chunkSize)
+                  .map((id) => ({ addedVideoId: id, action: o })),
+              })
+            ),
+      Promise.resolve()
+    );
   }
   function zt() {
-    const n = bt.T.V,
-      ids = G();
+    const ids = G();
+    if (!ids.length) {
+      Kt(L.messages.invalidData);
+      return !1;
+    }
     return (
       watchLaterRequest(ids)
         .then((res) => {
@@ -1397,9 +1457,8 @@
           Kt(`✔️   ${L.messages.addToWatchLater} (${ids.length})`);
         })
         .catch((err) => {
-          console.warn("[multi-select] Watch later request failed, falling back:", err);
+          console.warn("[multi-select] Watch later request failed:", err);
           Kt("👎   " + L.messages.addToWatchLater);
-          bt.p(n);
         }),
       ct(),
       !z.preserveSelection
@@ -1438,12 +1497,8 @@
       host.data = fresh;
       console.info("[multi-select] Playlist data refreshed in place");
     } catch (err) {
-      console.warn("[multi-select] In-place refresh failed, navigating:", err);
-      try {
-        bt.$();
-      } catch (err2) {
-        console.warn("[multi-select] Playlist refresh failed:", err2);
-      }
+      console.warn("[multi-select] In-place refresh failed:", err);
+      Kt("👎   " + L.messages.invalidData);
     }
     restore();
   }
@@ -1970,12 +2025,7 @@
                 `#${T} > header > #${I} { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; margin-left: 20px; }`,
                 `#${T} > header > #${I}:hover { background-color: ${a}; border-radius: 50%; }`,
                 `#${T} > div { padding: 8px 0; background-color: var(--yt-spec-call-to-action, #065fd4); color: #fff; text-align: center; border-radius: 8px; }`,
-                `@keyframes ${
-                  E + "-fade-in-out"
-                } { 0%, 100% { bottom: 100px; opacity: 0; } 20%, 80% { bottom: 130px; opacity: 1; } }`,
-                `#${E} { font-size: 18px; position: fixed; bottom: 130px; left: 50vw; transform: translateX(-50%); z-index: 10000; box-shadow: ${o}; background-color: ${i}; color: ${r}; text-align: center; white-space: pre; border-radius: ${k}; border: ${d}; padding: 15px 20px; }`,
-                `#${E}.show { animation: ${E + "-fade-in-out"} 4000ms; }`,
-                `#${b} { padding: 0 16px 12px; font-family: Roboto, Arial, sans-serif; font-size: 14px; position: fixed; z-index: 2029; box-shadow: ${o}; background-color: ${i}; color: ${r}; text-align: center; border-radius: ${k}; border: ${d}; }`,
+                `#${b} { width: min(460px, calc(100vw - 32px)); box-sizing: border-box; padding: 0 20px 20px; font-family: Roboto, Arial, sans-serif; font-size: 14px; position: fixed; z-index: 2029; box-shadow: 0 8px 32px rgba(0,0,0,.4); background-color: var(--yt-spec-menu-background, #212121); color: var(--yt-spec-text-primary, #f1f1f1); text-align: start; border-radius: 12px; border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
                 `#${b}[position=center] { bottom: 130px; left: 50vw; transform: translateX(-50%); }`,
                 `#${b}[position=left] { bottom: 130px; left: 50px; }`,
                 `#${b}[position=custom] { left: clamp(0px, var(--x), calc(100vw - var(--right-offset))); top: clamp(1px, var(--y), calc(100vh - var(--bottom-offset))); }`,
@@ -1984,21 +2034,20 @@
                 `#${b} > #drag-handle > hr:first-child { margin: 0; }`,
                 `#${b} > #drag-handle > hr:last-child { margin: 3px 0 0; }`,
                 `#${b}[position=custom] > #drag-handle { visibility: visible; }`,
-                `#${b} > #content > header { display: flex; align-items: center; }`,
+                `#${b} > #content > header { display: flex; align-items: center; min-height: 56px; padding: 0 0 4px; border-bottom: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
                 `#${b} > #content > header > #title { padding-left: 10px; padding-right: 5px; }`,
                 `#${b} > #content > header > #${g} { margin-left: auto; }`,
-                `#${b} > #content > #choice { display: flex; align-items: center; margin: 10px 0; }`,
-                `#${b} > #content > #choice > #source-title { margin: 0; cursor: pointer; }`,
-                `#${b} > #content > #choice > #source-channel { margin: 0 0 0 30px; cursor: pointer; }`,
-                `#${b} > #content > #choice > #source-watched { margin: 0 0 0 30px; cursor: pointer; }`,
-                `#${b} > #content > #choice > label { padding-left: 10px; cursor: pointer; }`,
-                `#${b} > #content > section { display: flex; align-items: center; }`,
-                `#${b} > #content > section > input { margin-right: 10px; width: 15em; border-radius: 6px; font-family: Courier; font-size: inherit; background-color: inherit; color: inherit; }`,
-                `#${b} > #content > section > #done { margin-left: auto; }`,
-                `#${b} > #content > footer { margin-top: 20px; }`,
-                `#${b} > #content > footer > div { display: flex; align-items: center; }`,
-                `#${b} > #content > footer > div > input { cursor: pointer; transform: scale(1.5); }`,
-                `#${b} > #content > footer > div > label { cursor: pointer; padding-left: 10px; }`,
+                `#${b} > #content > #choice { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; margin: 18px 0; }`,
+                `#${b} > #content > #choice > input { margin: 0; accent-color: var(--yt-spec-call-to-action, #3ea6ff); cursor: pointer; }`,
+                `#${b} > #content > #choice > label { cursor: pointer; }`,
+                `#${b} > #content > section { display: flex; align-items: center; gap: 12px; }`,
+                `#${b} > #content > section > input { flex: 1; min-width: 0; height: 38px; box-sizing: border-box; margin: 0; padding: 0 12px; border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.2)); border-radius: 6px; font-family: inherit; font-size: inherit; background-color: transparent; color: inherit; outline: none; }`,
+                `#${b} > #content > section > input:focus { border-color: var(--yt-spec-call-to-action, #3ea6ff); box-shadow: 0 0 0 1px var(--yt-spec-call-to-action, #3ea6ff); }`,
+                `#${b} > #content > section > #done { flex: none; width: 40px; height: 40px; margin: 0; }`,
+                `#${b} > #content > footer { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
+                `#${b} > #content > footer > div { display: flex; align-items: center; gap: 10px; }`,
+                `#${b} > #content > footer > div > input { width: 18px; height: 18px; margin: 0; accent-color: var(--yt-spec-call-to-action, #3ea6ff); cursor: pointer; }`,
+                `#${b} > #content > footer > div > label { cursor: pointer; }`,
                 `#${b} > #content yt-icon-button { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; }`,
                 `#${b} > #content yt-icon-button:hover { background-color: ${a}; border-radius: 50%; }`,
                 `#${w} { display: none; position: fixed; padding: 8px; border-radius: ${k}; border: ${d}; box-shadow: ${o}; background-color: ${i}; color: ${r}; font-family: Roboto, Arial, sans-serif; font-size: 14px; max-width: ${t}px; z-index: 2030; }`,
@@ -2250,38 +2299,7 @@
                     (L = o), vt.tt();
                     break;
                   case "destroy":
-                    te(),
-                      (qt.enabled = !1),
-                      !r &&
-                        (function () {
-                          const t = s + "-reload-required";
-                          if (!e.querySelector(`#${t}`))
-                            try {
-                              const n = [
-                                  `#${t} { top: 64px; left: 16px; max-width: 320px; padding: 12px 16px; box-sizing: border-box; position: fixed; display: flex; align-items: center; gap: 12px; font-family: Roboto, Arial, sans-serif; font-size: 14px; line-height: 20px; color: var(--yt-spec-text-primary); background-color: var(--yt-spec-menu-background, #282828); border: 1px solid var(--yt-spec-10-percent-layer, rgba(255, 255, 255, 0.1)); border-radius: 12px; box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.3); z-index: 10000; user-select: none; cursor: pointer; }`,
-                                  `#${t} > svg, #${t} > img { flex: none; width: 32px; height: 32px; }`,
-                                  `#${t} > #info { margin: 0; color: var(--yt-spec-text-secondary, #aaa); }`,
-                                  `#${t} > #info > p { margin: 0 0 2px; font-weight: 500; color: var(--yt-spec-text-primary); }`,
-                                  `#${t}[dir="rtl"] { left: auto; right: 25px; }`,
-                                ],
-                                o = Bt.gt().sheet,
-                                i = o.cssRules.length;
-                              n.forEach((t, e) => o.insertRule(t, i + e));
-                              const r = L.messages,
-                                a = e.createElement("div");
-                              (a.id = t),
-                                (a.dir = r.localeDir),
-                                (a.title = r.clickToClose),
-                                (a.onclick = () => (a.style.display = "none")),
-                                (a.innerHTML = `${ot(
-                                  !1,
-                                  32
-                                )}<div id="info"><p>${r.extensionName}</p>${
-                                  r.reloadRequired
-                                }</div>`),
-                                e.body.appendChild(a);
-                            } catch (t) {}
-                        })();
+                    te(), (qt.enabled = !1);
                 }
               } catch (t) {}
             },
@@ -2378,7 +2396,7 @@
     Xt = (() => {
       let n, o, i;
       const c = s + "-callout",
-        d = 150,
+        d = 320,
         l = 10,
         u = 12,
         f = (t) => {
@@ -2398,7 +2416,7 @@
             parent: "#" + vt.dt,
             dir: "up",
             content: () =>
-              `${L.messages.callout1} <button id="shortcuts">${L.messages.keys}</button>`,
+              L.messages.callout1,
             style: (t) => `top: ${t.clientHeight + u}px;`,
             callback: () => {
               const t = r
@@ -2467,11 +2485,11 @@
           z.callout,
             (function () {
               if (!n) {
-                const t = "cyan";
+                const t = "var(--yt-spec-menu-background, #212121)";
                 [
                   `@keyframes ${c}-up { 0% { transform: translateY(0px); } 50% { transform: translateY(${u}px); } }`,
                   `@keyframes ${c}-down { 0% { transform: translateY(0px); } 50% { transform: translateY(-${u}px); } }`,
-                  `#${c} { position: absolute; border-radius: ${k}; width: ${d}px; padding: ${l}px; background-color: ${t}; box-shadow: 0px 0px 10px 5px ${_}; color: black; display:flex; justify-content: center; font-size: 14px; z-index: 2030; user-select: none; }`,
+                  `#${c} { position: absolute; border-radius: 12px; width: min(${d}px, calc(100vw - 32px)); padding: 16px; box-sizing: border-box; background-color: var(--yt-spec-menu-background, #212121); border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); box-shadow: 0 8px 32px rgba(0,0,0,.4); color: var(--yt-spec-text-primary, #f1f1f1); display: flex; justify-content: center; font-family: Roboto, Arial, sans-serif; font-size: 14px; line-height: 20px; z-index: 2030; user-select: none; }`,
                   `#${c}::after { position: absolute; border-width: ${u}px; border-color: transparent; border-style: solid; pointer-events: none; content: " "; }`,
                   `#${c}[dir=up]::after { top: -${
                     2 * u
@@ -2479,23 +2497,39 @@
                   `#${c}[dir=down]::after { bottom: -${
                     2 * u
                   }px; border-top-color: ${t}; animation: ${c}-down linear 1.2s infinite; }`,
-                  `#${c} > div > #close { top: ${l + 2}px; right: ${
-                    l + 2
-                  }px; position: absolute; font-size: 30px; line-height: 16px; cursor: pointer; }`,
-                  `#${c} > div > #close:hover { color: red; }`,
-                  `#${c} > div > #content { padding: 5px; }`,
-                  `#${c} > div > #content > button { cursor: pointer; }`,
+                  `#${c} > div { width: 100%; }`,
+                  `#${c} > div > #close { position: absolute; top: 10px; right: 10px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: transparent; color: var(--yt-spec-text-primary, #f1f1f1); font-size: 22px; line-height: 22px; cursor: pointer; }`,
+                  `#${c} > div > #close:hover { background: var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
+                  `#${c} > div > #content { padding: 4px 34px 14px 0; }`,
+                  `#${c} > div > #content > strong { display: block; margin-bottom: 4px; font-size: 15px; }`,
+                  `#${c} > div > #content > p { margin: 0; }`,
+                  `#${c} > div > #content > a { color: inherit; font-weight: 600; }`,
+                  `#${c} > div > #actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; }`,
+                  `#${c} > div > #actions > button { min-height: 32px; padding: 4px 12px; border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.2)); border-radius: 6px; background: transparent; color: var(--yt-spec-text-secondary, #aaa); cursor: pointer; font: inherit; }`,
+                  `#${c} > div > #actions > button:hover { background: var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); color: var(--yt-spec-text-primary, #f1f1f1); }`,
+                  `#${c} > div > #actions > #next { background: var(--yt-spec-call-to-action, #3ea6ff); color: #0f0f0f; border-color: transparent; font-weight: 500; }`,
                 ].forEach((t) => Bt.bt(!0, t)),
                   (n = e.createElement("div")),
                   (n.id = c),
-                  (n.innerHTML = `<div><yt-icon id="icon" icon="${s}:${s}-info"></yt-icon><span id="close">×</span><div id="content"></div></div>`),
+                  (n.innerHTML = `<div><yt-icon id="icon" icon="${s}:${s}-info"></yt-icon><button id="close" type="button" aria-label="${L.messages.close}">×</button><div id="content"></div><div id="actions"><button id="skip" type="button">${L.messages.onboardingSkip}</button><button id="shortcuts" type="button">${L.messages.onboardingShortcuts}</button><button id="next" type="button"></button></div></div>`),
                   n
                     .querySelector("#close")
+                    .addEventListener("click", (t) => (it(t), b())),
+                  n
+                    .querySelector("#skip")
+                    .addEventListener("click", (t) => (it(t), b())),
+                  n
+                    .querySelector("#next")
                     .addEventListener("click", (t) => (it(t), b())),
                   (o = n.querySelector("#content"));
               }
             })(),
-            (o.innerHTML = i.content()),
+            (o.innerHTML = `<strong>${L.messages.onboardingTitle}</strong><p>${L.messages.onboardingStep.replace("$1", String(z.callout + 1)).replace("$2", String(m.length))}</p><p>${i.content()}</p>`),
+            n.querySelector("#shortcuts").style.display = z.callout === 0 ? "" : "none",
+            n.querySelector("#next").textContent =
+              z.callout === m.length - 1
+                ? L.messages.onboardingFinish
+                : L.messages.onboardingNext,
             n.setAttribute("dir", i.dir),
             (n.style = i.style(r)),
             i.callback?.(),
@@ -2651,7 +2685,7 @@
               (w.style.display = "block"),
               (w.firstElementChild.innerHTML = x.value),
               (_.checked = x.option),
-              (_.nextElementSibling.textContent = "Filter umkehren");
+              (_.nextElementSibling.textContent = L.messages.reverseFilter);
           });
         const k = () => a.querySelector('input[name="source"]:checked').value,
           E = () =>
@@ -2719,30 +2753,26 @@
     };
   })();
   function Kt(t) {
+    const container = e.querySelector("ytd-popup-container"),
+      text = t.replace(/^[^\p{L}\p{N}]+/u, "").slice(0, 120);
+    if (!container?.handleOpenPopupAction) {
+      console.warn("[multi-select] Native YouTube toast unavailable:", text);
+      return;
+    }
     try {
-      // YouTube's native toast; the emoji prefix is only meaningful in the fallback below.
-      const text = t.replace(/^[^\p{L}\p{N}]+/u, "");
-      // The popup container's own handler: the only route that still renders a native toast.
-      e.querySelector("ytd-popup-container").handleOpenPopupAction({
+      container.handleOpenPopupAction({
         openPopupAction: {
           popupType: "TOAST",
           popup: {
             notificationActionRenderer: {
-              responseText: { simpleText: text.length > 120 ? text.slice(0, 117) + "..." : text },
+              responseText: { simpleText: text },
             },
           },
         },
       });
-      return;
-    } catch {}
-    const n = e.createElement("div");
-    (n.id = E),
-      (n.textContent = t),
-      (n.className = "show"),
-      e.body.appendChild(n),
-      n.addEventListener("animationend", function t(e) {
-        n.removeEventListener("animationend", t), n.remove();
-      });
+    } catch (err) {
+      console.warn("[multi-select] Native YouTube toast failed:", err);
+    }
   }
   function te() {
     (O = !0),

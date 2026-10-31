@@ -17,27 +17,6 @@
    "bottomLeft": {
       "message": "左下方"
    },
-   "callout1": {
-      "message": "在这里您可以打开和关闭多重选择或使用这些"
-   },
-   "callout2": {
-      "message": "这是用于多选的操作栏。"
-   },
-   "callout3": {
-      "message": "在这里您可以再次关闭操作栏。"
-   },
-   "callout5": {
-      "message": "在这里您可以看到您选择了多少个视频。"
-   },
-   "callout6": {
-      "message": "您可以在此处选择所有视频。"
-   },
-   "callout7": {
-      "message": "您可以在此处再次取消选择所有选定的视频。"
-   },
-   "callout8": {
-      "message": "这是一个具有附加功能的菜单。"
-   },
    "cancel": {
       "message": "取消"
    },
@@ -97,84 +76,6 @@
    },
    "findDuplicatesBackwards": {
       "message": "向后查找重复项"
-   },
-   "hint100": {
-      "message": "一般来说"
-   },
-   "hint101": {
-      "message": "您可以使用标题栏中的蓝色图标按钮启用和禁用多项选择"
-   },
-   "hint101a": {
-      "message": "如果禁用多项选择，则也禁用键绑定"
-   },
-   "hint102": {
-      "message": "如果导航到另一个页面，则当前选择会丢失"
-   },
-   "hint103": {
-      "message": "如果您继续在菜单或页面中以相同方向导航，您会从第一项转到最后一项，然后从最后一项转到第一项"
-   },
-   "hint104": {
-      "message": "左窗格中带有播放列表名称的“展开”和“隐藏部分内容”可以使用 Ctrl+I 展开和折叠"
-   },
-   "hint105": {
-      "message": "在此版本中，剪贴板是扩展中的一个小内存，而不是操作系统剪贴板"
-   },
-   "hint106": {
-      "message": "主题（深色/浅色）自动采用 YouTube"
-   },
-   "hint200": {
-      "message": "选择视频"
-   },
-   "hint201": {
-      "message": "您可以通过单击鼠标来选择或取消选择视频"
-   },
-   "hint202": {
-      "message": "您可以使用空格键/Enter 选择或取消选择聚焦视频"
-   },
-   "hint203": {
-      "message": "聚焦的视频有绿松石色边框"
-   },
-   "hint203a": {
-      "message": "如果您没有看到焦点或尚未聚焦视频，请按导航键"
-   },
-   "hint204": {
-      "message": "所选视频将以钢蓝色突出显示，并在右下角有一个复选标记"
-   },
-   "hint205": {
-      "message": "按住 Shift 键可选择多个连续的视频"
-   },
-   "hint205a": {
-      "message": "单击或关注要选择的第一个视频，按住 Shift 键并单击或关注要选择的最后一个视频"
-   },
-   "hint206": {
-      "message": "您可以使用过滤器选择视频"
-   },
-   "hint207": {
-      "message": "您可以将所选视频的 ID 保存到文件中"
-   },
-   "hint207a": {
-      "message": "输出格式: JSON, TEXT, HTML"
-   },
-   "hint300": {
-      "message": "播放列表"
-   },
-   "hint301": {
-      "message": "您只能将视频添加到自己的播放列表中，包括稍后观看"
-   },
-   "hint302": {
-      "message": "您只能删除自己播放列表中的视频，包括“稍后观看”、“顶过的视频”和“历史记录”"
-   },
-   "hint302a": {
-      "message": "仅当您确认安全提示时才会删除视频"
-   },
-   "hint303": {
-      "message": "根据播放列表设置中的配置，将视频添加到播放列表的顶部或底部"
-   },
-   "hint304": {
-      "message": "您可以从文件添加视频"
-   },
-   "hint304a": {
-      "message": "导入格式: JSON, TEXT, HTML"
    },
    "home": {
       "message": "Home"
@@ -269,9 +170,6 @@
    "moveToTop": {
       "message": "移至顶部"
    },
-   "news": {
-      "message": "<h2>在 3.5 版本中</h2><span>🔧 固定视频检测</span><h2>在 3.4 版本中</h2><span><s>✔️ 未记录的选项：屏蔽广告</s></span><span>🎁 将文件中的视频添加到播放列表</span><span>🎁 将选择保存到文件</span><span>🎁 使用过滤器选择观看的视频</span><span>🎁 自由定位操作栏和过滤器</span><h2>在 3.3 版本中</h2><span>🔧 修复了添加到新播放列表的问题</span><span>✔️ 选项：向后查找重复项</span><h2>在 3.2 版本中</h2><span>🔧 固定视频检测</span><span>✔️ 选项：删除时无需安全查询</span><span>✨ 加载整个播放列表</span><span>🎁 按频道名称选择视频</span><span>🎁 完整的上下文菜单</span><h2>在 3.1 版本中</h2><span>🔨 修复了操作栏中不可见的图标</span><span>🔨 修复了操作栏中的三点菜单</span><span>🎁操作栏的备用位置，左下角</span><h2>在 3.0 版本中</h2><span>✔️ 支持新接口Manifest V3</span><span>✔️ 用户体验已从头开始重新设计</span><span>✔️ 与 YouTube 中相同的暗/亮显示</span><span>✔️ 所选视频清晰突出</span><span>✔️ 用于打开/关闭多项选择的图标按钮</span><span>✔️ 动作条</span><span>✔️ 上下文菜单</span><span>🚀 键盘导航</span><span>🚀 复制、剪切和粘贴视频</span><span>✨ 查找重复项</span><span>🎁 使用过滤器选择视频</span>"
-   },
    "noDuplicatesFound": {
       "message": "没有找到重复项"
    },
@@ -286,9 +184,6 @@
    },
    "preserveSelection": {
       "message": "复制后保留选择"
-   },
-   "reloadRequired": {
-      "message": "<p>此扩展已更新。</p><p>请重新加载此页面。</p>"
    },
    "remove": {
       "message": "消除"
@@ -326,17 +221,11 @@
    "sortPlaylistNames": {
       "message": "显示已排序的播放列表名称"
    },
-   "tabHints": {
-      "message": "蒂普斯"
-   },
    "tabSettings": {
       "message": "选项"
    },
    "tabShortcuts": {
       "message": "按键绑定"
-   },
-   "tabWhatsNew": {
-      "message": "什么是新的"
    },
    "title": {
       "message": "标题"

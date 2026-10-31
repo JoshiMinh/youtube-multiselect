@@ -17,27 +17,6 @@
    "bottomLeft": {
       "message": "sol alt"
    },
-   "callout1": {
-      "message": "Burada çoklu seçimi açıp kapatabilirsiniz veya bununla birlikte"
-   },
-   "callout2": {
-      "message": "İşte çoklu seçim için işlem çubuğu."
-   },
-   "callout3": {
-      "message": "Burada işlem çubuğunu tekrar kapatabilirsiniz."
-   },
-   "callout5": {
-      "message": "Burada kaç tane video seçtiğinizi görebilirsiniz."
-   },
-   "callout6": {
-      "message": "Burada tüm videoları seçebilirsiniz."
-   },
-   "callout7": {
-      "message": "Burada seçilen tüm videoların seçimini tekrar kaldırabilirsiniz."
-   },
-   "callout8": {
-      "message": "İşte ek işlevlere sahip bir menü."
-   },
    "cancel": {
       "message": "İptal etmek"
    },
@@ -97,84 +76,6 @@
    },
    "findDuplicatesBackwards": {
       "message": "Yinelenenleri geriye doğru bul"
-   },
-   "hint100": {
-      "message": "Genel olarak"
-   },
-   "hint101": {
-      "message": "Başlık çubuğundaki mavi simge düğmesiyle çoklu seçimi etkinleştirebilir veya devre dışı bırakabilirsiniz"
-   },
-   "hint101a": {
-      "message": "Çoklu seçim devre dışı bırakılırsa tuş atamaları da devre dışı bırakılır"
-   },
-   "hint102": {
-      "message": "Başka bir sayfaya giderseniz geçerli seçim kaybolur"
-   },
-   "hint103": {
-      "message": "Bir menüde veya sayfada aynı yönde gezinmeye devam ederseniz, ilk öğeden son öğeye ve son öğeden ilk öğeye gidersiniz"
-   },
-   "hint104": {
-      "message": "Çalma listesi adlarıyla birlikte sol bölmedeki \"Daha fazla göster\" ve \"Daha az göster\" Ctrl+I ile genişletilebilir ve daraltılabilir"
-   },
-   "hint105": {
-      "message": "Bu sürümde pano, işletim sistemi panosu değil, uzantı içindeki küçük bir bellektir"
-   },
-   "hint106": {
-      "message": "Tema (koyu/açık) YouTube'dan otomatik olarak uyarlanır"
-   },
-   "hint200": {
-      "message": "Videoları seçme"
-   },
-   "hint201": {
-      "message": "Fare tıklamasıyla bir videoyu seçebilir veya seçimini kaldırabilirsiniz"
-   },
-   "hint202": {
-      "message": "Odaklanmış bir videoyu Boşluk Çubuğu/Enter ile seçebilir veya seçimini kaldırabilirsiniz"
-   },
-   "hint203": {
-      "message": "Odaklanmış bir videonun turkuaz kenarlığı vardır"
-   },
-   "hint203a": {
-      "message": "Odaklanma görmüyorsanız veya henüz hiçbir video odaklanmadıysa bir gezinme tuşuna basın"
-   },
-   "hint204": {
-      "message": "Seçilen bir video çelik mavisi ile vurgulanacak ve sağ alt köşede bir onay işareti olacaktır"
-   },
-   "hint205": {
-      "message": "Art arda birden fazla video seçmek için Shift tuşunu basılı tutun"
-   },
-   "hint205a": {
-      "message": "Seçmek için ilk videoya tıklayın veya odaklanın, Shift'i basılı tutun ve seçmek için son videoyu tıklayın veya odaklanın"
-   },
-   "hint206": {
-      "message": "Filtreli videoları seçebilirsiniz"
-   },
-   "hint207": {
-      "message": "Seçilen videoların kimliklerini bir dosyaya kaydedebilirsiniz"
-   },
-   "hint207a": {
-      "message": "Çıkış formatları: JSON, TEXT, HTML"
-   },
-   "hint300": {
-      "message": "Çalma listeleri"
-   },
-   "hint301": {
-      "message": "Daha sonra izle dahil olmak üzere yalnızca kendi oynatma listelerinize video ekleyebilirsiniz"
-   },
-   "hint302": {
-      "message": "Daha sonra izle, Beğenilen videolar ve Geçmiş dahil olmak üzere yalnızca kendi oynatma listenizdeki videoları silebilirsiniz"
-   },
-   "hint302a": {
-      "message": "Videolar yalnızca güvenlik istemini onaylarsanız silinir"
-   },
-   "hint303": {
-      "message": "Videolar, oynatma listesi ayarlarında yapılandırıldığı gibi bir oynatma listesinin en üstüne veya en altına eklenir"
-   },
-   "hint304": {
-      "message": "Bir dosyadan video ekleyebilirsiniz"
-   },
-   "hint304a": {
-      "message": "İçe aktarma formatları: JSON, TEXT, HTML"
    },
    "home": {
       "message": "Home"
@@ -269,9 +170,6 @@
    "moveToTop": {
       "message": "En üste taşı"
    },
-   "news": {
-      "message": "<h2>3.5 sürümünde</h2><span>🔧 Sabit video algılama</span><h2>3.4 sürümünde</h2><span><s>✔️ Belgelenmemiş seçenek: Reklamları engelle</s></span><span>🎁 Dosyalardan oynatma listelerine video ekleyin</span><span>🎁 Seçimi dosyaya kaydet</span><span>🎁 Filtreyi kullanarak izlenen videoları seçin</span><span>🎁 Eylem çubuğunu ve filtreyi serbestçe konumlandırın</span><h2>3.3 sürümünde</h2><span>🔧 Yeni oynatma listesine ekleme düzeltildi</span><span>✔️ Seçenek: Yinelenenleri geriye doğru bul</span><h2>3.2 sürümünde</h2><span>🔧 Sabit video algılama</span><span>✔️ Seçenek: Güvenlik sorgusu olmadan sil</span><span>✨ Tüm oynatma listesini yükle</span><span>🎁 Videoları kanal adına göre seçin</span><span>🎁 Tam bağlam menüsü</span><h2>3.1 sürümünde</h2><span>🔨 Eylem çubuğundaki görünmez simgeler düzeltildi</span><span>🔨 Eylem çubuğunda sabit 3 noktalı menü</span><span>🎁 İşlem çubuğunun alternatif konumu, sol alt</span><h2>3.0 sürümünde</h2><span>✔️ Yeni arayüz Manifest V3'ü destekler</span><span>✔️ Kullanıcı deneyimi sıfırdan yeniden tasarlandı</span><span>✔️ YouTube ile aynı karanlık/açık ekran</span><span>✔️ Seçilen videolar açıkça vurgulanır</span><span>✔️ Çoklu seçimi açmak/kapatmak için simge düğmesi</span><span>✔️ Eylem çubuğu</span><span>✔️ Bağlam menüsü</span><span>🚀 Klavye navigasyonu</span><span>🚀 Videoları kopyalayın, kesin ve yapıştırın</span><span>✨ Yinelenenleri bulun</span><span>🎁 Filtreli videoları seçin</span>"
-   },
    "noDuplicatesFound": {
       "message": "Yinelenenler bulunamadı"
    },
@@ -286,9 +184,6 @@
    },
    "preserveSelection": {
       "message": "Kopyalamadan sonra seçimi koru"
-   },
-   "reloadRequired": {
-      "message": "<p>Uzantı güncellendi.</p><p>Lütfen bu sayfayı yeniden yükleyin.</p>"
    },
    "remove": {
       "message": "Kaldırmak"
@@ -326,17 +221,11 @@
    "sortPlaylistNames": {
       "message": "Çalma listesi adlarını sıralanmış olarak göster"
    },
-   "tabHints": {
-      "message": "İpuçları"
-   },
    "tabSettings": {
       "message": "Ayarlar"
    },
    "tabShortcuts": {
       "message": "Tuş bağlamaları"
-   },
-   "tabWhatsNew": {
-      "message": "Ne var ne yok"
    },
    "title": {
       "message": "Başlık"

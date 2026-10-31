@@ -19,9 +19,12 @@ const PAGE_PERSISTED = new Set(['blacklisted', 'callout', 'counts', 'handle', 'b
 const MESSAGE_KEYS = [
   'addToPlaylist', 'addToQueue', 'addToWatchLater', 'addVideosFromFile',
   'callout1', 'callout2', 'callout3', 'callout5', 'callout6', 'callout7', 'callout8',
+  'onboardingTitle', 'onboardingStep', 'onboardingNext', 'onboardingSkip',
+  'onboardingFinish', 'onboardingShortcuts',
   'cancel', 'caseSensitive', 'channelName', 'chooseOutputFormat', 'clickToClose', 'close',
   'confirmRemoveContent', 'copy', 'cut', 'deselectAllVideos','downloadSelection',
   'extensionName', 'filterHelpTooltip', 'invalidData', 'invalidFilter', 'keys',
+  'reverseFilter',
   'loadEntirePlaylist', 'loadingEntirePlaylist', 'localeDir', 'moveAfter', 'moveToBottom',
   'moveToTop', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',
   'selectAllVideos', 'selectDuplicates', 'selectWithFilter', 'selected', 'title', 'watched',
@@ -91,7 +94,15 @@ export default defineContentScript({
       if (!isFirefox) {
         const onDisconnect = () => {
           port.onDisconnect.removeListener(onDisconnect);
-          setTimeout(() => (browser.runtime.id ? connect() : destroy()), 100);
+          send('destroy');
+          setTimeout(() => {
+            if (browser.runtime.id) {
+              connect();
+              injectPageScript();
+            } else {
+              destroy();
+            }
+          }, 100);
         };
         port.onDisconnect.addListener(onDisconnect);
       }
@@ -114,13 +125,17 @@ export default defineContentScript({
       if (dark !== Boolean(options.dark)) await browser.storage.local.set({ dark });
     };
 
-    const script = document.createElement('script');
-    script.src = browser.runtime.getURL('/js/polymer.js' as never);
-    script.onload = () => {
-      script.remove();
-      void browser.storage.local.get().then(pushOptions).then(syncTheme);
-      sendMessages();
+    const injectPageScript = () => {
+      if (document.querySelector('html[data-cast-api-enabled]')) return;
+      const script = document.createElement('script');
+      script.src = browser.runtime.getURL('/js/polymer.js' as never);
+      script.onload = () => {
+        script.remove();
+        void browser.storage.local.get().then(pushOptions).then(syncTheme);
+        sendMessages();
+      };
+      document.documentElement.appendChild(script);
     };
-    document.documentElement.appendChild(script);
+    injectPageScript();
   },
 });

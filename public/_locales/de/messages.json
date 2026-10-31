@@ -17,27 +17,6 @@
    "bottomLeft": {
       "message": "unten links"
    },
-   "callout1": {
-      "message": "Hier schaltest Du die Mehrfachauswahl ein und aus oder mit diesen"
-   },
-   "callout2": {
-      "message": "Hier ist die Aktionsleiste für die Mehrfachauswahl."
-   },
-   "callout3": {
-      "message": "Hier kannst Du die Aktionsleiste wieder schließen."
-   },
-   "callout5": {
-      "message": "Hier siehst Du, wie viele Videos Du ausgewählt hast."
-   },
-   "callout6": {
-      "message": "Hier kannst Du alle Videos auswählen."
-   },
-   "callout7": {
-      "message": "Hier kannst Du alle ausgewählten Videos wieder abwählen."
-   },
-   "callout8": {
-      "message": "Hier befindet sich ein Menü mit weiteren Funktionen."
-   },
    "cancel": {
       "message": "Abbrechen"
    },
@@ -97,84 +76,6 @@
    },
    "findDuplicatesBackwards": {
       "message": "Duplikate rückwärts finden"
-   },
-   "hint100": {
-      "message": "Allgemein"
-   },
-   "hint101": {
-      "message": "Sie können die Mehrfachauswahl mit der blauen Symbolschaltfläche in der Kopfleiste aktivieren und deaktivieren"
-   },
-   "hint101a": {
-      "message": "Wenn die Mehrfachauswahl deaktiviert ist, sind auch die Tastenbelegungen deaktiviert"
-   },
-   "hint102": {
-      "message": "Wenn Sie zu einer anderen Seite navigieren, geht die aktuelle Auswahl verloren"
-   },
-   "hint103": {
-      "message": "Wenn Sie in einem Menü oder auf einer Seite in derselben Richtung weiternavigieren, gelangen Sie vom ersten zum letzten und vom letzten zum ersten Punkt"
-   },
-   "hint104": {
-      "message": "„Mehr ansehen“ und „Weniger anzeigen“ im linken Bereich mit den Playlist-Namen kann mit Strg+I erweitert und reduziert werden"
-   },
-   "hint105": {
-      "message": "In dieser Version ist die Zwischenablage ein kleiner Speicher innerhalb der Erweiterung und nicht die Zwischenablage des Betriebssystems"
-   },
-   "hint106": {
-      "message": "Das Design (dunkel/hell) wird automatisch von YouTube übernommen"
-   },
-   "hint200": {
-      "message": "Videos auswählen"
-   },
-   "hint201": {
-      "message": "Sie können ein Video per Mausklick auswählen oder abwählen"
-   },
-   "hint202": {
-      "message": "Sie können ein fokussiertes Video mit Leertaste/Eingabetaste auswählen oder abwählen"
-   },
-   "hint203": {
-      "message": "Ein fokussiertes Video hat einen türkisfarbenen Rand"
-   },
-   "hint203a": {
-      "message": "Wenn Sie keinen Fokus sehen oder noch kein Video fokussiert wurde, drücken Sie eine Navigationstaste"
-   },
-   "hint204": {
-      "message": "Ein ausgewähltes Video wird stahlblau hervorgehoben und hat ein Häkchen in der rechten unteren Ecke"
-   },
-   "hint205": {
-      "message": "Halten Sie die Umschalttaste gedrückt, um mehrere aufeinanderfolgende Videos auszuwählen"
-   },
-   "hint205a": {
-      "message": "Klicken oder fokussieren Sie auf das erste auszuwählende Video, halten Sie die Umschalttaste gedrückt und klicken oder fokussieren Sie auf das letzte auszuwählende Video"
-   },
-   "hint206": {
-      "message": "Sie können Videos mit dem Filter auswählen"
-   },
-   "hint207": {
-      "message": "Sie können die IDs der ausgewählten Videos in einer Datei speichern"
-   },
-   "hint207a": {
-      "message": "Ausgabeformate: JSON, TEXT, HTML"
-   },
-   "hint300": {
-      "message": "Playlisten"
-   },
-   "hint301": {
-      "message": "Sie können nur Videos in Ihre eigenen Playlisten einfügen, einschließlich „Später ansehen“"
-   },
-   "hint302": {
-      "message": "Sie können nur Videos in Ihren eigenen Playlisten löschen, einschließlich „Später ansehen“, „Videos, die ich mag“ und Verlauf"
-   },
-   "hint302a": {
-      "message": "Videos werden nur gelöscht, wenn Sie die Sicherheitsabfrage bestätigen"
-   },
-   "hint303": {
-      "message": "Videos werden oben oder unten einer Playlist hinzugefügt, wie in den Playlist-Einstellungen konfiguriert"
-   },
-   "hint304": {
-      "message": "Sie können Videos aus einer Datei hinzufügen"
-   },
-   "hint304a": {
-      "message": "Importformate: JSON, TEXT, HTML"
    },
    "home": {
       "message": "Pos1"
@@ -269,9 +170,6 @@
    "moveToTop": {
       "message": "An den Anfang verschieben"
    },
-   "news": {
-      "message": "<h2>in Version 3.5</h2><span>🔧 Videoerkennung wurde korrigiert</span><h2>in Version 3.4</h2><span><s>✔️ Undokumentierte Option: Werbung blockieren</s></span><span>🎁 Videos aus Dateien zu Playlists hinzufügen</span><span>🎁 Auswahl in Datei speichern</span><span>🎁 Angeschaute Videos mit dem Filter auswählen</span><span>🎁 Aktionsleiste und Filter frei positionieren</span><h2>in Version 3.3</h2><span>🔧 Zu neuer Playlist hinzufügen wurde korrigiert</span><span>✔️ Option: Duplikate rückwärts finden</span><h2>in Version 3.2</h2><span>🔧 Videoerkennung wurde korrigiert</span><span>✔️ Option: Löschen ohne Sicherheitsabfrage</span><span>✨ Gesamte Playlist laden</span><span>🎁 Videos nach Kanalnamen auswählen</span><span>🎁 Vollständiges Kontextmenü</span><h2>in Version 3.1</h2><span>🔨 Unsichtbare Symbole in der Aktionsleiste korrigiert</span><span>🔨 3-Punkte-Menü in der Aktionsleiste korrigiert</span><span>🎁 Alternative Position der Aktionsleiste, unten links</span><h2>in Version 3.0</h2><span>✔️ Unterstützt die neue Schnittstelle Manifest V3</span><span>✔️ Das Benutzererlebnis wurde von Grund auf neu gestaltet</span><span>✔️ Gleiche Darstellung Dunkel/Hell wie in YouTube</span><span>✔️ Ausgewählte Videos werden deutlich hervorgehoben</span><span>✔️ Symbolschaltfläche zum Ein-/Ausschalten der Mehrfachauswahl</span><span>✔️ Aktionsleiste</span><span>✔️ Kontextmenü</span><span>🚀 Tastaturnavigation</span><span>🚀 Videos kopieren, ausschneiden und einfügen</span><span>✨ Duplikate finden</span><span>🎁 Videos mit dem Filter auswählen</span>"
-   },
    "noDuplicatesFound": {
       "message": "Keine Duplikate gefunden"
    },
@@ -286,9 +184,6 @@
    },
    "preserveSelection": {
       "message": "Auswahl nach dem Kopieren beibehalten"
-   },
-   "reloadRequired": {
-      "message": "<p>Die Erweiterung wurde aktualisiert.</p><p>Bitte laden Sie diese Seite neu.</p>"
    },
    "remove": {
       "message": "Entfernen"
@@ -326,17 +221,11 @@
    "sortPlaylistNames": {
       "message": "Playlist-Namen sortiert anzeigen"
    },
-   "tabHints": {
-      "message": "Tipps"
-   },
    "tabSettings": {
       "message": "Einstellungen"
    },
    "tabShortcuts": {
       "message": "Tastenbelegungen"
-   },
-   "tabWhatsNew": {
-      "message": "Was gibt's Neues"
    },
    "title": {
       "message": "Titel"

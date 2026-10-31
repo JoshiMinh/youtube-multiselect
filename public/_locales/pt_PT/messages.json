@@ -17,27 +17,6 @@
    "bottomLeft": {
       "message": "inferior esquerdo"
    },
-   "callout1": {
-      "message": "Aqui você liga e desliga a seleção múltipla ou com estes"
-   },
-   "callout2": {
-      "message": "Aqui está a barra de ação para seleção múltipla."
-   },
-   "callout3": {
-      "message": "Aqui você pode fechar a barra de ação novamente."
-   },
-   "callout5": {
-      "message": "Aqui você pode ver quantos vídeos você selecionou."
-   },
-   "callout6": {
-      "message": "Aqui você pode selecionar todos os vídeos."
-   },
-   "callout7": {
-      "message": "Aqui você pode desmarcar todos os vídeos selecionados novamente."
-   },
-   "callout8": {
-      "message": "Aqui está um menu com funções adicionais."
-   },
    "cancel": {
       "message": "Cancelar"
    },
@@ -97,84 +76,6 @@
    },
    "findDuplicatesBackwards": {
       "message": "Encontre duplicatas para trás"
-   },
-   "hint100": {
-      "message": "Geralmente"
-   },
-   "hint101": {
-      "message": "Você pode ativar e desativar a seleção múltipla com o botão de ícone azul na barra de cabeçalho"
-   },
-   "hint101a": {
-      "message": "Se a seleção múltipla estiver desativada, as combinações de teclas também serão desativadas"
-   },
-   "hint102": {
-      "message": "Se você navegar para outra página, a seleção atual será perdida"
-   },
-   "hint103": {
-      "message": "Se você continuar navegando na mesma direção em um menu ou em uma página, você vai do primeiro ao último e do último ao primeiro item"
-   },
-   "hint104": {
-      "message": "“Mostrar mais” e “Mostrar menos” no painel esquerdo com nomes de lista de reprodução podem ser expandidos e recolhidos com Ctrl+I"
-   },
-   "hint105": {
-      "message": "Nesta versão, a área de transferência é uma pequena memória dentro da extensão e não a área de transferência do sistema operacional"
-   },
-   "hint106": {
-      "message": "O tema (escuro/claro) é automaticamente adotado do YouTube"
-   },
-   "hint200": {
-      "message": "Selecionando vídeos"
-   },
-   "hint201": {
-      "message": "Você pode selecionar ou desmarcar um vídeo com um clique do mouse"
-   },
-   "hint202": {
-      "message": "Você pode selecionar ou desmarcar um vídeo focado com a barra de espaço/Enter"
-   },
-   "hint203": {
-      "message": "Um vídeo focado tem uma borda turquesa"
-   },
-   "hint203a": {
-      "message": "Se você não vê um foco ou nenhum vídeo foi focado ainda, pressione uma tecla de navegação"
-   },
-   "hint204": {
-      "message": "Um vídeo selecionado será destacado em azul aço e terá uma marca de seleção no canto inferior direito"
-   },
-   "hint205": {
-      "message": "Mantenha pressionada a tecla Shift para selecionar vários vídeos consecutivos"
-   },
-   "hint205a": {
-      "message": "Clique ou foque no primeiro vídeo para selecionar, segure Shift e clique ou foque no último vídeo para selecionar"
-   },
-   "hint206": {
-      "message": "Você pode selecionar vídeos com o filtro"
-   },
-   "hint207": {
-      "message": "Você pode salvar os IDs dos vídeos selecionados em um arquivo"
-   },
-   "hint207a": {
-      "message": "Formatos de saída: JSON, TEXT, HTML"
-   },
-   "hint300": {
-      "message": "Listas de reprodução"
-   },
-   "hint301": {
-      "message": "Você só pode adicionar vídeos às suas próprias listas de reprodução, incluindo Assistir mais tarde"
-   },
-   "hint302": {
-      "message": "Você só pode excluir vídeos em suas próprias listas de reprodução, incluindo Assistir mais tarde, Vídeos curtidos e Histórico"
-   },
-   "hint302a": {
-      "message": "Os vídeos são excluídos apenas se você confirmar o prompt de segurança"
-   },
-   "hint303": {
-      "message": "Os vídeos são adicionados à parte superior ou inferior de uma lista de reprodução conforme definido nas configurações da lista de reprodução"
-   },
-   "hint304": {
-      "message": "Você pode adicionar vídeos de um arquivo"
-   },
-   "hint304a": {
-      "message": "Formatos de importação: JSON, TEXT, HTML"
    },
    "home": {
       "message": "Home"
@@ -269,9 +170,6 @@
    "moveToTop": {
       "message": "Mover para o início"
    },
-   "news": {
-      "message": "<h2>na versão 3.5</h2><span>🔧 Detecção de vídeo fixa</span><h2>na versão 3.4</h2><span><s>✔️ Opção não documentada: Bloquear anúncios</s></span><span>🎁 Adicione vídeos de arquivos a listas de reprodução</span><span>🎁 Salvar seleção em arquivo</span><span>🎁 Selecione os vídeos assistidos usando o filtro</span><span>🎁 Posicione livremente a barra de ação e o filtro</span><h2>na versão 3.3</h2><span>🔧 Corrigido adicionar à nova lista de reprodução</span><span>✔️ Opção: Encontre duplicatas para trás</span><h2>na versão 3.2</h2><span>🔧 Detecção de vídeo fixa</span><span>✔️ Opção: Excluir sem consulta de segurança</span><span>✨ Carregar lista de reprodução inteira</span><span>🎁 Selecionar vídeos pelo nome do canal</span><span>🎁 Menu de contexto completo</span><h2>na versão 3.1</h2><span>🔨 Ícones invisíveis corrigidos na barra de ação</span><span>🔨 Menu fixo de 3 pontos na barra de ação</span><span>🎁 Posição alternativa da barra de ação, canto inferior esquerdo</span><h2>na versão 3.0</h2><span>✔️ Suporta a nova interface Manifest V3</span><span>✔️ A experiência do usuário foi totalmente redesenhada</span><span>✔️ Mesma tela escura/clara do YouTube</span><span>✔️ Os vídeos selecionados são claramente destacados</span><span>✔️ Botão de ícone para ativar/desativar a seleção múltipla</span><span>✔️ Barra de ação</span><span>✔️ Menu de contexto</span><span>🚀 Navegação pelo teclado</span><span>🚀 Copie, recorte e cole vídeos</span><span>✨ Encontrar duplicatas</span><span>🎁 Selecione vídeos com o filtro</span>"
-   },
    "noDuplicatesFound": {
       "message": "Nenhuma duplicata encontrada"
    },
@@ -286,9 +184,6 @@
    },
    "preserveSelection": {
       "message": "Manter a seleção após a cópia"
-   },
-   "reloadRequired": {
-      "message": "<p>Esta extensão foi atualizada.</p><p>Por favor, recarregue esta página.</p>"
    },
    "remove": {
       "message": "Remover"
@@ -326,17 +221,11 @@
    "sortPlaylistNames": {
       "message": "Mostrar nomes de listas de reprodução classificados"
    },
-   "tabHints": {
-      "message": "Pontas"
-   },
    "tabSettings": {
       "message": "Configurações"
    },
    "tabShortcuts": {
       "message": "Combinações de teclas"
-   },
-   "tabWhatsNew": {
-      "message": "O que há de novo"
    },
    "title": {
       "message": "Título"

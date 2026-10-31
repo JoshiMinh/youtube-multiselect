@@ -17,27 +17,6 @@
    "bottomLeft": {
       "message": "abajo a la izquierda"
    },
-   "callout1": {
-      "message": "Aquí activa y desactiva la selección múltiple o con estos"
-   },
-   "callout2": {
-      "message": "Aquí está la barra de acción para la selección múltiple."
-   },
-   "callout3": {
-      "message": "Aquí puede volver a cerrar la barra de acción."
-   },
-   "callout5": {
-      "message": "Aquí puede ver cuántos videos ha seleccionado."
-   },
-   "callout6": {
-      "message": "Aquí puede seleccionar todos los videos."
-   },
-   "callout7": {
-      "message": "Aquí puede anular la selección de todos los videos seleccionados nuevamente."
-   },
-   "callout8": {
-      "message": "Aquí hay un menú con funciones adicionales."
-   },
    "cancel": {
       "message": "Cancelar"
    },
@@ -97,84 +76,6 @@
    },
    "findDuplicatesBackwards": {
       "message": "Encuentra duplicados al revés"
-   },
-   "hint100": {
-      "message": "Generalmente"
-   },
-   "hint101": {
-      "message": "Puede habilitar y deshabilitar la selección múltiple con el botón de icono azul en la barra de encabezado"
-   },
-   "hint101a": {
-      "message": "Si la selección múltiple está deshabilitada, las combinaciones de teclas también están deshabilitadas"
-   },
-   "hint102": {
-      "message": "Si navega a otra página, la selección actual se pierde"
-   },
-   "hint103": {
-      "message": "Si continúa navegando en la misma dirección en un menú o en una página, va del primero al último y del último al primer elemento"
-   },
-   "hint104": {
-      "message": "“Mostrar más” y “Mostrar menos” en el panel izquierdo con nombres de listas de reproducción se pueden expandir y contraer con Ctrl+I"
-   },
-   "hint105": {
-      "message": "En esta versión, el portapapeles es una pequeña memoria dentro de la extensión y no el portapapeles del sistema operativo"
-   },
-   "hint106": {
-      "message": "El tema (oscuro/claro) se adopta automáticamente de YouTube"
-   },
-   "hint200": {
-      "message": "Selección de vídeos"
-   },
-   "hint201": {
-      "message": "Puede seleccionar o anular la selección de un video con un clic del mouse"
-   },
-   "hint202": {
-      "message": "Puede seleccionar o anular la selección de un video enfocado con la barra espaciadora/Intro"
-   },
-   "hint203": {
-      "message": "Un vídeo enfocado tiene un borde turquesa"
-   },
-   "hint203a": {
-      "message": "Si no ve un enfoque o aún no se ha enfocado ningún video, presione una tecla de navegación"
-   },
-   "hint204": {
-      "message": "Un vídeo seleccionado se resaltará en azul acero y tendrá una marca de verificación en la esquina inferior derecha"
-   },
-   "hint205": {
-      "message": "Mantenga presionada la tecla Shift para seleccionar varios videos consecutivos"
-   },
-   "hint205a": {
-      "message": "Haga clic o enfóquese en el primer video para seleccionar, mantenga presionada la tecla Mayús y haga clic o enfóquese en el último video para seleccionar"
-   },
-   "hint206": {
-      "message": "Puedes seleccionar videos con el filtro"
-   },
-   "hint207": {
-      "message": "Puede guardar las ID de los videos seleccionados en un archivo"
-   },
-   "hint207a": {
-      "message": "Formatos de salida: JSON, TEXT, HTML"
-   },
-   "hint300": {
-      "message": "Listas de reproducción"
-   },
-   "hint301": {
-      "message": "Solo puede agregar videos a sus propias listas de reproducción, incluida Ver más tarde"
-   },
-   "hint302": {
-      "message": "Solo puede eliminar videos en sus propias listas de reproducción, incluidas Ver más tarde, Videos que me gustan e Historial"
-   },
-   "hint302a": {
-      "message": "Los videos solo se eliminan si confirma el aviso de seguridad"
-   },
-   "hint303": {
-      "message": "Los videos se agregan al principio o al final de una lista de reproducción según lo configurado en la configuración de la lista de reproducción"
-   },
-   "hint304": {
-      "message": "Puedes agregar videos desde un archivo"
-   },
-   "hint304a": {
-      "message": "Formatos de importación: JSON, TEXT, HTML"
    },
    "home": {
       "message": "Inicio"
@@ -269,9 +170,6 @@
    "moveToTop": {
       "message": "Mover al principio"
    },
-   "news": {
-      "message": "<h2>en la versión 3.5</h2><span>🔧 Detección de video fijo</span><h2>en la versión 3.4</h2><span><s>✔️ Opción no documentada: Bloquear anuncios</s></span><span>🎁 Agregar videos de archivos a listas de reproducción</span><span>🎁 Guardar selección en archivo</span><span>🎁 Seleccionar videos vistos usando el filtro</span><span>🎁 Coloque libremente la barra de acción y el filtro</span><h2>en la versión 3.3</h2><span>🔧 Se corrigió la adición a la nueva lista de reproducción</span><span>✔️ Opción: Encuentra duplicados al revés</span><h2>en la versión 3.2</h2><span>🔧 Detección de video fijo</span><span>✔️ Opción: Eliminar sin consulta de seguridad</span><span>✨ Cargar toda la lista de reproducción</span><span>🎁 Seleccionar videos por nombre de canal</span><span>🎁 Menú contextual completo</span><h2>en la versión 3.1</h2><span>🔨 Iconos invisibles fijos en la barra de acción</span><span>🔨 Menú fijo de 3 puntos en la barra de acción</span><span>🎁 Posición alternativa de la barra de acción, abajo a la izquierda</span><h2>en la versión 3.0</h2><span>✔️ Admite la nueva interfaz Manifest V3</span><span>✔️ La experiencia del usuario se ha rediseñado desde cero</span><span>✔️ Misma pantalla oscura/clara que en YouTube</span><span>✔️ Los videos seleccionados están claramente resaltados</span><span>✔️ Botón de icono para activar o desactivar la selección múltiple</span><span>✔️ Barra de acción</span><span>✔️ Menú contextual</span><span>🚀 Navegación por teclado</span><span>🚀 Copiar, cortar y pegar videos</span><span>✨ Encuentra duplicados</span><span>🎁 Seleccionar videos con el filtro</span>"
-   },
    "noDuplicatesFound": {
       "message": "No se encontraron duplicados"
    },
@@ -286,9 +184,6 @@
    },
    "preserveSelection": {
       "message": "Mantener la selección después de copiar"
-   },
-   "reloadRequired": {
-      "message": "<p>La extensión ha sido actualizada.</p><p>Vuelva a cargar esta página por favor.</p>"
    },
    "remove": {
       "message": "Eliminar"
@@ -326,17 +221,11 @@
    "sortPlaylistNames": {
       "message": "Mostrar nombres de playlists ordenados"
    },
-   "tabHints": {
-      "message": "Consejos"
-   },
    "tabSettings": {
       "message": "Ajustes"
    },
    "tabShortcuts": {
       "message": "Atajos de teclado"
-   },
-   "tabWhatsNew": {
-      "message": "Qué hay de nuevo"
    },
    "title": {
       "message": "Título"

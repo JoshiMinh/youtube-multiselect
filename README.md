@@ -35,7 +35,8 @@ pnpm build
 ```
 
 Then open `chrome://extensions`, turn on Developer mode, choose **Load unpacked** and select
-`.output/chrome-mv3`. Reload any open YouTube tabs.
+`.output/chrome-mv3`. Existing YouTube tabs reconnect to the updated extension without a page
+refresh; if the extension was previously loaded from another build, open a new YouTube tab once.
 
 For Firefox, run `pnpm build:firefox` and load `.output/firefox-mv2` from `about:debugging`.
 
@@ -48,7 +49,7 @@ For Firefox, run `pnpm build:firefox` and load `.output/firefox-mv2` from `about
 | `pnpm build:firefox` | Production build for Firefox |
 | `pnpm zip` | Package the build for store upload |
 | `pnpm typecheck` | Run the TypeScript checker |
-| `node smoke.mjs` | Load the build in Chromium on a public playlist and check for errors |
+| `node smoke.mjs` | Load the build in Chromium on a public playlist and check for errors (requires Playwright) |
 
 ## Project layout
 
