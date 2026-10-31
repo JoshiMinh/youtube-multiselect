@@ -19,7 +19,10 @@ export default defineConfig({
         suggested_key: { default: 'Ctrl+I' },
       },
     },
-    web_accessible_resources: [{ resources: ['js/polymer.js'], matches: ['https://www.youtube.com/*'] }],
+    web_accessible_resources: [{
+      resources: ['js/polymer.js'],
+      matches: ['https://www.youtube.com/*', 'https://music.youtube.com/*'],
+    }],
     ...(browser === 'firefox' && {
       browser_specific_settings: { gecko: { id: 'youtube-multiselect@local' } },
     }),

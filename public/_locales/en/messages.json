@@ -146,6 +146,9 @@
    "findDuplicatesBackwards": {
       "message": "Find duplicates backwards"
    },
+   "flipList": {
+      "message": "Flip list"
+   },
    "openOptionsOnUpdate": {
       "message": "Open settings after an extension update"
    },
@@ -238,6 +241,9 @@
    },
    "moveToBottom": {
       "message": "Move to bottom"
+   },
+   "groupByChannel": {
+      "message": "Group by channel"
    },
    "moveToTop": {
       "message": "Move to top"

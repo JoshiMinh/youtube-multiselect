@@ -2,6 +2,7 @@
 !(function (t, e) {
   if (!("customElements" in t)) return;
   const n = "https://www.youtube.com",
+    isMusic = location.hostname === "music.youtube.com",
     o = "ACTION_ADD_VIDEO",
     i = "ACTION_REMOVE_VIDEO_BY_VIDEO_ID",
     r = -1 !== navigator.userAgent.indexOf("Firefox"),
@@ -13,7 +14,7 @@
     f = s + "-penalty-icon-" + c,
     h = s + "-wrapper-" + c,
     m = s + "-dialog-" + c,
-    b = '.ytd-page-manager[role="main"]',
+    b = isMusic ? "ytmusic-app" : '.ytd-page-manager[role="main"]',
     $ = s + "-popup-menu",
     y = $ + "-item",
     g = s + "-video-checkbox",
@@ -115,27 +116,46 @@
         t?.getRootNode?.()?.host?.parentElement;
       return r?.matches?.(LK) ? lk(r) : r;
     },
-    F = (t) => H(j(t).data, "videoId"),
-    U = (t) => H(j(t).data, "setVideoId"),
-    B = (t) => j(t).data.isPlayable,
+    F = (t) => {
+      const data = j(t).data;
+      return isMusic ? data?.playlistItemData?.videoId : H(data, "videoId");
+    },
+    U = (t) => {
+      const data = j(t).data;
+      return isMusic ? data?.playlistItemData?.playlistSetVideoId : H(data, "setVideoId");
+    },
+    B = (t) => isMusic || j(t).data.isPlayable,
     G = ([...t] = S()) => (R() ? t.filter(B).map(F) : t.map(F)),
-    q = () => e.querySelector(b + '[page-subtype="playlist"]')?.__data?.data,
+    q = () =>
+      isMusic
+        ? e.querySelector("ytmusic-playlist-shelf-renderer")?.data
+        : e.querySelector(b + '[page-subtype="playlist"]')?.__data?.data,
     Q = () =>
       q()?.header?.playlistHeaderRenderer ??
-      e.querySelector(b + '[page-subtype="playlist"] ytd-playlist-video-list-renderer')?.data,
+      (isMusic
+        ? q()
+        : e.querySelector(b + '[page-subtype="playlist"] ytd-playlist-video-list-renderer')?.data),
     // Playlist pages now list lockupViewModel items instead of playlistVideoListRenderer.
     PL = () =>
-      q()?.contents?.twoColumnBrowseResultsRenderer?.tabs?.[0]?.tabRenderer?.content?.sectionListRenderer
-        ?.contents?.[0]?.itemSectionRenderer?.contents,
+      isMusic
+        ? q()?.contents
+        : q()?.contents?.twoColumnBrowseResultsRenderer?.tabs?.[0]?.tabRenderer?.content?.sectionListRenderer
+            ?.contents?.[0]?.itemSectionRenderer?.contents,
     svid = (id) => {
-      const item = id && PL()?.find?.((x) => x.lockupViewModel?.contentId === id);
+      const item = id && PL()?.find?.((x) => {
+        const json = JSON.stringify(x);
+        return json.includes(`"contentId":"${id}"`) || json.includes(`"videoId":"${id}"`);
+      });
       return item ? JSON.stringify(item).match(/"setVideoId":"([^"]+)"/)?.[1] : void 0;
     },
-    J = () => Q()?.playlistId ?? (R() ? new URLSearchParams(t.location.search).get("list") : void 0),
+    J = () => Q()?.playlistId ?? new URLSearchParams(t.location.search).get("list"),
     X = () =>
+      (isMusic && Boolean(J())) ||
       Q()?.isEditable ||
       D() ||
-      (R() && ("WL" === J() || JSON.stringify(PL()?.[0]?.lockupViewModel ?? "").includes('"setVideoId"'))),
+      (R() &&
+        ("WL" === J() ||
+          PL()?.some?.((item) => JSON.stringify(item).includes('"setVideoId"')))),
     W = () => "LL" === J(),
     // Saved Shorts: no setVideoIds and not marked editable, but items can be removed by video id.
     SS = () => "YS" === J(),
@@ -231,7 +251,7 @@
   }
   location;
   const bt = (function () {
-      const n = e.querySelector("ytd-app");
+      const n = e.querySelector("ytd-app, ytmusic-app");
       function i(t, e, n, o = "setVideoId") {
         const i = {
             webCommandMetadata: {
@@ -248,12 +268,17 @@
       return {
         p(t, e = n, refresh = !0) {
           const edit = t?.playlistEditEndpoint;
-          if (!edit) return e.resolveCommand(t);
+          if (!edit) {
+            if (typeof e?.resolveCommand === "function") return e.resolveCommand(t);
+            console.warn("[multi-select] YouTube Music command is not supported by this page");
+            return Promise.resolve(!1);
+          }
           if (!edit.actions?.length) return;
           // resolveCommand no longer performs playlist edits, so send them directly.
           const { clientActions, ...request } = edit;
           const done = () => (
               clientActions &&
+                typeof n?.resolveCommand === "function" &&
                 n.resolveCommand({
                   signalServiceEndpoint: { signal: "CLIENT_SIGNAL", actions: clientActions },
                 }),
@@ -316,13 +341,13 @@
               url: e,
               reload: !1,
             };
-          return n.onYtNavigate({ detail: o });
+          return typeof n?.onYtNavigate === "function" ? n.onYtNavigate({ detail: o }) : void 0;
         },
         get v() {
           return n;
         },
         get _() {
-          return n.mastheadHeight || 56;
+          return n?.mastheadHeight || 56;
         },
         get k() {
           return t.ytcfg?.get("LOGGED_IN");
@@ -591,6 +616,20 @@
           enabled: () => a && c && !d && !r,
         },
         {
+          id: s + "-action-group-by-channel",
+          handler: groupByChannel,
+          icon: "view_module",
+          label: () => L.messages.groupByChannel,
+          enabled: () => a && c && !d && !r,
+        },
+        {
+          id: s + "-action-flip-list",
+          handler: flipSelected,
+          icon: `${s}:${s}-flip-list`,
+          label: () => L.messages.flipList,
+          enabled: () => a && c && !d && !r,
+        },
+        {
           id: s + "-action-select-duplicates",
           handler: Yt,
           icon: "icons:find-in-page",
@@ -815,7 +854,8 @@
       };
       return {
         tt() {
-          !n && ht("#end.ytd-masthead").then(o);
+          !n &&
+            ht(isMusic ? "ytmusic-nav-bar #right-content" : "#end.ytd-masthead").then(o);
         },
         st() {
           n && (n.remove(), (n = null));
@@ -1114,7 +1154,7 @@
                     n
                       ? r && a.scrollIntoView({ block: "center" })
                       : a.scrollIntoView(!1),
-                    o) {
+                    o)) {
                     const n = e.indexOf(t);
                     -1 !== n && (o ? g(t, a) : i(n, e.indexOf(a)));
                   }
@@ -1324,6 +1364,7 @@
           "ytd-grid-video-renderer",
           "ytd-playlist-video-renderer",
           "ytd-compact-video-renderer",
+          "ytmusic-responsive-list-item-renderer",
         ],
         n = [],
         o = (t) => {
@@ -1392,7 +1433,14 @@
             .map(async ([n, v]) => `${n} ${ts}_${await sha1(`${ts} ${v} ${origin}`)}`)
         )
       ).join(" "),
-      context = cfg.get("INNERTUBE_CONTEXT"),
+      baseContext = cfg.get("INNERTUBE_CONTEXT"),
+      delegatedSessionId = cfg.get("DELEGATED_SESSION_ID"),
+      context = delegatedSessionId
+        ? {
+            ...baseContext,
+            user: { ...baseContext?.user, onBehalfOfUser: delegatedSessionId },
+          }
+        : baseContext,
       res = await fetch(
         `${path}?key=${cfg.get("INNERTUBE_API_KEY")}&prettyPrint=false`,
         {
@@ -1450,6 +1498,7 @@
       Kt(L.messages.invalidData);
       return !1;
     }
+    const fallback = bt.T.V;
     return (
       watchLaterRequest(ids)
         .then((res) => {
@@ -1457,8 +1506,14 @@
           Kt(`✔️   ${L.messages.addToWatchLater} (${ids.length})`);
         })
         .catch((err) => {
-          console.warn("[multi-select] Watch later request failed:", err);
-          Kt("👎   " + L.messages.addToWatchLater);
+          console.warn("[multi-select] Watch later request failed, falling back:", err);
+          return bt.p(fallback).then(
+            () => Kt(`✔️   ${L.messages.addToWatchLater} (${ids.length})`),
+            (fallbackError) => {
+              console.warn("[multi-select] Watch later fallback failed:", fallbackError);
+              Kt("👎   " + L.messages.addToWatchLater);
+            }
+          );
         }),
       ct(),
       !z.preserveSelection
@@ -1524,6 +1579,82 @@
       else parent.insertBefore(frag, siblings[0] ?? null);
       softRefresh(expectTop);
     };
+  }
+  function reorderSelected(order, message) {
+    const selected = [...S()],
+      setVideoIds = selected.map(U),
+      first = selected[0],
+      anchor = first && rowOf(first.parentElement.parentElement),
+      parent = anchor?.parentElement,
+      rows = selected.map((checkbox) => rowOf(checkbox.parentElement.parentElement)),
+      previous = parent && [...parent.children]
+        .filter((child) => child.localName === rows[0]?.localName)
+        .find((child) => child.nextElementSibling === anchor);
+    if (!setVideoIds.every(Boolean) || !parent || !rows.length) {
+      Kt("👎   " + L.messages.invalidData);
+      return !1;
+    }
+    const actions = order
+      .slice()
+      .reverse()
+      .map((setVideoId) => ({
+        setVideoId,
+        action: "ACTION_MOVE_VIDEO_AFTER",
+        ...(previous ? { movedSetVideoIdPredecessor: U(previous.querySelector(x)) } : {}),
+      }));
+    const request = {
+      commandMetadata: {
+        webCommandMetadata: {
+          sendPost: !0,
+          apiUrl: "/youtubei/v1/browse/edit_playlist",
+        },
+      },
+      playlistEditEndpoint: { playlistId: J(), params: "CAFAAQ%3D%3D", actions },
+    };
+    bt.p(request, void 0, !1)?.then((ok) => {
+      if (!ok) return;
+      const current = [...S()].map((checkbox) => rowOf(checkbox.parentElement.parentElement));
+      const selectedRows = new Set(rows);
+      const fragment = e.createDocumentFragment();
+      order.forEach((setVideoId) => {
+        const index = setVideoIds.indexOf(setVideoId);
+        const row = rows[index];
+        row && fragment.appendChild(row);
+      });
+      if (current.length && parent === current[0].parentElement) {
+        const sibling = previous?.nextSibling || current.find((row) => !selectedRows.has(row));
+        parent.insertBefore(fragment, sibling || null);
+      }
+      Kt(`✔️   ${message} (${order.length})`);
+      softRefresh();
+    });
+    z.counts.move += order.length;
+    ct();
+    return !0;
+  }
+  function channelName(data) {
+    return (
+      data?.shortBylineText?.runs?.map((run) => run.text).join("") ||
+      data?.longBylineText?.runs?.map((run) => run.text).join("") ||
+      data?.ownerText?.runs?.map((run) => run.text).join("") ||
+      ""
+    );
+  }
+  function groupByChannel() {
+    const selected = [...S()],
+      order = selected
+        .map((checkbox) => ({ setVideoId: U(checkbox), channel: channelName(j(checkbox).data) }))
+        .reduce((groups, item) => {
+          const group = groups.find((candidate) => candidate.channel === item.channel);
+          (group || groups[groups.push({ channel: item.channel, items: [] }) - 1]).items.push(item);
+          return groups;
+        }, [])
+        .flatMap((group) => group.items)
+        .map((item) => item.setVideoId);
+    return reorderSelected(order, L.messages.groupByChannel);
+  }
+  function flipSelected() {
+    return reorderSelected([...S()].map(U).reverse(), L.messages.flipList);
   }
   function Lt() {
     if (!bt.T.M.every(Boolean)) return Kt("👎   " + L.messages.invalidData), !1;
@@ -2126,7 +2257,7 @@
               i = `<g id="${s}-info"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></g>`,
               r = `<g id="${s}-select-all"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"></path></g>`,
               a = `<g id="${s}-unselect-all"><path d="M1.79 12l5.58 5.59L5.96 19 .37 13.41 1.79 12zm.45-7.78L12.9 14.89l-1.28 1.28L7.44 12l-1.41 1.41L11.62 19l2.69-2.69 4.89 4.89 1.41-1.41L3.65 2.81 2.24 4.22zm14.9 9.27L23.62 7 22.2 5.59l-6.48 6.48 1.42 1.42zM17.96 7l-1.41-1.41-3.65 3.66 1.41 1.41L17.96 7z"></path></g>`;
-            (t.innerHTML = policy.createHTML(`<svg><defs>${o}${i}${r}${a}</defs></svg>`)),
+            (t.innerHTML = policy.createHTML(`<svg><defs>${o}${i}${r}${a}<g id="${s}-flip-list"><path d="M7 3v3h10v2H7v3L3 7l4-4zm10 8v3H7v2h10v3l4-4-4-4z"></path></g></defs></svg>`)),
               e.head.appendChild(t);
           }
         },

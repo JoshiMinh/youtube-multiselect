@@ -26,13 +26,13 @@ const MESSAGE_KEYS = [
   'extensionName', 'filterHelpTooltip', 'invalidData', 'invalidFilter', 'keys',
   'reverseFilter',
   'loadEntirePlaylist', 'loadingEntirePlaylist', 'localeDir', 'moveAfter', 'moveToBottom',
-  'moveToTop', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',
+  'moveToTop', 'groupByChannel', 'flipList', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',
   'selectAllVideos', 'selectDuplicates', 'selectWithFilter', 'selected', 'title', 'watched',
 ];
 
-// Port of the original content script (document_end, youtube.com).
+// Port of the original content script (document_end, YouTube and YouTube Music).
 export default defineContentScript({
-  matches: ['https://www.youtube.com/*'],
+  matches: ['https://www.youtube.com/*', 'https://music.youtube.com/*'],
   excludeMatches: [
     'https://www.youtube.com/error?*',
     'https://www.youtube.com/howyoutubeworks/*',
@@ -44,7 +44,7 @@ export default defineContentScript({
   runAt: 'document_end',
   main() {
     if (document.title === '404 Not Found') return;
-    if (!document.querySelector('ytd-app')) return;
+    if (!document.querySelector('ytd-app, ytmusic-app')) return;
     const isFirefox = navigator.userAgent.includes('Firefox');
 
     const send = (type: string, value?: unknown) =>

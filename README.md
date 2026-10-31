@@ -5,9 +5,9 @@
 # Youtube Multiselect
 
 A browser extension that adds multi-selection to YouTube playlists, Watch Later, subscriptions and
-other video lists. Select many videos at once, then copy, cut, paste, add to a playlist or queue,
-remove, or download the selection. The interface is styled to match YouTube's own light and dark
-themes.
+other video lists on YouTube and YouTube Music. Select many videos at once, then copy, cut, paste,
+add to a playlist or queue, remove, or download the selection. The interface is styled to match
+YouTube's own light and dark themes.
 
 ## Features
 
@@ -18,6 +18,7 @@ themes.
 - Copy, cut and paste videos between playlists, and add videos from a file.
 - Add the selection to a playlist, Watch Later or the queue, move it to the top or bottom of a
   playlist, or remove it.
+- Group selected videos by channel or flip their order in playlists you own or can edit.
 - Load an entire playlist before selecting.
 - Optional video index in playlists, sorted playlist names, and selection that survives copying.
 - Floating action bar that can sit at the bottom center, bottom left, or anywhere you drag it.
