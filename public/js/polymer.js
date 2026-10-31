@@ -191,12 +191,15 @@
     st(x, !1), kt.l();
   }
   function isShortVideo(t) {
-    const n = j(t);
-    return (
-      !!n?.matches?.("ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2") ||
-      !!n?.querySelector?.('a[href^="/shorts/"]') ||
-      !!t.closest?.('a[href^="/shorts/"]')
-    );
+    let n = t;
+    for (let i = 0; n && i < 8; i++, n = n.parentElement) {
+      if (n.matches?.("ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer"))
+        return !0;
+      if (n.querySelector?.('a[href*="/shorts/"]')) return !0;
+      if (n.__data?.data && /"shorts|\/shorts\//i.test(JSON.stringify(n.__data.data)))
+        return !0;
+    }
+    return !1;
   }
   function selectByType(t) {
     P().forEach((e) => (e.checked = isShortVideo(e) === t)), kt.l();
