@@ -74,6 +74,11 @@
     Y = () => !!N(),
     H = (t, e) =>
       t.playlistId ? (t[e] = t.videos?.[0]?.childVideoRenderer?.[e]) : t[e],
+    setVideoIdFromData = (data) =>
+      data?.playlistItemData?.playlistSetVideoId ||
+      data?.setVideoId ||
+      data?.playlistSetVideoId ||
+      JSON.stringify(data)?.match(/"(?:setVideoId|playlistSetVideoId)":"([^"]+)"/)?.[1],
     // A Short is rendered as -v2 wrapping the plain element; only the outer one gets a checkbox.
     LKN = [
       "yt-lockup-view-model",
@@ -121,8 +126,10 @@
       return isMusic ? data?.playlistItemData?.videoId : H(data, "videoId");
     },
     U = (t) => {
-      const data = j(t).data;
-      return isMusic ? data?.playlistItemData?.playlistSetVideoId : H(data, "setVideoId");
+      const data = j(t).data,
+        videoId = isMusic ? data?.playlistItemData?.videoId : H(data, "videoId"),
+        setVideoId = setVideoIdFromData(data);
+      return setVideoId || svid(videoId);
     },
     B = (t) => isMusic || j(t).data.isPlayable,
     G = ([...t] = S()) => (R() ? t.filter(B).map(F) : t.map(F)),
@@ -146,7 +153,9 @@
         const json = JSON.stringify(x);
         return json.includes(`"contentId":"${id}"`) || json.includes(`"videoId":"${id}"`);
       });
-      return item ? JSON.stringify(item).match(/"setVideoId":"([^"]+)"/)?.[1] : void 0;
+      return item
+        ? JSON.stringify(item).match(/"(?:setVideoId|playlistSetVideoId)":"([^"]+)"/)?.[1]
+        : void 0;
     },
     J = () => Q()?.playlistId ?? new URLSearchParams(t.location.search).get("list"),
     X = () =>
@@ -476,20 +485,22 @@
     })(),
     yt = (function () {
       let t, n;
-      function o(t) {
+      function o(t, loaded, total) {
         let o = e.querySelector("#" + T);
         if (!o) {
           (o = e.createElement("div")), (o.id = T);
           const t = et(I, "close") + nt(I, L.messages.close),
-            i = `<header>${`<span id="title">${L.messages.loadingEntirePlaylist}</span>`}${t}</header>`;
-          (o.innerHTML = `${i}<div></div>`),
+            i = `<header><span id="title">${L.messages.loadingEntirePlaylist}</span>${t}</header>`;
+          (o.innerHTML = `${i}<p id="status"></p><div role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>`),
             o.querySelector("#" + I).addEventListener("click", () => (n = !0)),
             e.body.appendChild(o);
         }
         const i = Math.min(100, Math.round(100 * t)) + "%";
         return (
-          (o.lastElementChild.style.width = i),
-          (o.lastElementChild.textContent = i),
+          (o.querySelector('[role="progressbar"]').style.width = i),
+          (o.querySelector('[role="progressbar"]').textContent = i),
+          (o.querySelector('[role="progressbar"]').setAttribute("aria-valuenow", String(Math.round(100 * t)))),
+          (o.querySelector("#status").textContent = loaded == null ? "" : `${loaded} / ${total}`),
           (o.style.display = ""),
           o
         );
@@ -523,12 +534,18 @@
         // Scrolling to the end lets YouTube fetch and render the next page itself.
         for (; !n && d && location.href === u; ) {
           const count = () => document.querySelectorAll(LK).length,
-            before = count();
-          document.documentElement.scrollTop = document.documentElement.scrollHeight;
-          for (let tries = 0; tries < 40 && count() === before; tries++)
+            before = count(),
+            beforeToken = d && JSON.stringify(d);
+          window.scrollTo(0, document.documentElement.scrollHeight);
+          for (let tries = 0; tries < 40; tries++) {
             await new Promise((resolve) => setTimeout(resolve, 250));
-          if (count() === before) break;
-          (s = i(q())?.contents), (d = r(s)), (l = (s?.length || 0) - (d ? 1 : 0)), o(d ? l / a : 1);
+            const next = r(i(q())?.contents),
+              changed = count() > before || (next && JSON.stringify(next) !== beforeToken);
+            if (changed) break;
+          }
+          const after = count();
+          if (after === before && (!d || JSON.stringify(r(i(q())?.contents)) === beforeToken)) break;
+          (s = i(q())?.contents), (d = r(s)), (l = (s?.length || 0) - (d ? 1 : 0)), o(d ? l / a : 1, l, a);
         }
         !(function (e) {
           e
@@ -545,7 +562,7 @@
                   },
                   !0
                 ),
-                (e.style.animation = `4s ${T + "-fade-out"} forwards`))
+                (e.style.animation = `180ms ${T + "-fade-out"} forwards`))
             : (t = n = !1);
         })(p);
       }
@@ -1295,8 +1312,18 @@
                 super();
                 this.append(n._template().content.cloneNode(true));
                 this.addEventListener("click", (t) => {
+                  if (t.button === 1) return;
                   this.checked = !this.checked;
                   n.onTap({ detail: { sourceEvent: t }, target: this });
+                });
+                this.addEventListener("auxclick", (t) => {
+                  if (t.button !== 1) return;
+                  const link = this.closest(LK)?.querySelector(
+                    'a[href*="/watch?v="], a[href^="/shorts/"]'
+                  );
+                  if (!link?.href) return;
+                  t.preventDefault();
+                  window.open(link.href, "_blank", "noopener,noreferrer");
                 });
                 this.addEventListener("contextmenu", (t) => n.onContextMenu(t));
               }
@@ -1529,7 +1556,15 @@
   // Same for removals: capture the rows now, drop them once the request has succeeded.
   function removeRows() {
     const rows = [...S()].map((b) => b.parentElement.parentElement).filter(Boolean).map(rowOf);
-    return (ok) => ok && (rows.forEach((r) => r.remove()), Kt(`✔️   ${L.messages.removeVideos} (${rows.length})`));
+    rows.forEach((r) => r.remove());
+    return (ok) => {
+      if (!ok) {
+        softRefresh();
+        return;
+      }
+      Kt(`✔️   ${L.messages.removeVideos} (${rows.length})`);
+      softRefresh();
+    };
   }
   // Re-fetches the playlist and hands it to YouTube's own browse element, which re-renders the list
   // in place (no navigation, no page load); falls back to a soft navigation.
@@ -1553,7 +1588,12 @@
       console.info("[multi-select] Playlist data refreshed in place");
     } catch (err) {
       console.warn("[multi-select] In-place refresh failed:", err);
-      Kt("👎   " + L.messages.invalidData);
+      try {
+        bt.$();
+      } catch (navigationError) {
+        console.warn("[multi-select] Playlist reload failed:", navigationError);
+        Kt("👎   " + L.messages.invalidData);
+      }
     }
     restore();
   }
@@ -1588,8 +1628,9 @@
       parent = anchor?.parentElement,
       rows = selected.map((checkbox) => rowOf(checkbox.parentElement.parentElement)),
       previous = parent && [...parent.children]
-        .filter((child) => child.localName === rows[0]?.localName)
-        .find((child) => child.nextElementSibling === anchor);
+        .slice(0, [...parent.children].indexOf(anchor))
+        .reverse()
+        .find((child) => child.matches?.(LK) || child.querySelector?.(x));
     if (!setVideoIds.every(Boolean) || !parent || !rows.length) {
       Kt("👎   " + L.messages.invalidData);
       return !1;
@@ -2151,11 +2192,12 @@
                 `@keyframes ${
                   T + "-fade-out"
                 } { from { opacity: 1; } to { opacity: 0; } }`,
-                `#${T} { min-width: 200px; border-radius: ${k}; border: ${d}; padding: 12px; box-shadow: ${o}; background-color: ${i}; color: ${r}; position: fixed; top: 60px; left: 50vw; transform: translateX(-50%); font-size: 16px; z-index: 10000; }`,
-                `#${T} > header { display: flex; align-items: center; padding-bottom: 8px; }`,
+                `#${T} { width: min(320px, calc(100vw - 32px)); box-sizing: border-box; border-radius: 14px; border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); padding: 14px; box-shadow: 0 8px 28px rgba(0,0,0,.35); background-color: var(--yt-spec-menu-background, #212121); color: ${r}; position: fixed; top: 64px; left: 50vw; transform: translateX(-50%); font-size: 14px; z-index: 10000; }`,
+                `#${T} > header { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; font-size: 14px; font-weight: 500; }`,
                 `#${T} > header > #${I} { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; margin-left: 20px; }`,
                 `#${T} > header > #${I}:hover { background-color: ${a}; border-radius: 50%; }`,
-                `#${T} > div { padding: 8px 0; background-color: var(--yt-spec-call-to-action, #065fd4); color: #fff; text-align: center; border-radius: 8px; }`,
+                `#${T} > #status { min-height: 18px; margin: 0 0 8px; color: var(--yt-spec-text-secondary, #aaa); font-size: 12px; }`,
+                `#${T} > [role="progressbar"] { height: 28px; box-sizing: border-box; padding: 5px 8px; background-color: var(--yt-spec-call-to-action, #065fd4); color: #fff; text-align: center; border-radius: 8px; font-size: 12px; font-weight: 600; transition: width 120ms linear; }`,
                 `#${b} { width: min(460px, calc(100vw - 32px)); box-sizing: border-box; padding: 0 20px 20px; font-family: Roboto, Arial, sans-serif; font-size: 14px; position: fixed; z-index: 2029; box-shadow: 0 8px 32px rgba(0,0,0,.4); background-color: var(--yt-spec-menu-background, #212121); color: var(--yt-spec-text-primary, #f1f1f1); text-align: start; border-radius: 12px; border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
                 `#${b}[position=center] { bottom: 130px; left: 50vw; transform: translateX(-50%); }`,
                 `#${b}[position=left] { bottom: 130px; left: 50px; }`,

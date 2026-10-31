@@ -16,12 +16,16 @@ export default defineBackground(() => {
     if (message?.type === 'url') void browser.tabs.create({ url: message.value, active: true });
   });
 
+  browser.action.onClicked.addListener(() => {
+    void browser.runtime.openOptionsPage();
+  });
+
   browser.runtime.onInstalled.addListener(async (details) => {
     if (details.reason === 'install') {
       await browser.storage.local.set({ installed: Date.now() });
-      void browser.runtime.openOptionsPage();
     } else if (details.reason === 'update') {
       const previous = details.previousVersion ?? '';
+      const current = browser.runtime.getManifest().version;
       if (previous < '3.0') {
         await browser.storage.local.remove([
           'hideOnHome',
@@ -45,7 +49,9 @@ export default defineBackground(() => {
         }
       }
       const { openOptionsOnUpdate = true } = await browser.storage.local.get('openOptionsOnUpdate');
-      if (openOptionsOnUpdate) void browser.runtime.openOptionsPage();
+      if (openOptionsOnUpdate && previous && previous !== current) {
+        void browser.runtime.openOptionsPage();
+      }
     }
   });
 
