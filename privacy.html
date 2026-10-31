@@ -3,38 +3,79 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Privacy Policy — Youtube Multiselect</title>
-    <style>
-      :root { color-scheme: light dark; font-family: system-ui, sans-serif; background: #0f1720; color: #f1f5f9; }
-      body { margin: 0; }
-      main { box-sizing: border-box; max-width: 760px; margin: 0 auto; padding: 56px 24px; }
-      p, li { color: #cbd5e1; line-height: 1.65; }
-      h1 { margin-bottom: 8px; }
-      h2 { margin-top: 36px; }
-      a { color: #60a5fa; }
-      .updated { color: #94a3b8; }
-    </style>
+    <meta name="description" content="Privacy policy for Youtube Multiselect.">
+    <title>Privacy Policy · Youtube Multiselect</title>
+    <link rel="stylesheet" href="site.css">
   </head>
   <body>
-    <main>
-      <h1>Privacy Policy</h1>
-      <p class="updated">Youtube Multiselect · Last updated: October 31, 2026</p>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="index.html">
+          <img src="assets/icon_logo.svg" alt="" width="32" height="32">
+          <span>Youtube Multiselect</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="index.html">Overview</a>
+          <a href="privacy.html" aria-current="page">Privacy</a>
+          <a href="https://github.com/JoshiMinh/youtube-multiselect">Source code</a>
+        </nav>
+      </div>
+    </header>
 
-      <h2>What the extension does</h2>
-      <p>Youtube Multiselect adds multi-selection and batch-management tools to YouTube and YouTube Music video lists and playlists.</p>
+    <main class="site-main">
+      <div class="privacy-layout">
+        <aside class="privacy-nav" aria-label="Privacy policy sections">
+          <p>On this page</p>
+          <a href="#scope">Scope</a>
+          <a href="#processed">Information processed</a>
+          <a href="#not-collected">What we do not collect</a>
+          <a href="#permissions">Permissions</a>
+          <a href="#contact">Contact</a>
+        </aside>
 
-      <h2>Information processed</h2>
-      <p>The extension temporarily processes video-list and playlist content shown on YouTube pages, such as video IDs, titles, channel names, watched state, and playlist ordering. This information is used only to provide the requested selection, filtering, copying, moving, grouping, reordering, and removal features.</p>
-      <p>Preferences and interface state are stored locally in the browser, including action-bar position, display settings, filter settings, onboarding progress, and usage counters.</p>
+        <article class="privacy-card">
+          <p class="eyebrow">Privacy, plainly stated</p>
+          <h1>Privacy Policy</h1>
+          <p class="updated">Youtube Multiselect · Last updated: October 31, 2026</p>
 
-      <h2>Information we do not collect</h2>
-      <p>Youtube Multiselect does not operate a remote analytics service, sell personal information, or transfer user data to third parties. It does not collect passwords, payment information, messages, health information, or precise location data.</p>
+          <section id="scope">
+            <h2>Scope</h2>
+            <p>This policy explains what Youtube Multiselect processes when you use its multi-selection and batch-management tools on YouTube and YouTube Music. The extension is designed to work locally in your browser and does not require an account with us.</p>
+          </section>
 
-      <h2>Permissions</h2>
-      <p>Storage permission saves local preferences. Access to YouTube and YouTube Music is required to display the extension controls and perform actions that the user requests using their existing signed-in session.</p>
+          <section id="processed">
+            <h2>Information processed</h2>
+            <p>The extension temporarily processes video-list and playlist content shown on YouTube pages, such as video IDs, titles, channel names, watched state, and playlist ordering. This information is used only to provide the selection, filtering, copying, moving, grouping, reordering, and removal features you request.</p>
+            <p>Preferences and interface state are stored locally in the browser. This can include the action-bar position, display settings, filter settings, onboarding progress, and usage counters.</p>
+            <div class="note"><strong>In short:</strong> playlist information is used to perform the action you choose, and your preferences stay in your browser.</div>
+          </section>
 
-      <h2>Contact</h2>
-      <p>For questions or support, visit <a href="https://github.com/JoshiMinh/youtube-multiselect/issues">the project issue tracker</a>.</p>
+          <section id="not-collected">
+            <h2>Information we do not collect</h2>
+            <p>Youtube Multiselect does not operate a remote analytics service, sell personal information, or transfer user data to third parties. It does not collect passwords, payment information, messages, health information, or precise location data.</p>
+            <p>The extension also does not use playlist content to build a separate profile about you. It interacts with YouTube only to provide the controls you have enabled and the actions you have requested.</p>
+          </section>
+
+          <section id="permissions">
+            <h2>Permissions</h2>
+            <p><strong>Storage:</strong> saves local preferences and interface state so the extension can remember how you use it.</p>
+            <p><strong>YouTube and YouTube Music access:</strong> displays the extension controls and performs actions requested by you using your existing signed-in session. The extension does not ask for your YouTube password or handle your authentication credentials.</p>
+          </section>
+
+          <section id="contact">
+            <h2>Contact</h2>
+            <p>If you have a question about this policy or the extension, visit <a href="https://github.com/JoshiMinh/youtube-multiselect/issues">the project issue tracker</a>. You can also review the implementation in the <a href="https://github.com/JoshiMinh/youtube-multiselect">source repository</a>.</p>
+          </section>
+        </article>
+      </div>
     </main>
+
+    <footer class="site-footer">
+      <p>Youtube Multiselect · Open source and local-first.</p>
+      <nav aria-label="Footer navigation">
+        <a href="index.html">Overview</a>
+        <a href="https://github.com/JoshiMinh/youtube-multiselect/issues">Support</a>
+      </nav>
+    </footer>
   </body>
 </html>

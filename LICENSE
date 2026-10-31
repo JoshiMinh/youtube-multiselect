@@ -7,14 +7,13 @@ work of the copyright holder:
 
   - entrypoints/
   - src/
-  - assets/
-  - public/icons/ (the logo and the PNG sizes generated from it)
+  - assets/ (the logo and the PNG sizes generated from it)
   - wxt.config.ts, smoke.mjs, package.json, tsconfig.json
   - README.md and this file
 
 It does not apply to material derived from the original "Multiselect for
-YouTube" extension by Pollux, which includes public/js/polymer.js and
-public/_locales/. The copyright holder has no right to license that material
+YouTube" extension by Pollux, which includes src/polymer.js and
+src/_locales/. The copyright holder has no right to license that material
 and grants no rights in it. Its use is governed by whatever terms its own
 author has set or has not set.
 

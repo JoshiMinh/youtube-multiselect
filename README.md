@@ -1,87 +1,179 @@
 <p align="center">
-  <img src="public/icons/logo.svg" alt="Youtube Multiselect" width="96" height="96" />
+  <img src="assets/icon_logo.svg" alt="Youtube Multiselect logo" width="96" height="96">
 </p>
 
 # Youtube Multiselect
 
-A browser extension that adds multi-selection to YouTube playlists, Watch Later, subscriptions and
-other video lists on YouTube and YouTube Music. Select many videos at once, then copy, cut, paste,
-add to a playlist or queue, remove, or download the selection. The interface is styled to match
-YouTube's own light and dark themes.
+Youtube Multiselect is a browser extension for selecting and managing multiple
+videos at once on YouTube and YouTube Music.
 
-## Features
+It adds batch controls to playlists, Watch Later, subscriptions, search results,
+and other video lists. The interface follows YouTube's light and dark themes and
+keeps preferences in the local browser profile.
 
-- Select videos with the mouse or the keyboard, one at a time or all at once.
-- Select with a filter on title, channel name or watched progress, with optional case sensitivity.
-- Select duplicates, searching forward or backward.
-- Select by duration and by position range.
-- Copy, cut and paste videos between playlists, and add videos from a file.
-- Add the selection to a playlist, Watch Later or the queue, move it to the top or bottom of a
-  playlist, or remove it.
-- Group selected videos by channel or flip their order in playlists you own or can edit.
-- Load an entire playlist before selecting.
-- Optional video index in playlists, sorted playlist names, and selection that survives copying.
-- Floating action bar that can sit at the bottom center, bottom left, or anywhere you drag it.
-- Localized into 14 languages.
+## What it can do
 
-The manual and the full list of keyboard shortcuts are on the extension's options page.
+- Select individual videos with the mouse or keyboard.
+- Select all videos or select by title, channel, watched progress, duration, or
+  position.
+- Search for duplicate videos, including in the reverse direction.
+- Copy, cut, and paste videos between playlists.
+- Add videos to a playlist, Watch Later, or the queue.
+- Move selected videos to the top or bottom of an editable playlist.
+- Remove selected videos and optionally skip the removal confirmation.
+- Group selected videos by channel or reverse playlist order.
+- Load an entire playlist before selecting videos.
+- Keep a selection while copying and optionally display video indexes.
+- Sort playlist names.
+- Use a floating action bar at the bottom center, bottom left, or a custom
+  position.
+- Configure the extension through the options page.
+- Use the interface in 14 languages.
 
-## Install
+The options page includes the complete keyboard shortcut reference and settings
+for selection behavior, playlist display, and the action bar.
 
-Requirements: Node.js and [pnpm](https://pnpm.io).
+## Privacy
+
+Youtube Multiselect processes the video and playlist information needed to carry
+out actions that you request on YouTube and YouTube Music. Preferences and
+interface state are stored locally through the browser storage API.
+
+The extension does not operate a remote analytics service, sell personal
+information, or transfer user data to third parties. It does not collect
+passwords, payment information, messages, health information, or precise
+location data.
+
+Read the complete policy in [privacy.html](privacy.html).
+
+## Install from a local build
+
+### Requirements
+
+- Node.js
+- pnpm
+- Chromium or Firefox for loading an unpacked extension
+
+### Chromium
 
 ```bash
 pnpm install
 pnpm build
 ```
 
-Then open `chrome://extensions`, turn on Developer mode, choose **Load unpacked** and select
-`.output/chrome-mv3`. Existing YouTube tabs reconnect to the updated extension without a page
-refresh; if the extension was previously loaded from another build, open a new YouTube tab once.
+Open `chrome://extensions`, enable Developer mode, select **Load unpacked**,
+and choose `.output/chrome-mv3`.
 
-For Firefox, run `pnpm build:firefox` and load `.output/firefox-mv2` from `about:debugging`.
+If an earlier build was loaded from another location, open a new YouTube tab
+after loading the new build. Existing tabs usually reconnect without a refresh.
+
+### Firefox
+
+```bash
+pnpm install
+pnpm build:firefox
+```
+
+Open `about:debugging`, choose **This Firefox**, select **Load Temporary Add-on**,
+and load the generated extension from `.output/firefox-mv2`.
 
 ## Development
 
-| Command | Purpose |
+Start WXT in development mode:
+
+```bash
+pnpm dev
+```
+
+WXT provides hot reload while developing the extension. The options page is
+defined in [entrypoints/options/index.html](entrypoints/options/index.html).
+The popup uses the same shared settings logic from [src/options.js](src/options.js).
+
+Run the type checker:
+
+```bash
+pnpm typecheck
+```
+
+Create a production build:
+
+```bash
+pnpm build
+```
+
+Build the Firefox variant:
+
+```bash
+pnpm build:firefox
+```
+
+Create a package for store upload:
+
+```bash
+pnpm zip
+```
+
+## Smoke test
+
+After creating a Chromium build, the Playwright smoke test loads it in a
+persistent Chromium context and opens a public YouTube playlist while checking
+for extension-related page errors:
+
+```bash
+node smoke.mjs
+```
+
+The smoke test requires Playwright's Chromium channel to be available locally.
+It uses a public playlist and does not sign in to YouTube.
+
+## Repository structure
+
+| Path | Purpose |
 | --- | --- |
-| `pnpm dev` | Start WXT with hot reload in a dev browser |
-| `pnpm build` | Production build for Chromium |
-| `pnpm build:firefox` | Production build for Firefox |
-| `pnpm zip` | Package the build for store upload |
-| `pnpm typecheck` | Run the TypeScript checker |
-| `node smoke.mjs` | Load the build in Chromium on a public playlist and check for errors (requires Playwright) |
+| `entrypoints/background.ts` | Background service worker and extension events |
+| `entrypoints/content/index.ts` | Content-script entrypoint and page-script bridge |
+| `entrypoints/content/style.css` | Content-script styles |
+| `entrypoints/options/index.html` | Settings and keyboard-shortcuts page |
+| `src/options.js` | Shared popup and options-page behavior |
+| `src/options.css` | Popup and options-page styles |
+| `src/polymer.js` | Page-side selection logic, menus, dialogs, and action bar |
+| `src/_locales/` | Translations |
+| `assets/` | Extension logo, icons, and generated static assets |
+| `index.html` | Project overview page |
+| `privacy.html` | Privacy policy |
+| `site.css` | Shared styles for the project pages |
+| `smoke.mjs` | Chromium Playwright smoke test |
+| `wxt.config.ts` | WXT and extension manifest configuration |
 
-## Project layout
+## Architecture notes
 
-| Path | Contents |
-| --- | --- |
-| `entrypoints/background.ts` | Background service worker |
-| `entrypoints/content/` | Content script that injects the page script and relays settings |
-| `entrypoints/popup/`, `entrypoints/options/` | Popup and options pages |
-| `src/options.js` | Shared script for the popup and options pages |
-| `assets/options.css` | Styles for the popup and options pages |
-| `public/js/polymer.js` | Page script: selection logic, action bar, menus and dialogs |
-| `public/_locales/` | Translations |
-| `public/icons/` | Logo (`logo.svg`) and the PNG sizes generated from it |
+The content script runs on YouTube and YouTube Music pages and injects the
+page-side script that interacts with the video-list UI. The background service
+worker handles extension-level events. The popup and options page share the
+same settings definitions and browser storage behavior.
 
-## Playlist header change
+The extension uses the browser's existing signed-in session to perform actions
+that the user initiates. It does not provide a separate YouTube API service or
+backend.
 
-YouTube replaced the playlist header data `header.playlistHeaderRenderer` with
-`header.pageHeaderRenderer`. The page script read the playlist ID and `isEditable` from the old
-object, got `undefined`, and treated every playlist as read-only, so the selection interface never
-appeared. The script now falls back to the data on `ytd-playlist-video-list-renderer`, which still
-carries both values.
+## Localization
 
-The progress estimate for "load entire playlist" still reads `numVideosText` from the old header
-and falls back to 5000, so its bar moves slowly. Loading itself works.
+Translations live under [src/_locales](src/_locales). English is the
+default locale. When adding a user-facing message, add the message to the
+English catalog first and update the other locale files as appropriate.
 
-## Credits
+## Attribution and licensing
 
-This project builds on the original "Multiselect for YouTube" extension by Pollux. The page script
-in `public/js/polymer.js` and the translations in `public/_locales/` derive from that work.
+This project builds on the original Multiselect for YouTube extension by
+Pollux. The page script in `src/polymer.js` and the translations in
+`src/_locales/` derive from that work.
 
-## License
+The repository license applies only to files identified as original work by
+the copyright holder. See [LICENSE](LICENSE) for the precise scope and the
+licensing terms. Material derived from the original extension remains subject
+to the terms set by its original author.
 
-See [LICENSE](LICENSE). The license covers only the files that are original to this repository.
-It does not cover material derived from the original extension.
+## Support
+
+Report bugs, request features, and ask questions in the
+[GitHub issue tracker](https://github.com/JoshiMinh/youtube-multiselect/issues).

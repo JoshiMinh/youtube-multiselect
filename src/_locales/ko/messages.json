@@ -1,0 +1,332 @@
+{
+   "addToPlaylist": {
+      "message": "재생목록에 저장"
+   },
+   "addToQueue": {
+      "message": "현재 재생목록에 추가"
+   },
+   "addToWatchLater": {
+      "message": "나중에 볼 동영상에 저장"
+   },
+   "addVideosFromFile": {
+      "message": "파일에서 비디오 추가"
+   },
+   "bottomCenter": {
+      "message": "하단 중앙"
+   },
+   "bottomLeft": {
+      "message": "왼쪽 하단"
+   },
+   "cancel": {
+      "message": "취소"
+   },
+   "caseSensitive": {
+      "message": "대소문자 구분"
+   },
+   "channelName": {
+      "message": "채널 이름"
+   },
+   "chooseOutputFormat": {
+      "message": "출력 형식을 선택하세요"
+   },
+   "clickToClose": {
+      "message": "닫으려면 클릭"
+   },
+   "close": {
+      "message": "닫다"
+   },
+   "confirmRemoveContent": {
+      "message": "이 목록에서 선택한 동영상을 제거하시겠습니까?"
+   },
+   "copy": {
+      "message": "복사"
+   },
+   "ctrl": {
+      "message": "Ctrl"
+   },
+   "custom": {
+      "message": "관습"
+   },
+   "cut": {
+      "message": "잘라내기"
+   },
+   "del": {
+      "message": "Del"
+   },
+   "deselectAllVideos": {
+      "message": "모든 동영상 선택 취소"
+   },
+   "downloadSelection": {
+      "message": "선택 항목을 파일에 저장"
+   },
+   "end": {
+      "message": "End"
+   },
+   "esc": {
+      "message": "Esc"
+   },
+   "extensionDescription": {
+      "message": "재생 목록의 비디오를 빠르고 쉽게 이동, 정렬 및 복사합니다."
+   },
+   "extensionName": {
+      "message": "Youtube Multiselect"
+   },
+   "filterHelpTooltip": {
+      "message": "정규 표현식 구문"
+   },
+   "findDuplicatesBackwards": {
+      "message": "거꾸로 중복 찾기"
+   },
+   "home": {
+      "message": "Home"
+   },
+   "ins": {
+      "message": "Ins"
+   },
+   "invalidData": {
+      "message": "유효하지 않은 데이터"
+   },
+   "invalidFilter": {
+      "message": "잘못된 정규 표현식"
+   },
+   "kbActivateFocusedMenuItem": {
+      "message": "초점이 맞춰진 메뉴 항목 활성화"
+   },
+   "kbCloseMenu": {
+      "message": "메뉴 닫기"
+   },
+   "kbCopySelectedVideos": {
+      "message": "선택한 비디오를 클립보드에 복사합니다"
+   },
+   "kbCutSelectedVideos": {
+      "message": "선택한 비디오를 클립보드에 복사하고 재생 목록 또는 기록에서 삭제합니다(보안 프롬프트 사용)"
+   },
+   "kbDeleteSelectedVideos": {
+      "message": "재생 목록 또는 기록에서 선택한 비디오 또는 집중된 비디오를 삭제합니다(확인 메시지 포함)"
+   },
+   "kbFocusAboveVideo": {
+      "message": "이전/위 비디오에 초점을 맞춥니다"
+   },
+   "kbFocusBelowVideo": {
+      "message": "다음/아래 비디오에 초점을 맞춥니다"
+   },
+   "kbFocusFirstMenuItem": {
+      "message": "첫 번째 메뉴 항목에 초점을 맞춥니다"
+   },
+   "kbFocusFirstVideo": {
+      "message": "첫 번째 비디오에 초점을 맞춥니다"
+   },
+   "kbFocusLastMenuItem": {
+      "message": "마지막 메뉴 항목에 초점을 맞춥니다"
+   },
+   "kbFocusLastVideo": {
+      "message": "마지막 비디오에 초점을 맞춥니다(다음 비디오 배치 로드)"
+   },
+   "kbFocusNextMenuItem": {
+      "message": "다음 메뉴 항목에 초점을 맞춥니다"
+   },
+   "kbFocusNextSelectedVideo": {
+      "message": "다음에 선택한 비디오에 초점을 맞춥니다"
+   },
+   "kbFocusNextVideo": {
+      "message": "다음 비디오에 초점을 맞춥니다"
+   },
+   "kbFocusPreviousMenuItem": {
+      "message": "이전 메뉴 항목에 초점을 맞춥니다"
+   },
+   "kbFocusPreviousSelectedVideo": {
+      "message": "이전에 선택한 비디오에 초점을 맞춥니다"
+   },
+   "kbFocusPreviousVideo": {
+      "message": "이전 비디오에 초점을 맞춥니다"
+   },
+   "kbPasteVideos": {
+      "message": "클립보드의 비디오를 현재 재생 목록에 붙여 넣습니다"
+   },
+   "kbToggleAllVideos": {
+      "message": "모든 비디오를 선택하거나 선택 해제합니다"
+   },
+   "kbToggleFocusedVideo": {
+      "message": "초점이 맞춰진 비디오를 선택하거나 선택 해제합니다"
+   },
+   "keys": {
+      "message": "열쇠"
+   },
+   "loadEntirePlaylist": {
+      "message": "전체 재생목록 로드"
+   },
+   "loadingEntirePlaylist": {
+      "message": "전체 재생 목록 로드 중"
+   },
+   "localeDir": {
+      "message": "ltr"
+   },
+   "moveAfter": {
+      "message": "이 후 이동"
+   },
+   "moveToBottom": {
+      "message": "맨 아래로 이동"
+   },
+   "moveToTop": {
+      "message": "맨 위로 이동"
+   },
+   "noDuplicatesFound": {
+      "message": "중복이 없습니다"
+   },
+   "noRemovalConfirmation": {
+      "message": "보안 쿼리 없이 삭제"
+   },
+   "paste": {
+      "message": "붙여넣기"
+   },
+   "positioning": {
+      "message": "위치 작업 표시줄 및 필터"
+   },
+   "preserveSelection": {
+      "message": "복사 후 선택 유지"
+   },
+   "remove": {
+      "message": "제거하다"
+   },
+   "removeVideos": {
+      "message": "이 목록에서 삭제"
+   },
+   "resetCallouts": {
+      "message": "소개 투어 반복"
+   },
+   "selectAllVideos": {
+      "message": "모든 동영상 선택"
+   },
+   "selectDuplicates": {
+      "message": "중복 선택"
+   },
+   "selectWithFilter": {
+      "message": "필터로 선택"
+   },
+   "selected": {
+      "message": "선택됨"
+   },
+   "shortcuts": {
+      "message": "키보드 단축키"
+   },
+   "shortcutsHeadline1": {
+      "message": "웹사이트 내비게이션"
+   },
+   "shortcutsHeadline2": {
+      "message": "작업 표시줄 및 상황에 맞는 메뉴 탐색"
+   },
+   "showVideoIndex": {
+      "message": "재생 목록에 비디오 인덱스 표시"
+   },
+   "sortPlaylistNames": {
+      "message": "정렬된 재생 목록 이름 표시"
+   },
+   "tabSettings": {
+      "message": "설정"
+   },
+   "tabShortcuts": {
+      "message": "키 바인딩"
+   },
+   "title": {
+      "message": "제목"
+   },
+   "toggleMultiSelectMode": {
+      "message": "다중 선택 켜기/끄기"
+   },
+   "watched": {
+      "message": "보았다"
+   },
+   "callout1": {
+      "message": "여러 동영상을 작업하려면 Multiselect를 켜세요. 브라우저 단축키도 설정할 수 있습니다."
+   },
+   "callout2": {
+      "message": "Multiselect가 켜져 있으면 이 작업 표시줄이 나타납니다. 현재 선택 항목에 사용할 도구가 들어 있습니다."
+   },
+   "callout3": {
+      "message": "이 버튼으로 작업 표시줄을 숨길 수 있습니다. 페이지를 나갈 때까지 선택 항목이 유지됩니다."
+   },
+   "callout5": {
+      "message": "선택한 동영상의 수입니다."
+   },
+   "callout6": {
+      "message": "이 버튼으로 로드된 모든 동영상을 선택합니다."
+   },
+   "callout7": {
+      "message": "현재 선택을 지웁니다."
+   },
+   "callout8": {
+      "message": "필터, 파일 작업, 재생목록 도구 등을 열려면 이 메뉴를 사용하세요."
+   },
+   "flipList": {
+      "message": "목록 뒤집기"
+   },
+   "groupByChannel": {
+      "message": "채널별 그룹화"
+   },
+   "languageNotice": {
+      "message": "인터페이스는 브라우저 언어와 YouTube 테마를 따릅니다."
+   },
+   "onboardingFinish": {
+      "message": "완료"
+   },
+   "onboardingNext": {
+      "message": "다음"
+   },
+   "onboardingShortcuts": {
+      "message": "단축키"
+   },
+   "onboardingSkip": {
+      "message": "둘러보기 건너뛰기"
+   },
+   "onboardingStep": {
+      "message": "$1단계 / 2"
+   },
+   "onboardingTitle": {
+      "message": "Multiselect 둘러보기"
+   },
+   "openOptionsOnUpdate": {
+      "message": "확장 프로그램 업데이트 후 설정 열기"
+   },
+   "optionsSections": {
+      "message": "옵션 섹션"
+   },
+   "reloadRequired": {
+      "message": "변경 사항을 적용하려면 페이지를 새로고침하세요."
+   },
+   "reverseFilter": {
+      "message": "필터 반전"
+   },
+   "selectShortsOnly": {
+      "message": "Shorts만 선택"
+   },
+   "selectVideosOnly": {
+      "message": "동영상만 선택"
+   },
+   "settingsEyebrow": {
+      "message": "확장 프로그램 환경설정"
+   },
+   "settingsGeneral": {
+      "message": "일반 설정"
+   },
+   "settingsGeneralDescription": {
+      "message": "동영상 관리에 사용하는 컨트롤을 조정합니다."
+   },
+   "settingsIntro": {
+      "message": "YouTube에서 선택, 재생목록 작업, 작업 표시줄의 동작을 설정하세요. 변경 사항은 자동으로 저장됩니다."
+   },
+   "settingsTitle": {
+      "message": "모든 재생목록을 더 쉽게 관리"
+   },
+   "shortcutsEyebrow": {
+      "message": "키보드"
+   },
+   "shortcutsIntro": {
+      "message": "자주 사용하는 단축키입니다. 아래 버튼으로 전체 단축키 목록을 열 수 있습니다."
+   },
+   "shortcutsTitle": {
+      "message": "마우스 없이 빠르게 작업"
+   },
+   "togglePlaylistGuide": {
+      "message": "재생목록 가이드 전환"
+   }
+}

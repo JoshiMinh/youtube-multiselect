@@ -69,7 +69,7 @@
         a
           ? (function () {
               const n = t.createElement("header");
-              (n.innerHTML = `<img src="icons/24.png"><span>${i}</span><button id="help"><img src="icons/help.svg"></button>`),
+              (n.innerHTML = `<img src="icon_24.png"><span>${i}</span><button id="help"><img src="help.svg"></button>`),
                 n
                   .querySelector("#help")
                   .addEventListener(

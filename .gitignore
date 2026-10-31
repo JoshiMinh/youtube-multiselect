@@ -1,26 +1,37 @@
 # Dependencies
 node_modules/
 
-# WXT
+# WXT and build output
 .wxt/
 .output/
 stats.html
 stats-*.json
 web-ext.config.ts
 
+# Test and coverage output
+playwright-report/
+test-results/
+blob-report/
+coverage/
+
 # Logs
 *.log
 npm-debug.log*
 pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Env
+# Local configuration and secrets
 .env
 .env.*
 !.env.example
 
-# OS / editor
+# Operating system files
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Editors
+.idea/
 .vscode/*
 !.vscode/extensions.json
-.idea/

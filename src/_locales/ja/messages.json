@@ -1,0 +1,332 @@
+{
+   "addToPlaylist": {
+      "message": "再生リストに保存"
+   },
+   "addToQueue": {
+      "message": "キューに追加"
+   },
+   "addToWatchLater": {
+      "message": "[後で見る] に保存"
+   },
+   "addVideosFromFile": {
+      "message": "ファイルからビデオを追加"
+   },
+   "bottomCenter": {
+      "message": "中央下"
+   },
+   "bottomLeft": {
+      "message": "左下"
+   },
+   "cancel": {
+      "message": "キャンセル"
+   },
+   "caseSensitive": {
+      "message": "大文字と小文字を区別"
+   },
+   "channelName": {
+      "message": "チャンネル名"
+   },
+   "chooseOutputFormat": {
+      "message": "出力形式を選択してください"
+   },
+   "clickToClose": {
+      "message": "クリックして閉じる"
+   },
+   "close": {
+      "message": "近い"
+   },
+   "confirmRemoveContent": {
+      "message": "選択したビデオをこのリストから削除してもよろしいですか?"
+   },
+   "copy": {
+      "message": "コピー"
+   },
+   "ctrl": {
+      "message": "Ctrl"
+   },
+   "custom": {
+      "message": "カスタム"
+   },
+   "cut": {
+      "message": "切り取り"
+   },
+   "del": {
+      "message": "Del"
+   },
+   "deselectAllVideos": {
+      "message": "すべての動画の選択を解除"
+   },
+   "downloadSelection": {
+      "message": "選択範囲をファイルに保存"
+   },
+   "end": {
+      "message": "End"
+   },
+   "esc": {
+      "message": "Esc"
+   },
+   "extensionDescription": {
+      "message": "プレイリスト内の動画を素早く簡単に移動、並べ替え、コピーします。"
+   },
+   "extensionName": {
+      "message": "Youtube Multiselect"
+   },
+   "filterHelpTooltip": {
+      "message": "正規表現の構文"
+   },
+   "findDuplicatesBackwards": {
+      "message": "重複を逆方向に検索"
+   },
+   "home": {
+      "message": "Home"
+   },
+   "ins": {
+      "message": "Ins"
+   },
+   "invalidData": {
+      "message": "無効なデータ"
+   },
+   "invalidFilter": {
+      "message": "正規表現が無効です"
+   },
+   "kbActivateFocusedMenuItem": {
+      "message": "フォーカスされたメニュー項目をアクティブにします"
+   },
+   "kbCloseMenu": {
+      "message": "メニューを閉じます"
+   },
+   "kbCopySelectedVideos": {
+      "message": "選択したビデオをクリップボードにコピーします"
+   },
+   "kbCutSelectedVideos": {
+      "message": "選択した動画をクリップボードにコピーし、プレイリストまたは履歴から削除します (セキュリティ プロンプト付き)。"
+   },
+   "kbDeleteSelectedVideos": {
+      "message": "選択した動画またはフォーカスされた動画をプレイリストまたは履歴から削除します (確認プロンプト付き)"
+   },
+   "kbFocusAboveVideo": {
+      "message": "前/上のビデオにフォーカスします"
+   },
+   "kbFocusBelowVideo": {
+      "message": "次/下のビデオにフォーカスします"
+   },
+   "kbFocusFirstMenuItem": {
+      "message": "最初のメニュー項目にフォーカスします"
+   },
+   "kbFocusFirstVideo": {
+      "message": "最初のビデオにフォーカスします"
+   },
+   "kbFocusLastMenuItem": {
+      "message": "最後のメニュー項目にフォーカスします"
+   },
+   "kbFocusLastVideo": {
+      "message": "最後のビデオにフォーカスします (ビデオの次のバッチを読み込みます)"
+   },
+   "kbFocusNextMenuItem": {
+      "message": "次のメニュー項目にフォーカスします"
+   },
+   "kbFocusNextSelectedVideo": {
+      "message": "次に選択したビデオにフォーカスします"
+   },
+   "kbFocusNextVideo": {
+      "message": "次のビデオにフォーカスします"
+   },
+   "kbFocusPreviousMenuItem": {
+      "message": "前のメニュー項目にフォーカスします"
+   },
+   "kbFocusPreviousSelectedVideo": {
+      "message": "前に選択したビデオにフォーカスします"
+   },
+   "kbFocusPreviousVideo": {
+      "message": "前のビデオにフォーカスします"
+   },
+   "kbPasteVideos": {
+      "message": "ビデオをクリップボードから現在のプレイリストに貼り付けます"
+   },
+   "kbToggleAllVideos": {
+      "message": "すべてのビデオを選択または選択解除します"
+   },
+   "kbToggleFocusedVideo": {
+      "message": "フォーカスされたビデオを選択または選択解除します"
+   },
+   "keys": {
+      "message": "キー"
+   },
+   "loadEntirePlaylist": {
+      "message": "プレイリスト全体をロードする"
+   },
+   "loadingEntirePlaylist": {
+      "message": "プレイリスト全体をロードしています"
+   },
+   "localeDir": {
+      "message": "ltr"
+   },
+   "moveAfter": {
+      "message": "この下に移動します"
+   },
+   "moveToBottom": {
+      "message": "一番下に移動"
+   },
+   "moveToTop": {
+      "message": "一番上に移動"
+   },
+   "noDuplicatesFound": {
+      "message": "重複は見つかりませんでした"
+   },
+   "noRemovalConfirmation": {
+      "message": "セキュリティクエリなしで削除"
+   },
+   "paste": {
+      "message": "貼り付け"
+   },
+   "positioning": {
+      "message": "アクションバーとフィルターを配置します"
+   },
+   "preserveSelection": {
+      "message": "操作後もチェックしたままにする"
+   },
+   "remove": {
+      "message": "削除"
+   },
+   "removeVideos": {
+      "message": "このリストから削除"
+   },
+   "resetCallouts": {
+      "message": "入門ツアーを繰り返す"
+   },
+   "selectAllVideos": {
+      "message": "すべての動画を選択"
+   },
+   "selectDuplicates": {
+      "message": "重複を選択"
+   },
+   "selectWithFilter": {
+      "message": "フィルターで選ぶ"
+   },
+   "selected": {
+      "message": "選択済み"
+   },
+   "shortcuts": {
+      "message": "キーボードショートカット"
+   },
+   "shortcutsHeadline1": {
+      "message": "ウェブサイトのナビゲーション"
+   },
+   "shortcutsHeadline2": {
+      "message": "アクション バーとコンテキスト メニューのナビゲーション"
+   },
+   "showVideoIndex": {
+      "message": "プレイリストに再生順の数字を表示する"
+   },
+   "sortPlaylistNames": {
+      "message": "ソートされたプレイリスト名を表示する"
+   },
+   "tabSettings": {
+      "message": "設定"
+   },
+   "tabShortcuts": {
+      "message": "キーバインディング"
+   },
+   "title": {
+      "message": "タイトル"
+   },
+   "toggleMultiSelectMode": {
+      "message": "複数選択のオン/オフ"
+   },
+   "watched": {
+      "message": "見た"
+   },
+   "callout1": {
+      "message": "複数の動画を操作するときは Multiselect をオンにしてください。ブラウザのショートカットも設定できます。"
+   },
+   "callout2": {
+      "message": "Multiselect をオンにするとこのアクションバーが表示されます。現在の選択に使えるツールが入っています。"
+   },
+   "callout3": {
+      "message": "このボタンでアクションバーを非表示にできます。ページを離れるまで選択は保持されます。"
+   },
+   "callout5": {
+      "message": "選択中の動画数です。"
+   },
+   "callout6": {
+      "message": "読み込まれたすべての動画を選択します。"
+   },
+   "callout7": {
+      "message": "現在の選択を解除します。"
+   },
+   "callout8": {
+      "message": "フィルター、ファイル操作、プレイリストツールなどを開きます。"
+   },
+   "flipList": {
+      "message": "リストを反転"
+   },
+   "groupByChannel": {
+      "message": "チャンネルでグループ化"
+   },
+   "languageNotice": {
+      "message": "ブラウザーの言語と YouTube のテーマに合わせて表示します。"
+   },
+   "onboardingFinish": {
+      "message": "完了"
+   },
+   "onboardingNext": {
+      "message": "次へ"
+   },
+   "onboardingShortcuts": {
+      "message": "ショートカット"
+   },
+   "onboardingSkip": {
+      "message": "ツアーをスキップ"
+   },
+   "onboardingStep": {
+      "message": "$1 / $2"
+   },
+   "onboardingTitle": {
+      "message": "Multiselect ツアー"
+   },
+   "openOptionsOnUpdate": {
+      "message": "拡張機能の更新後に設定を開く"
+   },
+   "optionsSections": {
+      "message": "オプションのセクション"
+   },
+   "reloadRequired": {
+      "message": "変更を適用するにはページを再読み込みしてください。"
+   },
+   "reverseFilter": {
+      "message": "フィルターを反転"
+   },
+   "selectShortsOnly": {
+      "message": "Shorts のみ選択"
+   },
+   "selectVideosOnly": {
+      "message": "動画のみ選択"
+   },
+   "settingsEyebrow": {
+      "message": "拡張機能の設定"
+   },
+   "settingsGeneral": {
+      "message": "一般設定"
+   },
+   "settingsGeneralDescription": {
+      "message": "動画管理で使う操作を調整します。"
+   },
+   "settingsIntro": {
+      "message": "YouTube での選択、プレイリスト操作、アクションバーの動作を設定します。変更は自動的に保存されます。"
+   },
+   "settingsTitle": {
+      "message": "すべてのプレイリストを簡単に管理"
+   },
+   "shortcutsEyebrow": {
+      "message": "キーボード"
+   },
+   "shortcutsIntro": {
+      "message": "よく使うショートカットです。下のボタンから完全な一覧を開けます。"
+   },
+   "shortcutsTitle": {
+      "message": "マウスなしで素早く操作"
+   },
+   "togglePlaylistGuide": {
+      "message": "プレイリストガイドを切り替え"
+   }
+}

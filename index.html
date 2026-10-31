@@ -3,35 +3,83 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Select and manage multiple videos at once on YouTube and YouTube Music.">
     <title>Youtube Multiselect</title>
-    <style>
-      :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #0f1720; color: #f1f5f9; }
-      body { margin: 0; }
-      main { box-sizing: border-box; max-width: 720px; margin: 0 auto; padding: 72px 24px; }
-      img { width: 72px; height: 72px; }
-      h1 { margin: 24px 0 12px; font-size: clamp(2rem, 6vw, 3.5rem); }
-      p, li { color: #cbd5e1; line-height: 1.65; }
-      a { color: #60a5fa; }
-      ul { padding-left: 1.25rem; }
-      .links { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
-    </style>
+    <link rel="stylesheet" href="site.css">
   </head>
   <body>
-    <main>
-      <img src="https://raw.githubusercontent.com/JoshiMinh/youtube-multiselect/main/public/icons/logo.svg" alt="">
-      <h1>Youtube Multiselect</h1>
-      <p>Select and manage multiple videos at once on YouTube and YouTube Music.</p>
-      <ul>
-        <li>Filter videos by title, channel, watched progress, duration, and position.</li>
-        <li>Copy, cut, paste, queue, save, remove, and download selections.</li>
-        <li>Group videos by channel, flip playlist order, and load entire playlists.</li>
-        <li>Use keyboard shortcuts and a floating action bar that follows YouTube themes.</li>
-      </ul>
-      <div class="links">
-        <a href="https://github.com/JoshiMinh/youtube-multiselect">Source code</a>
-        <a href="privacy.html">Privacy policy</a>
-        <a href="https://github.com/JoshiMinh/youtube-multiselect/issues">Support</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" href="index.html">
+          <img src="assets/icon_logo.svg" alt="" width="32" height="32">
+          <span>Youtube Multiselect</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="index.html" aria-current="page">Overview</a>
+          <a href="privacy.html">Privacy</a>
+          <a href="https://github.com/JoshiMinh/youtube-multiselect">Source code</a>
+        </nav>
       </div>
+    </header>
+
+    <main class="site-main">
+      <section class="hero" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">A better way to manage lists</p>
+          <h1 id="page-title">More videos. Less repetition.</h1>
+          <p class="hero-copy">Youtube Multiselect brings practical batch tools to YouTube and YouTube Music, so managing a playlist feels as quick as managing one video.</p>
+          <div class="cta-row">
+            <a class="button primary" href="https://github.com/JoshiMinh/youtube-multiselect">View the project</a>
+            <a class="button" href="privacy.html">Read the privacy policy</a>
+          </div>
+        </div>
+        <img class="hero-mark" src="assets/icon_logo.svg" alt="Youtube Multiselect logo" width="210" height="210">
+      </section>
+
+      <section class="section" aria-labelledby="tools-title">
+        <div class="section-heading">
+          <p class="eyebrow">Built for real playlists</p>
+          <h2 id="tools-title">The controls you need, without leaving YouTube.</h2>
+          <p class="lede">Select videos individually, by filter, or across an entire playlist. Then apply an action to the selection in one place.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <span class="number">01</span>
+            <h3>Find a precise selection</h3>
+            <p>Filter by title, channel, watched progress, duration, or position. Search forward or backward, including duplicates.</p>
+          </article>
+          <article class="feature-card">
+            <span class="number">02</span>
+            <h3>Act on many videos</h3>
+            <p>Copy, cut, paste, queue, save, remove, or download a group of videos instead of repeating the same action.</p>
+          </article>
+          <article class="feature-card">
+            <span class="number">03</span>
+            <h3>Keep your workflow close</h3>
+            <p>Use keyboard shortcuts, a floating action bar, and optional playlist tools that follow YouTube's light and dark themes.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="flow-title">
+        <div class="section-heading">
+          <p class="eyebrow">A simple rhythm</p>
+          <h2 id="flow-title">Select, shape, finish.</h2>
+        </div>
+        <div class="workflow">
+          <div class="workflow-step"><strong>01 · Select</strong><p>Choose one video, a filtered group, or the whole playlist.</p></div>
+          <div class="workflow-step"><strong>02 · Shape</strong><p>Copy, reorder, group by channel, or move the selection where it belongs.</p></div>
+          <div class="workflow-step"><strong>03 · Finish</strong><p>Save your changes, clear the selection, and get back to watching.</p></div>
+        </div>
+      </section>
     </main>
+
+    <footer class="site-footer">
+      <p>Youtube Multiselect · Open source and local-first.</p>
+      <nav aria-label="Footer navigation">
+        <a href="privacy.html">Privacy</a>
+        <a href="https://github.com/JoshiMinh/youtube-multiselect/issues">Support</a>
+      </nav>
+    </footer>
   </body>
 </html>

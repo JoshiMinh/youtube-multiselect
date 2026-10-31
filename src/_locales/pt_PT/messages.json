@@ -1,0 +1,332 @@
+{
+   "addToPlaylist": {
+      "message": "Guardar na playlist"
+   },
+   "addToQueue": {
+      "message": "Adicionar à fila"
+   },
+   "addToWatchLater": {
+      "message": "Guardar para ver mais tarde"
+   },
+   "addVideosFromFile": {
+      "message": "Adicionar vídeos do arquivo"
+   },
+   "bottomCenter": {
+      "message": "centro inferior"
+   },
+   "bottomLeft": {
+      "message": "inferior esquerdo"
+   },
+   "cancel": {
+      "message": "Cancelar"
+   },
+   "caseSensitive": {
+      "message": "Maiúsculas e minúsculas"
+   },
+   "channelName": {
+      "message": "Nome do canal"
+   },
+   "chooseOutputFormat": {
+      "message": "Selecione um formato de saída"
+   },
+   "clickToClose": {
+      "message": "Clique para fechar"
+   },
+   "close": {
+      "message": "Fechar"
+   },
+   "confirmRemoveContent": {
+      "message": "Tem certeza de que deseja remover os vídeos selecionados desta lista?"
+   },
+   "copy": {
+      "message": "Copiar"
+   },
+   "ctrl": {
+      "message": "Ctrl"
+   },
+   "custom": {
+      "message": "personalizado"
+   },
+   "cut": {
+      "message": "Recortar"
+   },
+   "del": {
+      "message": "Del"
+   },
+   "deselectAllVideos": {
+      "message": "Desmarcar todos os vídeos"
+   },
+   "downloadSelection": {
+      "message": "Salvar seleção em arquivo"
+   },
+   "end": {
+      "message": "End"
+   },
+   "esc": {
+      "message": "Esc"
+   },
+   "extensionDescription": {
+      "message": "Mova, classifique e copie vídeos em suas listas de reprodução com mais rapidez e facilidade."
+   },
+   "extensionName": {
+      "message": "Youtube Multiselect"
+   },
+   "filterHelpTooltip": {
+      "message": "Sintaxe de expressão regular"
+   },
+   "findDuplicatesBackwards": {
+      "message": "Encontre duplicatas para trás"
+   },
+   "home": {
+      "message": "Home"
+   },
+   "ins": {
+      "message": "Ins"
+   },
+   "invalidData": {
+      "message": "Dados inválidos"
+   },
+   "invalidFilter": {
+      "message": "Expressão regular inválida"
+   },
+   "kbActivateFocusedMenuItem": {
+      "message": "Ativa o item de menu focado"
+   },
+   "kbCloseMenu": {
+      "message": "Fecha o menu"
+   },
+   "kbCopySelectedVideos": {
+      "message": "Copia os vídeos selecionados para a área de transferência"
+   },
+   "kbCutSelectedVideos": {
+      "message": "Copia os vídeos selecionados para a área de transferência e os exclui da sua lista de reprodução ou histórico (com prompt de segurança)"
+   },
+   "kbDeleteSelectedVideos": {
+      "message": "Exclui os vídeos selecionados ou o vídeo em foco da sua lista de reprodução ou histórico (com solicitação de confirmação)"
+   },
+   "kbFocusAboveVideo": {
+      "message": "Foca o vídeo anterior/acima"
+   },
+   "kbFocusBelowVideo": {
+      "message": "Focaliza o vídeo seguinte/abaixo"
+   },
+   "kbFocusFirstMenuItem": {
+      "message": "Focaliza o primeiro item do menu"
+   },
+   "kbFocusFirstVideo": {
+      "message": "Foca o primeiro vídeo"
+   },
+   "kbFocusLastMenuItem": {
+      "message": "Focaliza o último item do menu"
+   },
+   "kbFocusLastVideo": {
+      "message": "Focaliza o último vídeo (carrega o próximo lote de vídeos)"
+   },
+   "kbFocusNextMenuItem": {
+      "message": "Focaliza o próximo item de menu"
+   },
+   "kbFocusNextSelectedVideo": {
+      "message": "Foca no próximo vídeo selecionado"
+   },
+   "kbFocusNextVideo": {
+      "message": "Foca o próximo vídeo"
+   },
+   "kbFocusPreviousMenuItem": {
+      "message": "Focaliza o item de menu anterior"
+   },
+   "kbFocusPreviousSelectedVideo": {
+      "message": "Foca no vídeo selecionado anteriormente"
+   },
+   "kbFocusPreviousVideo": {
+      "message": "Focaliza o vídeo anterior"
+   },
+   "kbPasteVideos": {
+      "message": "Cola os vídeos da área de transferência na lista de reprodução atual"
+   },
+   "kbToggleAllVideos": {
+      "message": "Seleciona ou desmarca todos os vídeos"
+   },
+   "kbToggleFocusedVideo": {
+      "message": "Seleciona ou desmarca o vídeo focado"
+   },
+   "keys": {
+      "message": "Chaves"
+   },
+   "loadEntirePlaylist": {
+      "message": "Carregar lista de reprodução inteira"
+   },
+   "loadingEntirePlaylist": {
+      "message": "Carregando toda a lista de reprodução"
+   },
+   "localeDir": {
+      "message": "ltr"
+   },
+   "moveAfter": {
+      "message": "Mova-se depois disso"
+   },
+   "moveToBottom": {
+      "message": "Mover para o fim"
+   },
+   "moveToTop": {
+      "message": "Mover para o início"
+   },
+   "noDuplicatesFound": {
+      "message": "Nenhuma duplicata encontrada"
+   },
+   "noRemovalConfirmation": {
+      "message": "Excluir sem consulta de segurança"
+   },
+   "paste": {
+      "message": "Colar"
+   },
+   "positioning": {
+      "message": "Posicionar barra de ação e filtro"
+   },
+   "preserveSelection": {
+      "message": "Manter a seleção após a cópia"
+   },
+   "remove": {
+      "message": "Remover"
+   },
+   "removeVideos": {
+      "message": "Remover desta lista"
+   },
+   "resetCallouts": {
+      "message": "Repita o tour introdutório"
+   },
+   "selectAllVideos": {
+      "message": "Selecione todos os vídeos"
+   },
+   "selectDuplicates": {
+      "message": "Selecionar duplicados"
+   },
+   "selectWithFilter": {
+      "message": "Selecione com filtro"
+   },
+   "selected": {
+      "message": "selecionado"
+   },
+   "shortcuts": {
+      "message": "Atalhos do teclado"
+   },
+   "shortcutsHeadline1": {
+      "message": "Navegação no site"
+   },
+   "shortcutsHeadline2": {
+      "message": "Navegação na barra de ação e menu de contexto"
+   },
+   "showVideoIndex": {
+      "message": "Mostrar o índice de vídeo em suas listas de reprodução"
+   },
+   "sortPlaylistNames": {
+      "message": "Mostrar nomes de listas de reprodução classificados"
+   },
+   "tabSettings": {
+      "message": "Configurações"
+   },
+   "tabShortcuts": {
+      "message": "Combinações de teclas"
+   },
+   "title": {
+      "message": "Título"
+   },
+   "toggleMultiSelectMode": {
+      "message": "Habilitar/Desabilitar Múltiseleção"
+   },
+   "watched": {
+      "message": "Visto"
+   },
+   "callout1": {
+      "message": "Ative o Multiselect quando quiser trabalhar com mais do que um vídeo. Também pode configurar atalhos do navegador."
+   },
+   "callout2": {
+      "message": "Esta barra de ações aparece quando o Multiselect está ativo. Contém as ferramentas da sua seleção atual."
+   },
+   "callout3": {
+      "message": "Use este botão para ocultar a barra de ações. A sua seleção fica disponível até sair da página."
+   },
+   "callout5": {
+      "message": "Esta contagem mostra quantos vídeos estão selecionados."
+   },
+   "callout6": {
+      "message": "Selecione todos os vídeos carregados com este botão."
+   },
+   "callout7": {
+      "message": "Limpe a seleção atual com este botão."
+   },
+   "callout8": {
+      "message": "Abra este menu para filtros, ações de ficheiros, ferramentas de playlists e muito mais."
+   },
+   "flipList": {
+      "message": "Inverter lista"
+   },
+   "groupByChannel": {
+      "message": "Agrupar por canal"
+   },
+   "languageNotice": {
+      "message": "A interface segue o idioma do navegador e o tema do YouTube."
+   },
+   "onboardingFinish": {
+      "message": "Concluído"
+   },
+   "onboardingNext": {
+      "message": "Seguinte"
+   },
+   "onboardingShortcuts": {
+      "message": "Atalhos"
+   },
+   "onboardingSkip": {
+      "message": "Ignorar apresentação"
+   },
+   "onboardingStep": {
+      "message": "Passo $1 de $2"
+   },
+   "onboardingTitle": {
+      "message": "Apresentação do Multiselect"
+   },
+   "openOptionsOnUpdate": {
+      "message": "Abrir definições após uma atualização da extensão"
+   },
+   "optionsSections": {
+      "message": "Secções das opções"
+   },
+   "reloadRequired": {
+      "message": "Recarregue a página para aplicar esta alteração."
+   },
+   "reverseFilter": {
+      "message": "Inverter filtro"
+   },
+   "selectShortsOnly": {
+      "message": "Selecionar apenas Shorts"
+   },
+   "selectVideosOnly": {
+      "message": "Selecionar apenas vídeos"
+   },
+   "settingsEyebrow": {
+      "message": "Preferências da extensão"
+   },
+   "settingsGeneral": {
+      "message": "Definições gerais"
+   },
+   "settingsGeneralDescription": {
+      "message": "Ajuste os controlos usados para gerir vídeos."
+   },
+   "settingsIntro": {
+      "message": "Escolha como funcionam a seleção, as ações da playlist e a barra de ações no YouTube. As alterações são guardadas automaticamente."
+   },
+   "settingsTitle": {
+      "message": "Gira cada playlist com mais facilidade"
+   },
+   "shortcutsEyebrow": {
+      "message": "Teclado"
+   },
+   "shortcutsIntro": {
+      "message": "Estes são os atalhos mais usados. A lista completa pode ser aberta através do botão abaixo."
+   },
+   "shortcutsTitle": {
+      "message": "Faça mais sem usar o rato"
+   },
+   "togglePlaylistGuide": {
+      "message": "Alternar guia de playlists"
+   }
+}

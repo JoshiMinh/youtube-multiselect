@@ -1,0 +1,332 @@
+{
+   "addToPlaylist": {
+      "message": "儲存至播放清單"
+   },
+   "addToQueue": {
+      "message": "加入待播清單"
+   },
+   "addToWatchLater": {
+      "message": "儲存至「稍後觀看」清單"
+   },
+   "addVideosFromFile": {
+      "message": "從文件添加視頻"
+   },
+   "bottomCenter": {
+      "message": "底部中心"
+   },
+   "bottomLeft": {
+      "message": "左下方"
+   },
+   "cancel": {
+      "message": "取消"
+   },
+   "caseSensitive": {
+      "message": "區分大小寫"
+   },
+   "channelName": {
+      "message": "頻道名稱"
+   },
+   "chooseOutputFormat": {
+      "message": "請選擇輸出格式"
+   },
+   "clickToClose": {
+      "message": "點擊關閉"
+   },
+   "close": {
+      "message": "關閉"
+   },
+   "confirmRemoveContent": {
+      "message": "您確定要從此列表中刪除選定的視頻嗎？"
+   },
+   "copy": {
+      "message": "複製"
+   },
+   "ctrl": {
+      "message": "Ctrl"
+   },
+   "custom": {
+      "message": "風俗"
+   },
+   "cut": {
+      "message": "剪切"
+   },
+   "del": {
+      "message": "Del"
+   },
+   "deselectAllVideos": {
+      "message": "取消選擇所有視頻"
+   },
+   "downloadSelection": {
+      "message": "將選擇儲存到文件"
+   },
+   "end": {
+      "message": "End"
+   },
+   "esc": {
+      "message": "Esc"
+   },
+   "extensionDescription": {
+      "message": "更快，更輕鬆地移動，排序和復製播放列表中的視頻。"
+   },
+   "extensionName": {
+      "message": "Youtube Multiselect"
+   },
+   "filterHelpTooltip": {
+      "message": "正則表達式語法"
+   },
+   "findDuplicatesBackwards": {
+      "message": "向後查找重複項"
+   },
+   "home": {
+      "message": "Home"
+   },
+   "ins": {
+      "message": "Ins"
+   },
+   "invalidData": {
+      "message": "無效數據"
+   },
+   "invalidFilter": {
+      "message": "無效的正則表達式"
+   },
+   "kbActivateFocusedMenuItem": {
+      "message": "激活焦點菜單項"
+   },
+   "kbCloseMenu": {
+      "message": "關閉菜單"
+   },
+   "kbCopySelectedVideos": {
+      "message": "將所選視頻複製到剪貼板"
+   },
+   "kbCutSelectedVideos": {
+      "message": "將所選視頻複製到剪貼板並將它們從播放列表或歷史記錄中刪除（帶有安全提示）"
+   },
+   "kbDeleteSelectedVideos": {
+      "message": "從播放列表或歷史記錄中刪除選定的視頻或聚焦的視頻（帶有確認提示）"
+   },
+   "kbFocusAboveVideo": {
+      "message": "聚焦上一個/上面的視頻"
+   },
+   "kbFocusBelowVideo": {
+      "message": "聚焦下一個/下面的視頻"
+   },
+   "kbFocusFirstMenuItem": {
+      "message": "聚焦第一個菜單項"
+   },
+   "kbFocusFirstVideo": {
+      "message": "聚焦第一個視頻"
+   },
+   "kbFocusLastMenuItem": {
+      "message": "聚焦最後一個菜單項"
+   },
+   "kbFocusLastVideo": {
+      "message": "聚焦最後一個視頻（加載下一批視頻）"
+   },
+   "kbFocusNextMenuItem": {
+      "message": "聚焦下一個菜單項"
+   },
+   "kbFocusNextSelectedVideo": {
+      "message": "專注於下一個選定的視頻"
+   },
+   "kbFocusNextVideo": {
+      "message": "聚焦下一個視頻"
+   },
+   "kbFocusPreviousMenuItem": {
+      "message": "聚焦上一個菜單項"
+   },
+   "kbFocusPreviousSelectedVideo": {
+      "message": "專注於之前選擇的視頻"
+   },
+   "kbFocusPreviousVideo": {
+      "message": "聚焦上一個視頻"
+   },
+   "kbPasteVideos": {
+      "message": "將剪貼板中的視頻粘貼到當前播放列表中"
+   },
+   "kbToggleAllVideos": {
+      "message": "選擇或取消選擇所有視頻"
+   },
+   "kbToggleFocusedVideo": {
+      "message": "選擇或取消選擇焦點視頻"
+   },
+   "keys": {
+      "message": "鑰匙"
+   },
+   "loadEntirePlaylist": {
+      "message": "加載整個播放列表"
+   },
+   "loadingEntirePlaylist": {
+      "message": "現在將加載整個播放列表"
+   },
+   "localeDir": {
+      "message": "ltr"
+   },
+   "moveAfter": {
+      "message": "在這裡下移"
+   },
+   "moveToBottom": {
+      "message": "移至底部"
+   },
+   "moveToTop": {
+      "message": "移至頂端"
+   },
+   "noDuplicatesFound": {
+      "message": "沒有找到重複項"
+   },
+   "noRemovalConfirmation": {
+      "message": "刪除時無需安全查詢"
+   },
+   "paste": {
+      "message": "粘貼"
+   },
+   "positioning": {
+      "message": "位置操作欄和篩選器"
+   },
+   "preserveSelection": {
+      "message": "複製後保留選擇"
+   },
+   "remove": {
+      "message": "消除"
+   },
+   "removeVideos": {
+      "message": "從此列表中刪除"
+   },
+   "resetCallouts": {
+      "message": "重複介紹性遊覽"
+   },
+   "selectAllVideos": {
+      "message": "選擇所有視頻"
+   },
+   "selectDuplicates": {
+      "message": "選擇重複項"
+   },
+   "selectWithFilter": {
+      "message": "選擇帶過濾器"
+   },
+   "selected": {
+      "message": "已選擇"
+   },
+   "shortcuts": {
+      "message": "鍵盤快捷鍵"
+   },
+   "shortcutsHeadline1": {
+      "message": "網站導航"
+   },
+   "shortcutsHeadline2": {
+      "message": "在操作欄和上下文菜單中導航"
+   },
+   "showVideoIndex": {
+      "message": "在播放列表中顯示視頻索引"
+   },
+   "sortPlaylistNames": {
+      "message": "顯示已排序的播放列表名稱"
+   },
+   "tabSettings": {
+      "message": "選項"
+   },
+   "tabShortcuts": {
+      "message": "按鍵綁定"
+   },
+   "title": {
+      "message": "標題"
+   },
+   "toggleMultiSelectMode": {
+      "message": "打開/關閉多項選擇"
+   },
+   "watched": {
+      "message": "看過"
+   },
+   "callout1": {
+      "message": "需要處理多部影片時，請開啟 Multiselect。你也可以設定瀏覽器快速鍵。"
+   },
+   "callout2": {
+      "message": "開啟 Multiselect 後會顯示此操作列，其中包含目前選取項目的工具。"
+   },
+   "callout3": {
+      "message": "使用此按鈕隱藏操作列。在離開頁面前，你的選取項目仍會保留。"
+   },
+   "callout5": {
+      "message": "此數字表示已選取的影片數量。"
+   },
+   "callout6": {
+      "message": "使用此按鈕選取所有已載入的影片。"
+   },
+   "callout7": {
+      "message": "使用此按鈕清除目前的選取項目。"
+   },
+   "callout8": {
+      "message": "開啟此選單即可使用篩選、檔案操作、播放清單工具等功能。"
+   },
+   "flipList": {
+      "message": "反轉清單"
+   },
+   "groupByChannel": {
+      "message": "依頻道分組"
+   },
+   "languageNotice": {
+      "message": "介面會使用瀏覽器語言和 YouTube 主題。"
+   },
+   "onboardingFinish": {
+      "message": "完成"
+   },
+   "onboardingNext": {
+      "message": "下一步"
+   },
+   "onboardingShortcuts": {
+      "message": "快速鍵"
+   },
+   "onboardingSkip": {
+      "message": "略過導覽"
+   },
+   "onboardingStep": {
+      "message": "第 $1 步，共 2 步"
+   },
+   "onboardingTitle": {
+      "message": "Multiselect 導覽"
+   },
+   "openOptionsOnUpdate": {
+      "message": "擴充功能更新後開啟設定"
+   },
+   "optionsSections": {
+      "message": "選項區段"
+   },
+   "reloadRequired": {
+      "message": "請重新載入頁面以套用此變更。"
+   },
+   "reverseFilter": {
+      "message": "反轉篩選條件"
+   },
+   "selectShortsOnly": {
+      "message": "僅選取 Shorts"
+   },
+   "selectVideosOnly": {
+      "message": "僅選取影片"
+   },
+   "settingsEyebrow": {
+      "message": "擴充功能偏好設定"
+   },
+   "settingsGeneral": {
+      "message": "一般設定"
+   },
+   "settingsGeneralDescription": {
+      "message": "調整管理影片時使用的控制項。"
+   },
+   "settingsIntro": {
+      "message": "選擇 YouTube 上的選取、播放清單操作和操作列行為。變更會自動儲存。"
+   },
+   "settingsTitle": {
+      "message": "更輕鬆地管理每個播放清單"
+   },
+   "shortcutsEyebrow": {
+      "message": "鍵盤"
+   },
+   "shortcutsIntro": {
+      "message": "以下是最常用的快速鍵。可以使用下方按鈕開啟完整清單。"
+   },
+   "shortcutsTitle": {
+      "message": "不用滑鼠也能快速操作"
+   },
+   "togglePlaylistGuide": {
+      "message": "切換播放清單指南"
+   }
+}

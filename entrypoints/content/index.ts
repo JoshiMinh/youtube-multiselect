@@ -128,7 +128,7 @@ export default defineContentScript({
     const injectPageScript = () => {
       if (document.querySelector('html[data-cast-api-enabled]')) return;
       const script = document.createElement('script');
-      script.src = browser.runtime.getURL('/js/polymer.js' as never);
+      script.src = browser.runtime.getURL('/polymer.js' as never);
       script.onload = () => {
         script.remove();
         void browser.storage.local.get().then(pushOptions).then(syncTheme);
