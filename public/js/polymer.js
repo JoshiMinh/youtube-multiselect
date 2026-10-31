@@ -674,14 +674,14 @@
         {
           id: s + "-action-select-shorts",
           handler: () => selectByType(!0),
-          icon: "icons:filter-list",
+          icon: "slow_motion_video",
           label: () => L.messages.selectShortsOnly,
           enabled: () => !a && P().length > 0,
         },
         {
           id: s + "-action-select-videos",
           handler: () => selectByType(!1),
-          icon: "icons:filter-list",
+          icon: "video_library",
           label: () => L.messages.selectVideosOnly,
           enabled: () => !a && P().length > 0,
         },
