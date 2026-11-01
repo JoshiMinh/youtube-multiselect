@@ -8,6 +8,9 @@
    "addToWatchLater": {
       "message": "Guardar para ver mais tarde"
    },
+   "likeVideos": {
+      "message": "Gostar dos vídeos selecionados"
+   },
    "addVideosFromFile": {
       "message": "Adicionar vídeos do arquivo"
    },

@@ -8,6 +8,9 @@
    "addToWatchLater": {
       "message": "Daha sonra izle'ye kaydet"
    },
+   "likeVideos": {
+      "message": "Seçilen videoları beğen"
+   },
    "addVideosFromFile": {
       "message": "Dosyadan video ekle"
    },

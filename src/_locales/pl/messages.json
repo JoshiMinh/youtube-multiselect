@@ -8,6 +8,9 @@
    "addToWatchLater": {
       "message": "Zapisz na liście Do obejrzenia"
    },
+   "likeVideos": {
+       "message": "Polub zaznaczone filmy"
+   },
    "addVideosFromFile": {
       "message": "Dodaj filmy z pliku"
    },

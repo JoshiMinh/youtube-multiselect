@@ -89,18 +89,16 @@ export default defineContentScript({
     if (isFirefox) destroy();
 
     // Connecting tells the background worker to enable the toolbar button for this tab.
+    // The page script must survive a port reconnect: its destroy path is permanent, and
+    // YouTube's cast marker can prevent reinjection after the service worker restarts.
     const connect = () => {
       const port = browser.runtime.connect();
       if (!isFirefox) {
         const onDisconnect = () => {
           port.onDisconnect.removeListener(onDisconnect);
-          send('destroy');
           setTimeout(() => {
             if (browser.runtime.id) {
               connect();
-              injectPageScript();
-            } else {
-              destroy();
             }
           }, 100);
         };

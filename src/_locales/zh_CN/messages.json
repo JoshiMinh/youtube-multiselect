@@ -8,6 +8,9 @@
    "addToWatchLater": {
       "message": "保存到“稍后观看”"
    },
+   "likeVideos": {
+      "message": "给选中的视频点赞"
+   },
    "addVideosFromFile": {
       "message": "从文件添加视频"
    },

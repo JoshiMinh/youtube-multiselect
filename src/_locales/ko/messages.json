@@ -8,6 +8,9 @@
    "addToWatchLater": {
       "message": "나중에 볼 동영상에 저장"
    },
+   "likeVideos": {
+      "message": "선택한 동영상에 좋아요 표시"
+   },
    "addVideosFromFile": {
       "message": "파일에서 비디오 추가"
    },

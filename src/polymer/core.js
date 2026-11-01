@@ -1,3 +1,6 @@
+import { FROM_PAGE, PAGE_PREFIX, TO_PAGE } from './contracts.js';
+
+export default function runPolymer() {
 "use strict";
 !(function (t, e) {
   if (!("customElements" in t)) return;
@@ -8,9 +11,9 @@
     r = -1 !== navigator.userAgent.indexOf("Firefox"),
     a = -1 !== navigator.userAgent.indexOf("Edg/"),
     c = Date.now().toString(36),
-    s = "msfy",
-    d = s + "-inner-message",
-    l = s + "-outer-message",
+    s = PAGE_PREFIX,
+    d = FROM_PAGE,
+    l = TO_PAGE,
     f = s + "-penalty-icon-" + c,
     h = s + "-wrapper-" + c,
     m = s + "-dialog-" + c,
@@ -191,18 +194,27 @@
     st(x, !1), kt.l();
   }
   function isShortVideo(t) {
-    let n = t;
-    for (let i = 0; n && i < 8; i++, n = n.parentElement) {
-      if (
-        n.matches?.(
-          "ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer, yt-lockup-view-model"
-        )
-      ) {
-        if (n.matches?.("ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer"))
+    let row = t;
+    for (let i = 0; row && i < 10; i++, row = row.parentElement) {
+      if (row.matches?.("ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer"))
+        return !0;
+      if (row.matches?.("yt-lockup-view-model")) {
+        const links = [...row.querySelectorAll?.("a[href]") || []];
+        if (links.some((link) => {
+          try {
+            return new URL(link.getAttribute("href") || "", location.origin).pathname.startsWith("/shorts/");
+          } catch {
+            return false;
+          }
+        }))
           return !0;
-        if (n.querySelector?.('a[href^="/shorts/"], a[href*="/shorts/"]')) return !0;
-        const data = n.__data?.data;
-        if (data && /["'](?:\/shorts\/|https?:\/\/[^"']+\/shorts\/)/i.test(JSON.stringify(data)))
+        const data = row.__data?.data ?? row.__data ?? row.data;
+        if (
+          data &&
+          /"(?:isShort|isShorts|shortsLockupViewModel)"\s*:\s*(?:true|{)|\/shorts\//i.test(
+            JSON.stringify(data)
+          )
+        )
           return !0;
       }
     }
@@ -210,6 +222,7 @@
   }
   function selectByType(t) {
     P().forEach((e) => (e.checked = isShortVideo(e) === t)), kt.l();
+    return !0;
   }
   function pt(t) {
     if (t && t.getAttribute("position") !== z.positioning)
@@ -3032,3 +3045,4 @@
   }
   Bt.gt(), Bt.vt(), Gt.gt(), It.tt(), Jt.wt();
 })(window, document);
+}

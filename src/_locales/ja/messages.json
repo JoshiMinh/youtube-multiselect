@@ -8,6 +8,9 @@
    "addToWatchLater": {
       "message": "[後で見る] に保存"
    },
+   "likeVideos": {
+      "message": "選択した動画に高評価"
+   },
    "addVideosFromFile": {
       "message": "ファイルからビデオを追加"
    },

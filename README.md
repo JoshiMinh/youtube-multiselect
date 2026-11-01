@@ -136,7 +136,8 @@ It uses a public playlist and does not sign in to YouTube.
 | `entrypoints/options/index.html` | Settings and keyboard-shortcuts page |
 | `src/options.js` | Shared popup and options-page behavior |
 | `src/options.css` | Popup and options-page styles |
-| `src/polymer.js` | Page-side selection logic, menus, dialogs, and action bar |
+| `src/polymer/entry.js` | Page-script bundle entrypoint |
+| `src/polymer/core.js` | Page-side selection logic, menus, dialogs, and action bar |
 | `src/_locales/` | Translations |
 | `assets/` | Extension logo, icons, and generated static assets |
 | `index.html` | Project overview page |
@@ -152,6 +153,11 @@ page-side script that interacts with the video-list UI. The background service
 worker handles extension-level events. The popup and options page share the
 same settings definitions and browser storage behavior.
 
+The page-side source is split into a small bundle entrypoint and a core runtime,
+but production builds still emit one `polymer.js` file. This preserves the
+existing page-script injection, message protocol, and teardown behavior while
+allowing future behavior-focused modules to be extracted safely.
+
 The extension uses the browser's existing signed-in session to perform actions
 that the user initiates. It does not provide a separate YouTube API service or
 backend.
@@ -165,7 +171,7 @@ English catalog first and update the other locale files as appropriate.
 ## Attribution and licensing
 
 This project builds on the original Multiselect for YouTube extension by
-Pollux. The page script in `src/polymer.js` and the translations in
+Pollux. The page-side runtime in `src/polymer/core.js` and the translations in
 `src/_locales/` derive from that work.
 
 The repository license applies only to files identified as original work by

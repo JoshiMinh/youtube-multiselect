@@ -8,6 +8,9 @@
    "addToWatchLater": {
       "message": "儲存至「稍後觀看」清單"
    },
+   "likeVideos": {
+      "message": "對選取的影片按讚"
+   },
    "addVideosFromFile": {
       "message": "從文件添加視頻"
    },

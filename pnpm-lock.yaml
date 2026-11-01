@@ -175,6 +175,9 @@ importers:
       typescript:
         specifier: ~6.0.3
         version: 6.0.3
+      vite:
+        specifier: 8.3.5
+        version: 8.3.5(@types/node@26.6.5)(jiti@2.7.0)
       wxt:
         specifier: ^0.21.5
         version: 0.21.5(rolldown@1.2.15)(typescript@6.0.3)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0))

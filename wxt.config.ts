@@ -1,6 +1,11 @@
 import { cp, rm } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
 import path from 'node:path';
 import { defineConfig } from 'wxt';
+
+const execFileAsync = promisify(execFile);
+const viteCli = path.resolve('node_modules/vite/bin/vite.js');
 
 export default defineConfig({
   publicDir: 'assets',
@@ -10,7 +15,10 @@ export default defineConfig({
   hooks: {
     'build:before': async () => {
       await Promise.all([
-        cp(path.resolve('src/polymer.js'), path.resolve('assets/polymer.js')),
+        execFileAsync(process.execPath, [viteCli, 'build', '--config', 'polymer.vite.config.ts'], {
+          cwd: path.resolve('.'),
+          windowsHide: true,
+        }),
         cp(path.resolve('src/_locales'), path.resolve('assets/_locales'), { recursive: true }),
       ]);
     },
