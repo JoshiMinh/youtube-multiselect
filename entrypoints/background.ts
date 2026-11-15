@@ -1,22 +1,27 @@
 import { browser } from 'wxt/browser';
+import { allowedExtensionUrl } from '../src/bridge';
+import { versionBefore } from '../src/version';
 
 // Port of the original service worker.
 export default defineBackground(() => {
+  const action = browser.action ?? browser.browserAction;
   const sendCommand = (tabId: number, command: string) => browser.tabs.sendMessage(tabId, { type: 'command', value: command });
 
-  void browser.action.disable();
+  void action.disable();
 
   // A content script connects once YouTube is ready; that enables the toolbar button for its tab.
   browser.runtime.onConnect.addListener((port) => {
     const tabId = port.sender?.tab?.id;
-    if (tabId !== undefined) void browser.action.enable(tabId);
+    if (tabId !== undefined) void action.enable(tabId);
   });
 
-  browser.runtime.onMessage.addListener((message) => {
-    if (message?.type === 'url') void browser.tabs.create({ url: message.value, active: true });
+  browser.runtime.onMessage.addListener((message, sender) => {
+    if (sender.id === browser.runtime.id && message?.type === 'url' && allowedExtensionUrl(message.value)) {
+      void browser.tabs.create({ url: message.value, active: true });
+    }
   });
 
-  browser.action.onClicked.addListener(() => {
+  action.onClicked.addListener(() => {
     void browser.runtime.openOptionsPage();
   });
 
@@ -26,7 +31,7 @@ export default defineBackground(() => {
     } else if (details.reason === 'update') {
       const previous = details.previousVersion ?? '';
       const current = browser.runtime.getManifest().version;
-      if (previous < '3.0') {
+      if (versionBefore(previous, '3.0')) {
         await browser.storage.local.remove([
           'hideOnHome',
           'hideOnTrending',
@@ -40,7 +45,8 @@ export default defineBackground(() => {
           'transparentBackgroundColor',
           'showOnHover',
         ]);
-      } else if (previous < '3.4') {
+      }
+      if (versionBefore(previous, '3.4')) {
         await browser.storage.local.remove('blockAds');
         const { actionBarLeft } = await browser.storage.local.get('actionBarLeft');
         if (actionBarLeft) {

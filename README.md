@@ -14,16 +14,18 @@ keeps preferences in the local browser profile.
 ## What it can do
 
 - Select individual videos with the mouse or keyboard.
-- Select all videos or select by title, channel, watched progress, duration, or
-  position.
+- Select all videos or select by title, channel, or watched progress.
 - Search for duplicate videos, including in the reverse direction.
 - Copy, cut, and paste videos between playlists.
 - Add videos to a playlist, Watch Later, or the queue.
 - Move selected videos to the top or bottom of an editable playlist.
+- Move selected videos or Shorts up or down one position in an editable playlist.
 - Remove selected videos and optionally skip the removal confirmation.
 - Group selected videos by channel or reverse playlist order.
 - Load an entire playlist before selecting videos.
 - Keep a selection while copying and optionally display video indexes.
+- Show modern playlist video and Shorts indexes on hover, keyboard focus, or
+  during selection mode. Numbers follow the loaded items in the active view.
 - Sort playlist names.
 - Use a floating action bar at the bottom center, bottom left, or a custom
   position.
@@ -126,6 +128,14 @@ node smoke.mjs
 The smoke test requires Playwright's Chromium channel to be available locally.
 It uses a public playlist and does not sign in to YouTube.
 
+Build both browser variants before running the regression checks with `pnpm test`.
+After a Chromium build,
+`pnpm test:browser` checks playlist actions, matching selection-box heights,
+content-script reinjection, worker reconnection, modern indexes, and rendering
+under enforced Trusted Types against local YouTube fixtures. These browser
+checks require Playwright Chromium (`pnpm exec playwright
+install chromium`) and do not edit a real playlist.
+
 ## Repository structure
 
 | Path | Purpose |
@@ -161,6 +171,11 @@ allowing future behavior-focused modules to be extracted safely.
 The extension uses the browser's existing signed-in session to perform actions
 that the user initiates. It does not provide a separate YouTube API service or
 backend.
+
+Page UI is constructed with DOM nodes and text rather than parsed HTML strings.
+The extension does not create a page-wide Trusted Types policy or restrict
+features by account identity. Startup removes obsolete account-restriction data
+from earlier versions without resetting other preferences.
 
 ## Localization
 

@@ -62,6 +62,9 @@
    "cancel": {
       "message": "Cancel"
    },
+   "save": {
+      "message": "Save"
+   },
    "caseSensitive": {
       "message": "Case sensitive"
    },
@@ -242,6 +245,12 @@
    "moveAfter": {
       "message": "Move down here"
    },
+   "moveUp": {
+      "message": "Move up"
+   },
+   "moveDown": {
+      "message": "Move down"
+   },
    "moveToBottom": {
       "message": "Move to bottom"
    },
@@ -307,6 +316,9 @@
    },
    "showVideoIndex": {
       "message": "Show the video index in your playlists"
+   },
+   "playlistPosition": {
+      "message": "Playlist position {index}"
    },
    "sortPlaylistNames": {
       "message": "Show playlist names sorted"

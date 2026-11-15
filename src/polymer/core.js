@@ -1,4 +1,9 @@
 import { FROM_PAGE, PAGE_PREFIX, TO_PAGE } from './contracts.js';
+import { playlistContents, playlistSetVideoId, playlistTab, stepMove } from './playlist.js';
+import { parseSelectionFile, selectionHtml } from './selection-files.js';
+import { element as el, svg, dragHandle } from './dom.js';
+import { iconSet } from './icons.js';
+import { createPlaylistIndexes } from './indexes.js';
 
 export default function runPolymer() {
 "use strict";
@@ -36,8 +41,7 @@ export default function runPolymer() {
       noRemovalConfirmation: !1,
       outlineIcon: !1,
       callout: 0,
-      handle: null,
-      blacklisted: !1,
+      showVideoIndex: !1,
       findDuplicatesBackwards: !1,
       positioning: "center",
       barPosition: { x: 0, y: t.innerHeight - 72 },
@@ -52,6 +56,13 @@ export default function runPolymer() {
     M,
     C,
     O = !1;
+  const pendingObservers = new Set();
+  const indexes = createPlaylistIndexes({
+    prefix: s, runtimeId: c,
+    canShow: () => R() && !isMusic && z.showVideoIndex,
+    isModern: (row) => row.matches(LK),
+    label: (position) => (L?.messages.playlistPosition || 'Playlist position {index}').replace('{index}', String(position)),
+  });
   const V = (function () {
       let t;
       return {
@@ -71,9 +82,13 @@ export default function runPolymer() {
     })(),
     D = () => "/feed/history" === t.location.pathname,
     R = () => "/playlist" === t.location.pathname,
-    P = () => e.querySelectorAll(v),
-    S = () => e.querySelectorAll(w),
-    N = () => e.querySelector(w),
+    visible = (checkbox) => {
+      const row = checkbox.parentElement?.parentElement;
+      return row && !row.closest('[hidden], [is-hidden]') && row.getClientRects().length > 0;
+    },
+    P = () => [...e.querySelectorAll(v)].filter(visible),
+    S = () => [...e.querySelectorAll(w)].filter(visible),
+    N = () => S()[0],
     Y = () => !!N(),
     H = (t, e) =>
       t.playlistId ? (t[e] = t.videos?.[0]?.childVideoRenderer?.[e]) : t[e],
@@ -95,24 +110,31 @@ export default function runPolymer() {
     },
     lkData = (r) => {
       const runs = (s) => ({ runs: [{ text: r.querySelector(s)?.textContent?.trim() ?? "" }] }),
-        pct = parseFloat(r.querySelector('[class*="WatchedProgressBarSegment"]')?.style.width);
+        pct = parseFloat(r.querySelector('[class*="WatchedProgressBarSegment"]')?.style.width),
+        raw = r.data ?? r.__data?.data ?? {};
       return {
+        ...raw,
         videoId: lkId(r),
         get setVideoId() {
-          return svid(lkId(r));
+          return playlistSetVideoId(r.data ?? r.__data?.data, lkId(r)) || svid(lkId(r), r);
         },
         isPlayable: true,
-        title: runs("h3"),
-        shortBylineText: runs("yt-content-metadata-view-model a, yt-content-metadata-view-model span"),
+        title: r.querySelector('h3') ? runs("h3") : raw.title,
+        shortBylineText: r.querySelector('yt-content-metadata-view-model') ? runs("yt-content-metadata-view-model a, yt-content-metadata-view-model span") : raw.shortBylineText,
         thumbnailOverlays: isNaN(pct)
-          ? []
+          ? raw.thumbnailOverlays ?? []
           : [{ thumbnailOverlayResumePlaybackRenderer: { percentDurationWatched: pct } }],
       };
     },
-    lk = (r) =>
+    musicData = (row) => {
+      const data = row.data ?? {};
+      const column = (index) => data.flexColumns?.[index]?.musicResponsiveListItemFlexColumnRenderer?.text;
+      return { ...data, title: data.title ?? column(0), shortBylineText: data.shortBylineText ?? column(1) };
+    },
+    lk = (r, getData = lkData) =>
       new Proxy(r, {
         get: (o, k) => {
-          if ("data" === k) return lkData(o);
+          if ("data" === k) return getData(o);
           const v = Reflect.get(o, k);
           return "function" == typeof v ? v.bind(o) : v;
         },
@@ -122,7 +144,7 @@ export default function runPolymer() {
         t?.parentElement?.parentElement ||
         t?.__dataHost?.__dataHost ||
         t?.getRootNode?.()?.host?.parentElement;
-      return r?.matches?.(LK) ? lk(r) : r;
+      return r?.matches?.(LK) ? lk(r) : isMusic && r?.matches?.('ytmusic-responsive-list-item-renderer') ? lk(r, musicData) : r;
     },
     F = (t) => {
       const data = j(t).data;
@@ -132,7 +154,7 @@ export default function runPolymer() {
       const data = j(t).data,
         videoId = isMusic ? data?.playlistItemData?.videoId : H(data, "videoId"),
         setVideoId = setVideoIdFromData(data);
-      return setVideoId || svid(videoId);
+      return setVideoId || svid(videoId, t?.parentElement?.parentElement);
     },
     B = (t) => isMusic || j(t).data.isPlayable,
     G = ([...t] = S()) => (R() ? t.filter(B).map(F) : t.map(F)),
@@ -149,16 +171,16 @@ export default function runPolymer() {
     PL = () =>
       isMusic
         ? q()?.contents
-        : q()?.contents?.twoColumnBrowseResultsRenderer?.tabs?.[0]?.tabRenderer?.content?.sectionListRenderer
-            ?.contents?.[0]?.itemSectionRenderer?.contents,
-    svid = (id) => {
-      const item = id && PL()?.find?.((x) => {
+        : playlistContents(q()),
+    svid = (id, row) => {
+      const matches = id && PL()?.filter?.((x) => {
         const json = JSON.stringify(x);
         return json.includes(`"contentId":"${id}"`) || json.includes(`"videoId":"${id}"`);
       });
-      return item
-        ? JSON.stringify(item).match(/"(?:setVideoId|playlistSetVideoId)":"([^"]+)"/)?.[1]
-        : void 0;
+      const occurrence = row ? [...e.querySelectorAll(LK)]
+        .filter((candidate) => candidate.getClientRects().length && lkId(candidate) === id).indexOf(row) : 0;
+      const item = matches?.[Math.max(0, occurrence)];
+      return playlistSetVideoId(item, id) || setVideoIdFromData(item);
     },
     J = () => Q()?.playlistId ?? new URLSearchParams(t.location.search).get("list"),
     X = () =>
@@ -167,7 +189,7 @@ export default function runPolymer() {
       D() ||
       (R() &&
         ("WL" === J() ||
-          PL()?.some?.((item) => JSON.stringify(item).includes('"setVideoId"')))),
+          PL()?.some?.((item) => /"(?:setVideoId|playlistSetVideoId)"/.test(JSON.stringify(item))))),
     W = () => "LL" === J(),
     // Saved Shorts: no setVideoIds and not marked editable, but items can be removed by video id.
     SS = () => "YS" === J(),
@@ -175,11 +197,9 @@ export default function runPolymer() {
     K = () => V.o && !D() && X(),
     tt = (t) => t.shiftKey && !t.ctrlKey && !t.altKey,
     et = (t, e) =>
-      `<yt-icon-button id="${t}"><yt-icon icon="${e}"></yt-icon></yt-icon-button>`,
+      el('yt-icon-button', { id: t }, el('yt-icon', { icon: e })),
     nt = (t, e) =>
-      `<tp-yt-paper-tooltip for="${t}" position="top">${e}</tp-yt-paper-tooltip>`,
-    ot = (t = !1, e = 24) =>
-      `<svg viewBox="0 0 128 128" style="width: ${e}px; height: ${e}px"><rect width="128" height="128" rx="28" fill="#212121"/><rect x="16" y="28" width="96" height="62" rx="14" fill="#e62117"/><path d="M54 46v26l24-13z" fill="#fff" stroke="#fff" stroke-width="6" stroke-linejoin="round"/><circle cx="94" cy="92" r="20" fill="#3ea6ff" stroke="#212121" stroke-width="6"/><path d="M85 92l7 7 12-13" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+      el('tp-yt-paper-tooltip', { for: t, position: 'top' }, e),
     it = (t) => (t.preventDefault(), t.stopPropagation()),
     rt = (e, n = d, o = t) => o.dispatchEvent(new CustomEvent(n, e)),
     at = (t, e) => rt({ detail: JSON.stringify({ type: t, value: e }) }),
@@ -188,7 +208,7 @@ export default function runPolymer() {
     e.querySelectorAll(t).forEach((t) => (t.checked = n));
   }
   function dt() {
-    st(x, !0), kt.l();
+    P().forEach((checkbox) => (checkbox.checked = !0)), kt.l();
   }
   function lt() {
     st(x, !1), kt.l();
@@ -198,7 +218,7 @@ export default function runPolymer() {
     for (let i = 0; row && i < 10; i++, row = row.parentElement) {
       if (row.matches?.("ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer"))
         return !0;
-      if (row.matches?.("yt-lockup-view-model")) {
+      if (row.matches?.("yt-lockup-view-model, ytd-playlist-video-renderer, ytd-video-renderer, ytd-rich-grid-media, ytd-grid-video-renderer, ytd-compact-video-renderer")) {
         const links = [...row.querySelectorAll?.("a[href]") || []];
         if (links.some((link) => {
           try {
@@ -211,7 +231,7 @@ export default function runPolymer() {
         const data = row.__data?.data ?? row.__data ?? row.data;
         if (
           data &&
-          /"(?:isShort|isShorts|shortsLockupViewModel)"\s*:\s*(?:true|{)|\/shorts\//i.test(
+          /"(?:isShort|isShorts|shortsLockupViewModel)"\s*:\s*(?:true|{)|"style":"SHORTS"|\/shorts\//i.test(
             JSON.stringify(data)
           )
         )
@@ -222,7 +242,7 @@ export default function runPolymer() {
   }
   function selectByType(t) {
     P().forEach((e) => (e.checked = isShortVideo(e) === t)), kt.l();
-    return !0;
+    return !1;
   }
   function pt(t) {
     if (t && t.getAttribute("position") !== z.positioning)
@@ -253,44 +273,12 @@ export default function runPolymer() {
       else {
         const r = (n && e.querySelector(n)) || e.documentElement;
         let a = new MutationObserver(() => {
-          (i = r.querySelector(t)), i && (a.disconnect(), (a = null), o(i));
+          (i = r.querySelector(t)), i && (a.disconnect(), pendingObservers.delete(a), (a = null), o(i));
         });
+        pendingObservers.add(a);
         a.observe(r, { childList: !0, subtree: !0 });
       }
     });
-  }
-  function mt(e) {
-    e &&
-      !z.blacklisted &&
-      new MutationObserver((e, n) => {
-        const o = e[0],
-          i = o.target,
-          r = t.getComputedStyle(i),
-          { display: a, visibility: c, opacity: s, color: d } = r;
-        if (a) {
-          const t = parseFloat(r?.width) || 0,
-            l = parseFloat(r?.height) || 0,
-            p = parseFloat(
-              d?.match(/^rgba\(\d+, \d+, \d+, ([0-9.]+)\)$/)?.[1] || 1
-            );
-          ("none" === a ||
-            "hidden" === c ||
-            "1" !== s ||
-            t < 20 ||
-            l < 20 ||
-            1 !== p) &&
-            (e.length,
-            o.attributeName,
-            i.className,
-            n.disconnect(),
-            (z.blacklisted = !0),
-            at("blacklisted", !0),
-            Et(!1));
-        }
-      }).observe(e, {
-        attributeFilter: ["style", "class", "hidden"],
-        subtree: !0,
-      });
   }
   location;
   const bt = (function () {
@@ -340,6 +328,7 @@ export default function runPolymer() {
             fail = (err) => {
               console.warn("[multi-select] Playlist edit failed:", err, JSON.stringify(request));
               Kt("👎   " + (err?.message || L.messages.invalidData));
+              return !1;
             };
           return serviceRequest({ playlistEditEndpoint: request }).then(done, (err) => {
             const { clientActions: _, ...alt } = t.fallback?.playlistEditEndpoint ?? {};
@@ -475,9 +464,6 @@ export default function runPolymer() {
           N(t) {
             return i(o, this.A, t, "addedVideoId");
           },
-          get Y() {
-            return { signalServiceEndpoint: { signal: "GET_ACCOUNT_MENU" } };
-          },
         },
       };
     })(),
@@ -503,7 +489,7 @@ export default function runPolymer() {
           return j(t)?.data?.videoId;
         },
         get R() {
-          return j(t)?.data?.setVideoId;
+          return t && U(t);
         },
         get J() {
           return t?.id === g;
@@ -523,9 +509,11 @@ export default function runPolymer() {
         let o = e.querySelector("#" + T);
         if (!o) {
           (o = e.createElement("div")), (o.id = T);
-          const t = et(I, "close") + nt(I, L.messages.close),
-            i = `<header><span id="title">${L.messages.loadingEntirePlaylist}</span>${t}</header>`;
-          (o.innerHTML = `${i}<p id="status"></p><div role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>`),
+          o.append(
+            el('header', {}, el('span', { id: 'title' }, L.messages.loadingEntirePlaylist), et(I, 'close'), nt(I, L.messages.close)),
+            el('p', { id: 'status' }),
+            el('div', { role: 'progressbar', 'aria-valuemin': 0, 'aria-valuemax': 100 })
+          ),
             o.querySelector("#" + I).addEventListener("click", () => (n = !0)),
             e.body.appendChild(o);
         }
@@ -539,15 +527,13 @@ export default function runPolymer() {
           o
         );
       }
-      const i = (t) =>
-          t?.contents?.twoColumnBrowseResultsRenderer?.tabs?.[0]?.tabRenderer
-            ?.content?.sectionListRenderer?.contents?.[0]?.itemSectionRenderer
-            ?.contents?.[0]?.playlistVideoListRenderer ?? { contents: PL() },
+      const i = (t) => ({ contents: isMusic ? t?.contents : playlistContents(t) }),
         r = (t) =>
           t?.[t.length - 1]?.continuationItemRenderer?.continuationEndpoint ??
           t?.[t.length - 1]?.continuationItemViewModel?.continuationCommand?.innertubeCommand;
       async function a() {
         t = !0;
+        n = !1;
         const e = q(),
           a = ((t) => {
             const e = t?.header?.playlistHeaderRenderer?.numVideosText?.runs;
@@ -566,13 +552,14 @@ export default function runPolymer() {
         const p = d && o(l / a),
           u = location.href;
         // Scrolling to the end lets YouTube fetch and render the next page itself.
-        for (; !n && d && location.href === u; ) {
-          const count = () => document.querySelectorAll(LK).length,
+        for (; !O && !n && d && location.href === u; ) {
+          const count = () => P().length,
             before = count(),
             beforeToken = d && JSON.stringify(d);
           window.scrollTo(0, document.documentElement.scrollHeight);
           for (let tries = 0; tries < 40; tries++) {
             await new Promise((resolve) => setTimeout(resolve, 250));
+            if (O || n || location.href !== u) break;
             const next = r(i(q())?.contents),
               changed = count() > before || (next && JSON.stringify(next) !== beforeToken);
             if (changed) break;
@@ -602,7 +589,7 @@ export default function runPolymer() {
       }
       return {
         W() {
-          a();
+          if (!t) a();
         },
         get Z() {
           return !r(i(q())?.contents);
@@ -660,6 +647,20 @@ export default function runPolymer() {
           enabled: () => a && (c || W() || SS()),
         },
         {
+          id: s + "-action-move-up",
+          handler: () => moveStep("up"),
+          icon: "arrow_upward",
+          label: () => L.messages.moveUp,
+          enabled: () => a && c && !d && !r,
+        },
+        {
+          id: s + "-action-move-down",
+          handler: () => moveStep("down"),
+          icon: "arrow_downward",
+          label: () => L.messages.moveDown,
+          enabled: () => a && c && !d && !r,
+        },
+        {
           id: s + "-action-move-to-top",
           handler: Mt,
           icon: "vertical_align_top",
@@ -678,14 +679,14 @@ export default function runPolymer() {
           handler: groupByChannel,
           icon: "view_module",
           label: () => L.messages.groupByChannel,
-          enabled: () => a && c && !d && !r,
+          enabled: () => a && c && !d,
         },
         {
           id: s + "-action-flip-list",
           handler: flipSelected,
           icon: `${s}:${s}-flip-list`,
           label: () => L.messages.flipList,
-          enabled: () => a && c && !d && !r,
+          enabled: () => a && c && !d,
         },
         {
           id: s + "-action-select-duplicates",
@@ -699,7 +700,7 @@ export default function runPolymer() {
           handler: () => Zt.tt(),
           icon: "icons:filter-list",
           label: () => L.messages.selectWithFilter,
-          enabled: () => !Zt.instance,
+          enabled: () => !Zt.lt,
         },
         {
           id: s + "-action-select-shorts",
@@ -817,14 +818,9 @@ export default function runPolymer() {
               (!(function (r, a, c) {
                 (o = e.createElement("div")),
                   (o.id = n),
-                  (o.innerHTML = `<div id="listbox" class="${$}" tabindex="-1">${r
-                    .map(({ id: t, icon: e, label: n, separator: o }) => {
-                      const i = o?.();
-                      return `<div class="${y}" tabindex="-1" ${
-                        i ? `separator="${i}"` : ""
-                      }><div id="${t}" tabindex="0"><yt-icon icon="${e}"></yt-icon>${n()}</div></div>`;
-                    })
-                    .join("")}</div>`),
+                  o.append(el('div', { id: 'listbox', class: $, tabindex: -1 },
+                    r.map(({ id, icon, label, separator }) => el('div', { class: y, tabindex: -1, separator: separator?.() || null },
+                      el('div', { id, tabindex: 0 }, el('yt-icon', { icon }), label()))))),
                   p
                     ? ((o.className = s + "-context-menu"),
                       o.style.setProperty("--x", a + t.scrollX + "px"),
@@ -865,10 +861,9 @@ export default function runPolymer() {
             (o = e.createElement("dialog")),
               (o.id = t),
               (o.className = m),
-              (o.innerHTML = (() => {
-                const t = L.messages;
-                return `<form method="dialog"><header></header><section>${t.confirmRemoveContent}</section><footer><button id="cancel">${t.cancel}</button><button id="submit">${t.remove}</button></footer></form>`;
-              })());
+              o.append(el('form', { method: 'dialog' }, el('header'),
+                el('section', {}, L.messages.confirmRemoveContent),
+                el('footer', {}, el('button', { type: 'button', id: 'cancel' }, L.messages.cancel), el('button', { type: 'button', id: 'submit' }, L.messages.remove))));
             const n = o.querySelector("button#cancel"),
               i = o.querySelector("button#submit");
             n.addEventListener("click", (t) => a(!1)),
@@ -904,7 +899,7 @@ export default function runPolymer() {
             );
         },
         st() {
-          o && (e.removeEventListener("keydown", r, n), o.remove(), (o = null));
+          o && (i && a(!1), e.removeEventListener("keydown", r, n), o.remove(), (o = null));
         },
         get dt() {
           return t;
@@ -915,11 +910,12 @@ export default function runPolymer() {
       const t = s + "-toggle-bar-button-" + c;
       let n;
       const o = (o) => {
-        if (o) {
+        if (o && !O) {
           (n = e.createElement("div")), (n.id = t);
-          const i = `<svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M3.5 5.5l1.5 1.5l2.5-2.5M3.5 11.5l1.5 1.5l2.5-2.5M3.5 17.5l1.5 1.5l2.5-2.5M11 6h9M11 12h9M11 18h9"/></svg>`,
+          const i = svg('svg', { viewBox: '0 0 24 24', width: 24, height: 24, fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' },
+              svg('path', { d: 'M3.5 5.5l1.5 1.5l2.5-2.5M3.5 11.5l1.5 1.5l2.5-2.5M3.5 17.5l1.5 1.5l2.5-2.5M11 6h9M11 12h9M11 18h9' })),
             r = L.messages.extensionName;
-          (n.innerHTML = `<yt-icon-button id="button">${i}</yt-icon-button><tp-yt-paper-tooltip>${r}</tp-yt-paper-tooltip>`),
+          n.append(el('yt-icon-button', { id: 'button' }, i), el('tp-yt-paper-tooltip', {}, r)),
             n.firstElementChild.addEventListener("click", (t) => Et(), !0),
             o.insertBefore(n, o.firstElementChild);
         }
@@ -962,7 +958,7 @@ export default function runPolymer() {
           if (n) {
             const o = e.querySelector(`iron-iconset-svg #content-${t} path`);
             o &&
-              ((n.innerHTML = `<div id="icon"><svg fill="#fff" viewBox="0 0 24 24" width="80%" height="80%">${o.outerHTML}</svg></div>`),
+              (n.replaceChildren(el('div', { id: 'icon' }, svg('svg', { fill: '#fff', viewBox: '0 0 24 24', width: '80%', height: '80%' }, o.cloneNode(true)))),
               (n.style.display = "block"));
           }
         },
@@ -985,7 +981,7 @@ export default function runPolymer() {
             handler: (t) => Et(!1),
             tooltip: () => L.messages.close,
             html() {
-              return et(this.id, this.icon) + nt(this.id, L.messages.close);
+              return [et(this.id, this.icon), nt(this.id, L.messages.close)];
             },
           },
           {
@@ -994,7 +990,7 @@ export default function runPolymer() {
               this.node.text = { simpleText: `${d} / ${a}` };
             },
             html() {
-              return `<yt-formatted-string id="${this.id}"></yt-formatted-string><span>${L.messages.selected}</span>`;
+              return [el('yt-formatted-string', { id: this.id }), el('span', {}, L.messages.selected)];
             },
           },
           {
@@ -1007,7 +1003,7 @@ export default function runPolymer() {
             },
             html() {
               return (
-                et(this.id, this.icon) + nt(this.id, L.messages.selectAllVideos)
+                [et(this.id, this.icon), nt(this.id, L.messages.selectAllVideos)]
               );
             },
           },
@@ -1021,8 +1017,7 @@ export default function runPolymer() {
             },
             html() {
               return (
-                et(this.id, this.icon) +
-                nt(this.id, L.messages.deselectAllVideos)
+                [et(this.id, this.icon), nt(this.id, L.messages.deselectAllVideos)]
               );
             },
           },
@@ -1062,10 +1057,10 @@ export default function runPolymer() {
         tt() {
           r ||
             (!(function () {
-              const t = h.reduce((t, e) => t + e.html(), "");
+              const t = h.flatMap((item) => item.html());
               (r = e.createElement("div")),
                 (r.id = o),
-                (r.innerHTML = `<div id="drag-handle"><hr><hr></div><div id="content" tabindex="0">${t}</div>`),
+                r.append(dragHandle(), el('div', { id: 'content', tabindex: 0 }, t)),
                 e.body.appendChild(r),
                 h.forEach((t) => (t.node = r.querySelector("#" + t.id))),
                 m(),
@@ -1079,7 +1074,8 @@ export default function runPolymer() {
         },
         st() {
           r &&
-            (r.removeEventListener("contextmenu", it, !0),
+            (l && (l(), (l = null)),
+            r.removeEventListener("contextmenu", it, !0),
             h.forEach(
               (t) =>
                 t.handler && t.node.removeEventListener("click", t.handler, !0)
@@ -1254,14 +1250,14 @@ export default function runPolymer() {
                 case "a":
                   return void (n && (_t(t), kt.ht ? lt() : dt()));
                 case "c":
-                  return void (n && Z() && (_t(t), Dt()));
+                  return void (n && Z() && (_t(t), Dt() && lt()));
                 case "v":
                   return void (n && K() && (_t(t), Rt()));
                 case "x":
                   return void (n && Y() && (X() || W() || SS()) && (_t(t), St(!0)));
                 case "Insert":
                   return void (n
-                    ? Z() && (_t(t), Dt())
+                    ? Z() && (_t(t), Dt() && lt())
                     : o && K() && (_t(t), Rt()));
                 case "Delete":
                   return void (
@@ -1301,11 +1297,12 @@ export default function runPolymer() {
         ];
       let i = !1;
       return (t = !i) => {
-        z.blacklisted && (Kt("⚠️ An unknown error has occurred"), (t = !1)),
-          "boolean" == typeof t &&
+        "boolean" == typeof t &&
             t !== i &&
             ((i = t),
+            indexes.setMode(t),
             o.forEach((e) => Bt.bt(t, e)),
+            It.refresh(),
             n(t),
             t
               ? (e
@@ -1321,7 +1318,7 @@ export default function runPolymer() {
     Tt = (function () {
       const t = {},
         n = h,
-        o = `<${n}></${n}>`,
+        o = () => el(n),
         i = (t = n) => {
           if (customElements.get(t)) return;
           const n = {
@@ -1329,7 +1326,7 @@ export default function runPolymer() {
             _template: () => {
               const t = e.createElement("template");
               return (
-                (t.innerHTML = `<tp-yt-paper-checkbox id="${g}" class="${g}" on-tap="onTap" on-contextmenu="onContextMenu"></tp-yt-paper-checkbox>`),
+                t.content.append(el('tp-yt-paper-checkbox', { id: g, class: g, 'on-tap': 'onTap', 'on-contextmenu': 'onContextMenu' })),
                 t
               );
             },
@@ -1365,12 +1362,13 @@ export default function runPolymer() {
             class extends HTMLElement {
               constructor() {
                 super();
-                this.append(n._template().content.cloneNode(true));
                 this.addEventListener("click", (t) => {
-                  if (t.button === 1) return;
-                  this.checked = !this.checked;
-                  n.onTap({ detail: { sourceEvent: t }, target: this });
+                  if (t.button !== 0) return;
+                  this.toggle(t);
                 });
+                this.addEventListener("keydown", (t) => {
+                  if (t.key === " " || t.key === "Enter") this.toggle(t);
+                }, true);
                 this.addEventListener("auxclick", (t) => {
                   if (t.button !== 1) return;
                   const link = this.closest(LK)?.querySelector(
@@ -1380,10 +1378,31 @@ export default function runPolymer() {
                   t.preventDefault();
                   window.open(link.href, "_blank", "noopener,noreferrer");
                 });
-                this.addEventListener("contextmenu", (t) => n.onContextMenu(t));
+                this.addEventListener("contextmenu", (t) => {
+                  this.firstElementChild?.focus();
+                  n.onContextMenu(t);
+                });
               }
 
               connectedCallback() {
+                // Custom-element constructors cannot append children during parser creation.
+                if (!this.firstElementChild) {
+                  this.append(n._template().content.cloneNode(true));
+                  const checkbox = this.firstElementChild;
+                  checkbox.style.pointerEvents = "none";
+                  checkbox.tabIndex = 0;
+                  if (!customElements.get("tp-yt-paper-checkbox")) {
+                    checkbox.setAttribute("role", "checkbox");
+                    Object.defineProperty(checkbox, "checked", {
+                      get() { return this.hasAttribute("checked"); },
+                      set(value) {
+                        this.toggleAttribute("checked", Boolean(value));
+                        this.setAttribute("aria-checked", String(Boolean(value)));
+                      },
+                    });
+                    checkbox.checked = !1;
+                  }
+                }
                 n.attached.call(this);
               }
 
@@ -1391,12 +1410,12 @@ export default function runPolymer() {
                 n.detached.call(this);
               }
 
-              get checked() {
-                return this.hasAttribute("checked");
-              }
-
-              set checked(value) {
-                this.toggleAttribute("checked", Boolean(value));
+              toggle(event) {
+                it(event);
+                const checkbox = this.firstElementChild;
+                checkbox.focus();
+                checkbox.checked = !checkbox.checked;
+                n.onTap({ detail: { sourceEvent: event }, target: checkbox });
               }
             }
           );
@@ -1406,14 +1425,15 @@ export default function runPolymer() {
           return "function" == typeof e ? e() : e;
         },
         a = (n, i) => {
+          if (O) return;
           t[n] = i;
           const r = i?.content?.lastElementChild;
-          r && r.insertAdjacentHTML("afterend", o),
+          r && ![...i.content.children].some((child) => child.localName === h) && r.after(o()),
             ((t) => {
               const n = e.querySelectorAll(t);
               n.length &&
                 (n.length,
-                n.forEach((t) => t.querySelector(":scope > " + h) || t.insertAdjacentHTML("beforeend", o)));
+                n.forEach((t) => t.querySelector(":scope > " + h) || t.append(o())));
             })(n);
         };
       return {
@@ -1429,8 +1449,9 @@ export default function runPolymer() {
               });
         },
         st(e) {
-          const n = r(e) || t[e];
-          n && ((n.innerHTML = n.innerHTML.replace(o, "")), delete t[e]);
+          const n = t[e] || r(e);
+          [...n?.content?.children || []].filter((child) => child.localName === h).forEach((wrapper) => wrapper.remove());
+          delete t[e];
         },
         get yt() {
           return n;
@@ -1449,36 +1470,65 @@ export default function runPolymer() {
           "ytmusic-responsive-list-item-renderer",
         ],
         n = [],
-        o = (t) => {
-          n[t] && (Tt.st(t), delete n[t]);
-        };
+        o = (t) => Tt.st(t);
       let r, a;
+      const sizes = new ResizeObserver(() => a || (a = requestAnimationFrame(c)));
+      const measured = new Set();
+      const fit = (row, wrapper) => {
+        if (!row.matches(`${LK}, ytd-rich-grid-media, ytd-rich-grid-slim-media, ytd-grid-video-renderer, ytd-reel-item-renderer`)) return;
+        const media = row.querySelector('yt-thumbnail-view-model, [class*="ThumbnailContainer"], [class*="ThumbnailParentContainer"], ytd-thumbnail, img');
+        if (!media) return;
+        for (const target of [row, media]) {
+          if (!measured.has(target)) sizes.observe(target), measured.add(target);
+        }
+        const rect = media.getBoundingClientRect(), host = row.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        Object.assign(wrapper.style, {
+          left: `${rect.left - host.left - row.clientLeft + row.scrollLeft}px`,
+          top: `${rect.top - host.top - row.clientTop + row.scrollTop}px`,
+          width: `${rect.width}px`, height: `${rect.height}px`,
+        });
+      };
       // Lockups are not Polymer elements, and YouTube's Polymer renderers no longer expose their
       // templates, so wrappers are inserted directly into whatever is on the page.
       const c = () => {
         a = 0;
+        if (O) return;
+        for (const target of measured) {
+          if (!target.isConnected) sizes.unobserve(target), measured.delete(target);
+        }
         Tt.ct();
         e.querySelectorAll(`${LK}, ${t.join(", ")}`).forEach((n) => {
           !n.querySelector(":scope > " + h) &&
             (n.matches(LK) ? lkId(n) : !0) &&
-            n.insertAdjacentHTML("beforeend", `<${h}></${h}>`);
+            n.append(el(h));
+          const wrapper = n.querySelector(":scope > " + h);
+          if (wrapper) fit(n, wrapper);
         });
+        indexes.update(P());
       };
       return {
+        refresh() {
+          if (!O && !a) a = requestAnimationFrame(c);
+        },
         tt() {
           t.forEach((t) =>
             customElements.whenDefined(t).then(() =>
               ((t) => {
+                if (O) return;
                 Tt.tt(t), n.push(t);
               })(t)
             )
           ),
             c(),
             (r = new MutationObserver(() => a || (a = requestAnimationFrame(c)))),
-            r.observe(e.body, { childList: !0, subtree: !0 });
+            r.observe(e.body, { childList: !0, subtree: !0, attributes: !0, attributeFilter: ['hidden', 'is-hidden', 'href'] });
         },
         st() {
           r?.disconnect(),
+            indexes.clear(),
+            sizes.disconnect(),
+            measured.clear(),
             cancelAnimationFrame(a),
             n.forEach(o),
             (n.length = 0),
@@ -1539,7 +1589,7 @@ export default function runPolymer() {
           body: JSON.stringify({ context, ...payload }),
         }
       ),
-      body = await res.json().catch(() => ({}));
+      body = await res.json();
     if (!res.ok || body.error || (body.status && "STATUS_SUCCEEDED" !== body.status))
       throw new Error(`HTTP ${res.status}: ${JSON.stringify(body.error || body.status || body).slice(0, 300)}`);
     return body;
@@ -1554,6 +1604,7 @@ export default function runPolymer() {
         { continuation: cont.token }
       ).then((r) => ({ ...r, actions: r.onResponseReceivedActions ?? r.actions }));
     if (edit) return innertube("/youtubei/v1/browse/edit_playlist", edit);
+    if (endpoint?.feedbackEndpoint?.feedbackToken) return innertube('/youtubei/v1/feedback', { feedbackTokens: [endpoint.feedbackEndpoint.feedbackToken] });
     throw new Error("unsupported service endpoint");
   }
   function watchLaterRequest(ids) {
@@ -1590,7 +1641,7 @@ export default function runPolymer() {
         .catch((err) => {
           console.warn("[multi-select] Watch later request failed, falling back:", err);
           return bt.p(fallback).then(
-            () => Kt(`✔️   ${L.messages.addToWatchLater} (${ids.length})`),
+            (ok) => ok && Kt(`✔️   ${L.messages.addToWatchLater} (${ids.length})`),
             (fallbackError) => {
               console.warn("[multi-select] Watch later fallback failed:", fallbackError);
               Kt("👎   " + L.messages.addToWatchLater);
@@ -1625,20 +1676,16 @@ export default function runPolymer() {
   }
   // YouTube no longer re-renders the list after a move, so mirror the server-side result in the DOM.
   function rowOf(el) {
-    let r = el;
-    if (!r.matches(LK)) return r;
-    while (r.parentElement && r.parentElement.querySelectorAll(LK).length < 2) r = r.parentElement;
-    return r;
+    // Never climb based on the number of peers: a one-item list used to resolve to <html>.
+    return el.matches(LK) ? el.closest('ytd-rich-item-renderer') || el : el;
   }
   // Same for removals: capture the rows now, drop them once the request has succeeded.
   function removeRows() {
+    const playlist = J();
     const rows = [...S()].map((b) => b.parentElement.parentElement).filter(Boolean).map(rowOf);
-    rows.forEach((r) => r.remove());
     return (ok) => {
-      if (!ok) {
-        softRefresh();
-        return;
-      }
+      if (!ok || O || J() !== playlist) return;
+      rows.forEach((r) => r.remove());
       Kt(`✔️   ${L.messages.removeVideos} (${rows.length})`);
       softRefresh();
     };
@@ -1655,7 +1702,9 @@ export default function runPolymer() {
       let fresh;
       // Liked Videos order lags behind a like by a moment; wait until the moved videos lead the list.
       for (let tries = 0; tries < 6; tries++) {
-        fresh = await innertube("/youtubei/v1/browse", { browseId: "VL" + list });
+        const endpoint = playlistTab(q())?.endpoint?.browseEndpoint;
+        fresh = await innertube("/youtubei/v1/browse", { browseId: "VL" + list, ...endpoint });
+        if (O || J() !== list || !host.isConnected) return;
         if (!expectTop) break;
         const top = [...JSON.stringify(fresh).matchAll(/"contentId":"([\w-]{11})"/g)].map((m) => m[1]);
         if (expectTop.every((id, i) => top[i] === id)) break;
@@ -1675,6 +1724,7 @@ export default function runPolymer() {
     restore();
   }
   function moveRows(mode, anchor, expectTop) {
+    const playlist = J();
     const isRow = (c) => c.localName === sample?.localName,
       anchorRow = anchor && rowOf(anchor),
       rows = [...S()]
@@ -1685,7 +1735,7 @@ export default function runPolymer() {
     console.info("[multi-select] move", mode, rows.length, "rows");
     return (ok) => {
       console.info("[multi-select] move result:", ok, "parent:", !!parent);
-      if (!ok || !parent) return;
+      if (!ok || !parent?.isConnected || O || J() !== playlist) return;
       Kt(`✔️   ${{ top: L.messages.moveToTop, bottom: L.messages.moveToBottom, after: L.messages.moveAfter }[mode]} (${rows.length})`);
       const frag = e.createDocumentFragment();
       frag.append(...rows);
@@ -1698,6 +1748,7 @@ export default function runPolymer() {
     };
   }
   function reorderSelected(order, message) {
+    const playlist = J();
     const selected = [...S()],
       setVideoIds = selected.map(U),
       first = selected[0],
@@ -1708,7 +1759,7 @@ export default function runPolymer() {
         .slice(0, [...parent.children].indexOf(anchor))
         .reverse()
         .find((child) => child.matches?.(LK) || child.querySelector?.(x));
-    if (!setVideoIds.every(Boolean) || !parent || !rows.length) {
+    if (!setVideoIds.every(Boolean) || !parent || !rows.length || new Set(setVideoIds).size !== setVideoIds.length || rows.some((row) => row.parentElement !== parent)) {
       Kt("👎   " + L.messages.invalidData);
       return !1;
     }
@@ -1730,24 +1781,22 @@ export default function runPolymer() {
       playlistEditEndpoint: { playlistId: J(), params: "CAFAAQ%3D%3D", actions },
     };
     bt.p(request, void 0, !1)?.then((ok) => {
-      if (!ok) return;
-      const current = [...S()].map((checkbox) => rowOf(checkbox.parentElement.parentElement));
-      const selectedRows = new Set(rows);
+      if (!ok || O || J() !== playlist || !parent.isConnected || rows.some((row) => row.parentElement !== parent)) return;
+      // The menu clears checkboxes before this async request finishes. Use captured rows.
+      const marker = e.createComment("msfy-reorder");
+      parent.insertBefore(marker, rows[0]);
       const fragment = e.createDocumentFragment();
       order.forEach((setVideoId) => {
         const index = setVideoIds.indexOf(setVideoId);
         const row = rows[index];
         row && fragment.appendChild(row);
       });
-      if (current.length && parent === current[0].parentElement) {
-        const sibling = previous?.nextSibling || current.find((row) => !selectedRows.has(row));
-        parent.insertBefore(fragment, sibling || null);
-      }
+      marker.replaceWith(fragment);
+      z.counts.move += order.length;
+      ct();
       Kt(`✔️   ${message} (${order.length})`);
       softRefresh();
     });
-    z.counts.move += order.length;
-    ct();
     return !0;
   }
   function channelName(data) {
@@ -1780,6 +1829,33 @@ export default function runPolymer() {
       apply = moveRows("after", $t.B?.parentElement?.parentElement);
     return bt.p(t, void 0, !1)?.then(apply), ct(), !0;
   }
+  function moveStep(direction) {
+    const playlist = J();
+    const checkboxes = [...P()], ids = checkboxes.map(U), selected = new Set([...S()].map(U));
+    const rows = checkboxes.map((checkbox) => rowOf(checkbox.parentElement.parentElement));
+    const parent = rows[0]?.parentElement;
+    if (!parent || !ids.every(Boolean) || new Set(ids).size !== ids.length || rows.some((row) => row.parentElement !== parent)) {
+      Kt("👎   " + L.messages.invalidData);
+      return !1;
+    }
+    const { order, actions } = stepMove(ids, selected, direction);
+    if (!actions.length) return !1;
+    bt.p({ playlistEditEndpoint: { playlistId: J(), params: "CAFAAQ%3D%3D", actions } }, void 0, !1)?.then((ok) => {
+      if (!ok || O || J() !== playlist || !parent.isConnected) return;
+      // Placeholders preserve non-video children such as continuation and section controls.
+      const slots = rows.map((row) => {
+        const slot = e.createComment("msfy-row");
+        row.replaceWith(slot);
+        return slot;
+      });
+      order.forEach((id, index) => slots[index].replaceWith(rows[ids.indexOf(id)]));
+      z.counts.move += actions.length;
+      ct();
+      Kt(`✔️   ${direction === "up" ? L.messages.moveUp : L.messages.moveDown} (${selected.size})`);
+      softRefresh();
+    });
+    return !0;
+  }
   // Liked Videos has no manual order (no setVideoIds); it is sorted by like time, so moving to the
   // top means un-liking and re-liking, last video first so the selection keeps its order.
   async function likeToTop(ids, apply) {
@@ -1799,7 +1875,8 @@ export default function runPolymer() {
       console.warn("[multi-select] Liked videos move failed:", err);
       Kt("👎   " + (err?.message || L.messages.invalidData));
     }
-    done && apply(!0);
+    if (done === ids.length) apply(!0);
+    else if (done) softRefresh();
   }
   function Mt() {
     if (W()) {
@@ -1857,61 +1934,34 @@ export default function runPolymer() {
             },
           };
           bt.m("yt-open-popup-action", [c, bt.v]);
+        } else {
+          M = !1;
+          Kt("👎   " + L.messages.invalidData);
         }
       }).catch((err) => {
         M = !1;
         console.warn("[multi-select] Save to playlist failed:", err);
+        Kt("👎   " + L.messages.addToPlaylist);
       });
-    }
-  }
-  function Vt() {
-    const t = e.querySelector("ytd-multi-page-menu-renderer");
-    if (t) {
-      const e = t.data?.header?.activeAccountHeaderRenderer,
-        n =
-          e?.channelHandle?.simpleText ||
-          e?.email?.simpleText ||
-          e?.accountName?.simpleText;
-      return (
-        n !== z.handle && ((z.handle = n), at("handle", n)),
-        !z.blacklisted &&
-          (function (t) {
-            const e = [
-              "@w-regner",
-              "@trentoast",
-              "@flashmemories",
-              "@micheledaniele5571",
-              "@kattanart",
-              "@fairyslash",
-              "@titoosky",
-              "@joey2scoops",
-              "@1palace",
-              "@utlf",
-              "@dmitrydmitriev",
-              "@hipffwi4739",
-              "@pockettubehq",
-              "@toetar",
-              "@jennis.strickpodcast",
-            ];
-            return (
-              e.includes(t?.channelHandle?.simpleText?.toLowerCase()) ||
-              e.includes(t?.email?.simpleText?.toLowerCase()) ||
-              e.includes(t?.accountName?.simpleText?.toLowerCase())
-            );
-          })(e) &&
-          ((z.blacklisted = !0), at("blacklisted", !0)),
-        t
-      );
     }
   }
   function Dt() {
     const t = G();
-    t.length && ((V.t = t), wt.U("copy"));
+    if (!t.length) return !1;
+    V.t = t;
+    z.counts.copy += t.length;
+    ct();
+    wt.U("copy");
+    return !z.preserveSelection;
   }
   function Rt(t) {
     wt.U("paste");
-    const e = t || V.t,
-      n = bt.T.N(e);
+    const e = t || V.t;
+    if (!Array.isArray(e) || !e.length || e.some((id) => !/^[\w-]{11}$/.test(id))) {
+      Kt("👎   " + L.messages.invalidData);
+      return;
+    }
+    const n = bt.T.N(e);
     bt.h(n).then(
       (n) => {
         bt.$(), t && (V.t = t), (z.counts.paste += e.length), ct();
@@ -1924,6 +1974,28 @@ export default function runPolymer() {
   }
   function St(t) {
     z.noRemovalConfirmation ? Nt(t) : xt.ot().then((e) => e && Nt(t));
+  }
+  async function removeHistory(cut) {
+    const entries = [...S()].map((checkbox) => ({ row: rowOf(checkbox.parentElement.parentElement), data: j(checkbox).data }));
+    if (cut) V.t = G();
+    let removed = 0;
+    for (const { row, data } of entries) {
+      try {
+        const menu = data?.menu?.menuRenderer;
+        const endpoint = ft(menu?.topLevelButtons, ['buttonRenderer', 'serviceEndpoint', 'feedbackEndpoint']) ||
+          ft(menu?.items, ['menuServiceItemRenderer', 'serviceEndpoint', 'feedbackEndpoint']);
+        if (!endpoint) throw new Error(L.messages.invalidData);
+        await serviceRequest({ feedbackEndpoint: endpoint });
+        row.remove();
+        removed++;
+      } catch (error) {
+        Kt('👎   ' + (error?.message || L.messages.invalidData));
+        break;
+      }
+    }
+    z.counts.cut += removed;
+    ct();
+    if (removed) Kt(`✔️   ${L.messages.removeVideos} (${removed})`);
   }
   // Liked Videos items are removed by un-liking; the lockup rows carry no menu data to read it from.
   async function unlikeVideos() {
@@ -1944,9 +2016,12 @@ export default function runPolymer() {
   }
   // Saved Shorts has no playlist edit API; each item carries its own "remove" feedback token.
   async function unsaveShorts() {
-    const items = PL()?.[0]?.richGridRenderer?.contents ?? [],
+    const items = PL()?.[0]?.richGridRenderer?.contents ?? PL() ?? [],
       tokenOf = (id) => {
-        const item = items.find((x) => JSON.stringify(x).includes(`"videoId":"${id}"`));
+        const item = items.find((x) => {
+          const json = JSON.stringify(x);
+          return json.includes(`"videoId":"${id}"`) || json.includes(`"contentId":"${id}"`);
+        });
         return item && JSON.stringify(item).match(/"imageName":"DELETE"[\s\S]*?"feedbackToken":"([^"]+)"/)?.[1];
       },
       entries = [...S()].map((b) => ({ id: F(b), row: rowOf(b.parentElement.parentElement) }));
@@ -1969,38 +2044,7 @@ export default function runPolymer() {
   function Nt(t) {
     t && wt.U("cut"),
       (D()
-        ? (function (t) {
-            const e = S();
-            t && (V.t = G(e)), e.length;
-            for (let t = 0; t < e.length; t++) {
-              const n = j(e[t]),
-                o = n.data.menu.menuRenderer,
-                i = [];
-              let r,
-                a = ft(o.topLevelButtons, [
-                  "buttonRenderer",
-                  "serviceEndpoint",
-                  "feedbackEndpoint",
-                ]);
-              !a &&
-                (a = ft(o.items, [
-                  "menuServiceItemRenderer",
-                  "serviceEndpoint",
-                  "feedbackEndpoint",
-                ])) &&
-                ((r = n), i.push(a.actions[0])),
-                i.push(a.actions[1]),
-                t === e.length - 1 && i.push(a.actions[2]);
-              const c = {
-                feedbackEndpoint: {
-                  feedbackToken: a.feedbackToken,
-                  actions: i,
-                },
-              };
-              bt.p(c, r);
-            }
-            return (z.counts.cut += e.length), ct(), !0;
-          })(t)
+        ? (removeHistory(t), !0)
         : W()
         ? (function (t) {
             t && (V.t = G()), (z.counts.cut += S().length);
@@ -2023,7 +2067,7 @@ export default function runPolymer() {
     let n = !1;
     for (let o = 0; o < t.length; o++) {
       const i = t[o],
-        r = j(i).data.videoId;
+        r = F(i);
       r && ((e[r] = (e[r] || 0) + 1), e[r] > 1 && ((i.checked = !0), (n = !0)));
     }
     !n && Kt("👍   " + L.messages.noDuplicatesFound), kt.l();
@@ -2044,28 +2088,29 @@ export default function runPolymer() {
           (o = e.createElement("dialog")),
             (o.id = t),
             (o.className = m),
-            (o.innerHTML = (() => {
-              const t = L.messages;
-              return `<form method="dialog"><header></header><section><label><input type="radio" name="type" value="0" checked>JSON</label><label><input type="radio" name="type" value="1">TEXT</label><label><input type="radio" name="type" value="2">HTML</label></section><footer><button id="cancel">${
-                t.cancel
-              }</button><button id="submit">${
-                t.save || "Speichern"
-              }</button></footer></form>`;
-            })());
+            o.append(el('form', { method: 'dialog' }, el('header'),
+              el('section', {}, ['JSON', 'TEXT', 'HTML'].map((label, index) => el('label', {}, el('input', { type: 'radio', name: 'type', value: index, checked: index === 0 }), label))),
+              el('footer', {}, el('button', { type: 'button', id: 'cancel' }, L.messages.cancel), el('button', { type: 'button', id: 'submit' }, L.messages.save || 'Save'))));
           const n = o.querySelector("button#cancel"),
             i = o.querySelector("button#submit");
           n.addEventListener("click", (t) => d(-1)),
             i.addEventListener("click", (t) => d(a())),
             (r = (t) => {
-              switch ((t.key, t.key)) {
+              if (t.target.matches('input[type="radio"]') && [" ", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(t.key)) return;
+              switch (t.key) {
                 case "Escape":
                   d(-1);
                   break;
                 case " ":
                 case "Enter":
-                  d(t.target === i ? a() : -1);
+                  d(t.target === n ? -1 : a());
                   break;
                 case "Tab":
+                  if (t.shiftKey && t.target === n) o.querySelector('input:checked').focus();
+                  else if (!t.shiftKey && t.target.matches('input[type="radio"]')) n.focus();
+                  else if (!t.shiftKey && t.target === i) o.querySelector('input:checked').focus();
+                  else (t.shiftKey ? n : i).focus();
+                  break;
                 case "ArrowLeft":
                 case "ArrowRight":
                   t.target === n ? i.focus() : n.focus();
@@ -2088,7 +2133,7 @@ export default function runPolymer() {
           );
       },
       st() {
-        o && (e.removeEventListener("keydown", r, n), o.remove(), (o = null));
+          o && (i && d(-1), e.removeEventListener("keydown", r, n), o.remove(), (o = null));
       },
       get dt() {
         return t;
@@ -2103,19 +2148,14 @@ export default function runPolymer() {
         case 1:
           return G().join("\n");
         case 2:
-          return [...S()]
-            .map((t) => {
-              const e = t.parentElement?.parentElement,
-                o = e?.polymerController || e?.inst || e,
-                i = o?.__data?.data,
-                r = i?.thumbnail?.thumbnails?.[0]?.url,
-                a =
-                  i?.headline?.simpleText ||
-                  i?.title?.simpleText ||
-                  i?.title?.runs?.[0]?.text;
-              return `<a href="${n}/watch?v=${i?.videoId}" style="display:block"><img src="${r}" style="width:150px">${a}</a>`;
-            })
-            .join("\n");
+          return selectionHtml([...S()].map((checkbox) => {
+            const row = j(checkbox), data = row?.data;
+            return {
+              id: F(checkbox),
+              thumbnail: data?.thumbnail?.thumbnails?.[0]?.url || row.querySelector('img')?.src,
+              title: data?.title?.runs?.map((run) => run.text).join('') || data?.title?.simpleText || data?.headline?.simpleText,
+            };
+          }));
       }
     }
     Ht.ot().then((n) => {
@@ -2129,7 +2169,7 @@ export default function runPolymer() {
           (s.download = "youtube-links"),
           e.body.appendChild(s),
           s.click(),
-          setTimeout(() => s.remove(), t.URL.revokeObjectURL(c));
+          setTimeout(() => { s.remove(); t.URL.revokeObjectURL(c); }, 1000);
       }
     });
   }
@@ -2145,24 +2185,7 @@ export default function runPolymer() {
               const e = new FileReader();
               (e.onload = (e) => {
                 try {
-                  function n(t, e) {
-                    switch (t) {
-                      case "application/json":
-                        return JSON.parse(e);
-                      case "text/plain":
-                        return e.replaceAll("\r\n", "\n").split("\n");
-                      case "text/html":
-                        return [...e.matchAll(/\/watch\?v=([^"]+)"/g)].map(
-                          (t) => t[1]
-                        );
-                    }
-                  }
-                  const o = n(t.type, e.target.result);
-                  if (
-                    !Array.isArray(o) ||
-                    o.some((t) => "string" != typeof t || t.length > 11)
-                  )
-                    throw new Error();
+                  const o = parseSelectionFile(e.target.result, t.type, t.name);
                   Rt(o);
                 } catch (i) {
                   Kt("👎   " + L.messages.invalidData);
@@ -2176,9 +2199,6 @@ export default function runPolymer() {
       e.body.appendChild(t),
       t.click();
   }
-  const policy = window.trustedTypes.createPolicy('default', {
-    createHTML: (string) => string
-  });
   const Ut = r
       ? (function () {
           function t(t) {
@@ -2277,7 +2297,7 @@ export default function runPolymer() {
                 `#${T} > [role="progressbar"] { height: 28px; box-sizing: border-box; padding: 5px 8px; background-color: var(--yt-spec-call-to-action, #065fd4); color: #fff; text-align: center; border-radius: 8px; font-size: 12px; font-weight: 600; transition: width 120ms linear; }`,
                 `#${b} { width: min(460px, calc(100vw - 32px)); box-sizing: border-box; padding: 0 20px 20px; font-family: Roboto, Arial, sans-serif; font-size: 14px; position: fixed; z-index: 2029; box-shadow: 0 8px 32px rgba(0,0,0,.4); background-color: var(--yt-spec-menu-background, #212121); color: var(--yt-spec-text-primary, #f1f1f1); text-align: start; border-radius: 12px; border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
                 `#${b}[position=center] { bottom: 130px; left: 50vw; transform: translateX(-50%); }`,
-                `#${b}[position=left] { bottom: 130px; left: 50px; }`,
+                `#${b}[position=left] { bottom: 130px; left: clamp(12px, calc(100vw - 460px), 50px); }`,
                 `#${b}[position=custom] { left: clamp(0px, var(--x), calc(100vw - var(--right-offset))); top: clamp(1px, var(--y), calc(100vh - var(--bottom-offset))); }`,
                 `#${b} > #drag-handle { visibility: hidden; position: relative; cursor: move; margin: 0 auto; padding: 6px 0; width: 50%; }`,
                 `#${b} > #drag-handle > hr { border: 0; height: 2px; border-radius: 1px; background-color: ${a}; }`,
@@ -2300,16 +2320,16 @@ export default function runPolymer() {
                 `#${b} > #content > footer > div > label { cursor: pointer; }`,
                 `#${b} > #content yt-icon-button { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; }`,
                 `#${b} > #content yt-icon-button:hover { background-color: ${a}; border-radius: 50%; }`,
-                `#${w} { display: none; position: fixed; padding: 8px; border-radius: ${k}; border: ${d}; box-shadow: ${o}; background-color: ${i}; color: ${r}; font-family: Roboto, Arial, sans-serif; font-size: 14px; max-width: ${t}px; z-index: 2030; }`,
+                `#${w} { display: none; position: fixed; width: max-content; box-sizing: border-box; padding: 8px; border-radius: ${k}; border: ${d}; box-shadow: ${o}; background-color: ${i}; color: ${r}; font-family: Roboto, Arial, sans-serif; font-size: 14px; max-width: min(${t}px, calc(100vw - 24px)); z-index: 2030; }`,
                 `#${w}[position=center] { bottom: 30px; left: 50vw; transform: translateX(-50%); }`,
-                `#${w}[position=left] { bottom: 30px; left: 50px; }`,
+                `#${w}[position=left] { bottom: 30px; left: clamp(12px, calc(100vw - ${t}px), 50px); }`,
                 `#${w}[position=custom] { left: clamp(0px, var(--x), calc(100vw - var(--right-offset))); top: clamp(1px, var(--y), calc(100vh - var(--bottom-offset))); }`,
                 `#${w} > #drag-handle { visibility: hidden; position: absolute; top: 0; left: 50%; transform: translateX(-50%); cursor: move; padding: 3px 12px; width: 24px; }`,
                 `#${w} > #drag-handle > hr { border: 0; height: 2px; border-radius: 1px; background-color: var(--yt-spec-text-secondary, #aaa); }`,
                 `#${w} > #drag-handle > hr:first-child { margin: 0; }`,
                 `#${w} > #drag-handle > hr:last-child { margin: 2px 0 0; }`,
                 `#${w}[position=custom] > #drag-handle { visibility: visible; }`,
-                `#${w} > #content { display: flex; align-items: center; column-gap: 4px; outline: none; }`,
+                `#${w} > #content { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; outline: none; }`,
                 `#${w} > #content > #selection { min-width: 4.5em; margin-left: 12px; text-align: end; white-space: nowrap; pointer-events: none; font-weight: 500; font-variant-numeric: tabular-nums; }`,
                 `#${w} > #content > span { pointer-events: none; margin: 0 12px 0 2px; color: var(--yt-spec-text-secondary, #aaa); }`,
                 `#${w} > #content > yt-icon-button { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; }`,
@@ -2340,6 +2360,9 @@ export default function runPolymer() {
                 `${x}[checked] { background-color: rgba(62, 166, 255, 0.18); box-shadow: inset 0 0 0 3px var(--yt-spec-call-to-action, #3ea6ff); }`,
                 `${x}:focus { outline: var(--yt-spec-text-primary, #fff) solid 2px; outline-offset: -2px }`,
                 `${h} { border-radius: ${k}; position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 1; cursor: pointer; display: none; }`,
+                `.${s}-playlist-index { position: absolute; z-index: 2; transform: translateX(-100%); min-width: 24px; height: 24px; box-sizing: border-box; padding: 2px 6px; border-radius: 6px; background: rgba(0,0,0,.8); color: #fff; font: 500 13px/20px Roboto, Arial, sans-serif; text-align: center; pointer-events: none; opacity: 0; visibility: hidden; }`,
+                `[data-msfy-indexed]:hover > .${s}-playlist-index, [data-msfy-indexed]:focus-within > .${s}-playlist-index, [data-msfy-selecting] > .${s}-playlist-index { opacity: 1; visibility: visible; }`,
+                `.${s}-index-description { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; pointer-events: none; }`,
                 `ytd-grid-video-renderer[is-dismissed] > ${h}, ytd-video-renderer[is-hidden] > ${h}, ytd-video-renderer[is-dismissed] > ${h}, ytd-compact-video-renderer[is-dismissed] > ${h}, ytd-reel-item-renderer[is-dismissed] > ${h} { display: none; }`,
               ],
               V = n.sheet,
@@ -2372,11 +2395,7 @@ export default function runPolymer() {
               t.setAttribute("name", s),
               t.setAttribute("size", "24"),
               (t.style.display = "none");
-            const o = `<g id="${s}-help"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"></path></g>`,
-              i = `<g id="${s}-info"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path></g>`,
-              r = `<g id="${s}-select-all"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"></path></g>`,
-              a = `<g id="${s}-unselect-all"><path d="M1.79 12l5.58 5.59L5.96 19 .37 13.41 1.79 12zm.45-7.78L12.9 14.89l-1.28 1.28L7.44 12l-1.41 1.41L11.62 19l2.69-2.69 4.89 4.89 1.41-1.41L3.65 2.81 2.24 4.22zm14.9 9.27L23.62 7 22.2 5.59l-6.48 6.48 1.42 1.42zM17.96 7l-1.41-1.41-3.65 3.66 1.41 1.41L17.96 7z"></path></g>`;
-            (t.innerHTML = policy.createHTML(`<svg><defs>${o}${i}${r}${a}<g id="${s}-flip-list"><path d="M7 3v3h10v2H7v3L3 7l4-4zm10 8v3H7v2h10v3l4-4-4-4z"></path></g><g id="${s}-shorts"><rect x="4" y="3" width="16" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2"></rect><path d="m10 7 6 5-6 5V7z"></path></g><g id="${s}-video"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"></rect><path d="m10 8 6 4-6 4V8z"></path></g></defs></svg>`)),
+            t.append(iconSet(s)),
               e.head.appendChild(t);
           }
         },
@@ -2389,14 +2408,18 @@ export default function runPolymer() {
       let t;
       const n = (function () {
           let e;
+          const originals = new WeakMap();
           const n = (t) => e.indexOf(t.playlistId),
             o = (t, e) =>
               (t.title?.simpleText || "").localeCompare(e.title?.simpleText),
             i = (t, e) => n(t) - n(e);
           return (n, r) => {
+            if (!Array.isArray(n)) return;
+            e = originals.get(n);
             n &&
               (t
-                ? ((e = n.map((t) => t.playlistAddToOptionRenderer.playlistId)),
+                ? ((e ??= n.map((t) => t.playlistAddToOptionRenderer.playlistId)),
+                  originals.set(n, e),
                   n.sort((t, e) =>
                     o(
                       t.playlistAddToOptionRenderer,
@@ -2418,11 +2441,12 @@ export default function runPolymer() {
                     [...r.children]
                       .sort((t, e) => i(t.data, e.data))
                       .forEach((t) => r.appendChild(t)),
-                  (e = null)));
+                  originals.delete(n), (e = null)));
           };
         })(),
         o = (function () {
           let e;
+          const originals = new WeakMap();
           const n = (t) => e.indexOf(t.entryData.guideEntryData.guideEntryId),
             o = (t, e) =>
               (t.formattedTitle?.simpleText || "").localeCompare(
@@ -2432,12 +2456,13 @@ export default function runPolymer() {
           return (n) => {
             const r = n.data?.expandableItems;
             if (r) {
+              e = originals.get(r);
               const a = n.expandableItems;
               t
-                ? ((e = r.map(
+                ? ((e ??= r.map(
                     (t) =>
                       t.guideEntryRenderer.entryData.guideEntryData.guideEntryId
-                  )),
+                  )), originals.set(r, e),
                   r.sort((t, e) =>
                     o(t.guideEntryRenderer, e.guideEntryRenderer)
                   ),
@@ -2453,7 +2478,7 @@ export default function runPolymer() {
                     [...a.children]
                       .sort((t, e) => i(t.data, e.data))
                       .forEach((t) => a.appendChild(t)),
-                  (e = null));
+                  originals.delete(r), (e = null));
             }
           };
         })();
@@ -2463,6 +2488,7 @@ export default function runPolymer() {
           return t;
         },
         set enabled(i) {
+          if (O) return;
           (t = i),
             ht(
               "ytd-guide-collapsible-entry-renderer",
@@ -2483,8 +2509,10 @@ export default function runPolymer() {
         for (const n in e) {
           const o = e[n],
             i = t[n];
-          if (i)
+          if (i) {
             "string" == typeof i ? Bt.bt(o, i) : i.forEach((t) => Bt.bt(o, t));
+            if (n === 'showVideoIndex') z.showVideoIndex = Boolean(o), It.refresh();
+          }
           else if (z.hasOwnProperty(n))
             switch (((z[n] = o), n)) {
               case "sortPlaylistNames":
@@ -2516,20 +2544,7 @@ export default function runPolymer() {
                   case "options-changed":
                     gt.et(),
                       Qt(o),
-                      Xt.$t(),
-                      z.loaded ||
-                        ((z.loaded = !0),
-                        bt.k &&
-                          (function () {
-                            if (!Vt()) {
-                              const t = bt.T.Y;
-                              bt.h(t).then((t) => {
-                                const e = Vt(),
-                                  n = e?.parentElement?.parentElement;
-                                n && n.opened && n.close();
-                              }, () => {});
-                            }
-                          })());
+                      Xt.$t();
                     break;
                   case "command":
                     "toggleMultiSelectMode" === o
@@ -2546,7 +2561,7 @@ export default function runPolymer() {
                         })({ preventDefault() {} });
                     break;
                   case "data":
-                    (L = o), vt.tt();
+                    (L = o), vt.tt(), It.refresh();
                     break;
                   case "destroy":
                     te(), (qt.enabled = !1);
@@ -2564,7 +2579,7 @@ export default function runPolymer() {
           {
             type: "yt-navigate-finish",
             listener: function (t) {
-              lt(), $t.H(), kt.l(), xt.st();
+              lt(), $t.H(), kt.l(), xt.st(), It.refresh();
             },
           },
           {
@@ -2731,6 +2746,7 @@ export default function runPolymer() {
         at("callout", m.length);
       };
       function $(r) {
+        if (O || !i || !r.isConnected) return;
         if ("none" !== t.getComputedStyle(r).display) {
           if (i.child) {
             const e = r.querySelector(i.child);
@@ -2765,7 +2781,11 @@ export default function runPolymer() {
                 ].forEach((t) => Bt.bt(!0, t)),
                   (n = e.createElement("div")),
                   (n.id = c),
-                  (n.innerHTML = `<div><yt-icon id="icon" icon="${s}:${s}-info"></yt-icon><button id="close" type="button" aria-label="${L.messages.close}">×</button><div id="content"></div><div id="actions"><button id="skip" type="button">${L.messages.onboardingSkip}</button><button id="shortcuts" type="button">${L.messages.onboardingShortcuts}</button><button id="next" type="button"></button></div></div>`),
+                  n.append(el('div', {}, el('yt-icon', { id: 'icon', icon: `${s}:${s}-info` }),
+                    el('button', { id: 'close', type: 'button', 'aria-label': L.messages.close }, '×'),
+                    el('div', { id: 'content' }),
+                    el('div', { id: 'actions' }, el('button', { id: 'skip', type: 'button' }, L.messages.onboardingSkip),
+                      el('button', { id: 'shortcuts', type: 'button' }, L.messages.onboardingShortcuts), el('button', { id: 'next', type: 'button' })))),
                   n
                     .querySelector("#close")
                     .addEventListener("click", (t) => (it(t), b())),
@@ -2778,7 +2798,9 @@ export default function runPolymer() {
                   (o = n.querySelector("#content"));
               }
             })(),
-            (o.innerHTML = `<strong>${L.messages.onboardingTitle}</strong><p>${L.messages.onboardingStep.replace("$1", String(z.callout + 1)).replace("$2", String(m.length))}</p><p>${i.content()}</p>`),
+            o.replaceChildren(el('strong', {}, L.messages.onboardingTitle),
+              el('p', {}, L.messages.onboardingStep.replace('$1', String(z.callout + 1)).replace('$2', String(m.length))),
+              el('p', {}, i.content())),
             n.querySelector("#shortcuts").style.display = z.callout === 0 ? "" : "none",
             n.querySelector("#next").textContent =
               z.callout === m.length - 1
@@ -2872,22 +2894,22 @@ export default function runPolymer() {
       c && (c(), (c = null)), pt(a) && (c = Wt(a, "filterPosition"));
     }
     function l() {
-      gt.et(), a.remove(), (a = null), kt.l();
+      c && (c(), (c = null)), gt.et(), a.remove(), (a = null), kt.l();
     }
     function p() {
       if (!a) {
         (a = e.createElement("div")), (a.id = n);
-        const c = et(o, "close") + nt(o, L.messages.close),
-          p = et(i, `${s}:${s}-help`) + nt(i, L.messages.filterHelpTooltip),
+        const c = [et(o, "close"), nt(o, L.messages.close)],
+          p = [et(i, `${s}:${s}-help`), nt(i, L.messages.filterHelpTooltip)],
           u = et("done", "icons:done"),
-          f = `<header><yt-icon icon="icons:filter-list"></yt-icon>${`<span id="title">${L.messages.selectWithFilter}</span>`}${p}${c}</header>`,
-          h = `<input type="radio" name="source" value="title" id="source-title" checked><label for="source-title">${L.messages.title}</label>`,
-          m = `<input type="radio" name="source" value="shortBylineText" id="source-channel"><label for="source-channel">${L.messages.channelName}</label>`,
-          b = `<input type="radio" name="source" value="watched" id="source-watched"><label for="source-watched">${L.messages.watched}</label>`,
-          $ = `<section><input><output style="display: none; width: 3em; text-align: right;"><span></span> %</output>${u}</section>`,
+          f = el('header', {}, el('yt-icon', { icon: 'icons:filter-list' }), el('span', { id: 'title' }, L.messages.selectWithFilter), p, c),
+          h = [el('input', { type: 'radio', name: 'source', value: 'title', id: 'source-title', checked: true }), el('label', { for: 'source-title' }, L.messages.title)],
+          m = [el('input', { type: 'radio', name: 'source', value: 'shortBylineText', id: 'source-channel' }), el('label', { for: 'source-channel' }, L.messages.channelName)],
+          b = [el('input', { type: 'radio', name: 'source', value: 'watched', id: 'source-watched' }), el('label', { for: 'source-watched' }, L.messages.watched)],
+          $ = el('section', {}, el('input'), el('output', { style: 'display: none; width: 3em; text-align: right;' }, el('span'), ' %'), u),
           y = n + "-case-sensitive",
-          g = `<footer>${`<div><input type="checkbox" id="${y}"><label for="${y}">${L.messages.caseSensitive}</label></div>`}</footer>`;
-        (a.innerHTML = `<div id="drag-handle"><hr><hr></div><div id="content">${f}<div id="choice">${h}${m}${b}</div>${$}${g}</div>`),
+          g = el('footer', {}, el('div', {}, el('input', { type: 'checkbox', id: y }), el('label', { for: y }, L.messages.caseSensitive)));
+        a.append(dragHandle(), el('div', { id: 'content' }, f, el('div', { id: 'choice' }, h, m, b), $, g)),
           a
             .querySelector("#content > header > #" + i)
             .addEventListener("click", () => t.open(r, "_blank")),
@@ -2895,9 +2917,10 @@ export default function runPolymer() {
         let x = z.filter.title;
         const v = a.querySelector("section > input"),
           w = v.nextElementSibling;
+        v.value = x.value;
         v.addEventListener("input", (t) => {
           (x.value = v.value),
-            "range" === v.type && (w.firstElementChild.innerHTML = x.value);
+            "range" === v.type && (w.firstElementChild.textContent = x.value);
         });
         const _ = a.querySelector(`#${y}`);
         (_.checked = x.option),
@@ -2937,7 +2960,7 @@ export default function runPolymer() {
               (v.value = x.value),
               v.focus(),
               (w.style.display = "block"),
-              (w.firstElementChild.innerHTML = x.value),
+              (w.firstElementChild.textContent = x.value),
               (_.checked = x.option),
               (_.nextElementSibling.textContent = L.messages.reverseFilter);
           });
@@ -2957,11 +2980,11 @@ export default function runPolymer() {
                         ),
                         n =
                           t?.thumbnailOverlayResumePlaybackRenderer
-                            ?.percentDurationWatched;
+                            ?.percentDurationWatched ?? 0;
                       (e ? n >= o : n < o) && (r.checked = !0);
                     } else {
                       const t =
-                        a?.[n]?.runs?.map((t) => t.text).join("") ||
+                        a?.[n]?.runs?.map((t) => t.text).join("") || a?.[n]?.simpleText ||
                         ("title" === n ? a?.headline?.simpleText : "");
                       o.test(t) && (r.checked = !0);
                     }
@@ -3029,7 +3052,10 @@ export default function runPolymer() {
     }
   }
   function te() {
-    (O = !0),
+    Et(!1),
+      (O = !0),
+      pendingObservers.forEach((observer) => observer.disconnect()),
+      pendingObservers.clear(),
       e.querySelector("#" + T)?.remove(),
       Jt.xt(),
       Bt.xt(),
@@ -3037,6 +3063,7 @@ export default function runPolymer() {
       It.st(),
       gt.et(),
       xt.st(),
+      Ht.st(),
       vt.st(),
       kt.st(),
       wt.st(),

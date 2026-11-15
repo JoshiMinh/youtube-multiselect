@@ -52,8 +52,10 @@ export default defineConfig({
       matches: ['https://www.youtube.com/*', 'https://music.youtube.com/*'],
     }],
     ...(browser === 'firefox' && {
-      browser_specific_settings: { gecko: { id: 'youtube-multiselect@local' } },
-      data_collection_permissions: { required: ['none'] },
+      browser_specific_settings: { gecko: {
+        id: 'youtube-multiselect@local',
+        data_collection_permissions: { required: ['none'] },
+      } },
     }),
   }),
 });

@@ -1,4 +1,5 @@
 import { browser } from 'wxt/browser';
+import { allowedExtensionUrl, validPagePreference } from '../../src/bridge';
 import './style.css';
 
 const PREFIX = 'msfy';
@@ -12,21 +13,24 @@ const DEFAULTS: Record<string, unknown> = {
   noRemovalConfirmation: false,
   findDuplicatesBackwards: false,
   positioning: 'center',
+  callout: 0,
+  barPosition: { x: 0, y: window.innerHeight - 72 },
+  filterPosition: { x: 0, y: 1 },
 };
 
-const PAGE_PERSISTED = new Set(['blacklisted', 'callout', 'counts', 'handle', 'barPosition', 'filterPosition']);
+const PAGE_PERSISTED = new Set(['callout', 'counts', 'barPosition', 'filterPosition']);
 
 const MESSAGE_KEYS = [
   'addToPlaylist', 'addToQueue', 'addToWatchLater', 'addVideosFromFile',
   'callout1', 'callout2', 'callout3', 'callout5', 'callout6', 'callout7', 'callout8',
   'onboardingTitle', 'onboardingStep', 'onboardingNext', 'onboardingSkip',
   'onboardingFinish', 'onboardingShortcuts',
-  'cancel', 'caseSensitive', 'channelName', 'chooseOutputFormat', 'clickToClose', 'close',
+  'cancel', 'save', 'caseSensitive', 'channelName', 'chooseOutputFormat', 'clickToClose', 'close',
   'confirmRemoveContent', 'copy', 'cut', 'deselectAllVideos','downloadSelection',
-  'extensionName', 'filterHelpTooltip', 'invalidData', 'invalidFilter', 'keys',
+  'extensionName', 'filterHelpTooltip', 'invalidData', 'invalidFilter', 'keys', 'playlistPosition',
   'reverseFilter',
   'loadEntirePlaylist', 'loadingEntirePlaylist', 'localeDir', 'moveAfter', 'moveToBottom',
-  'moveToTop', 'groupByChannel', 'flipList', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',
+  'moveToTop', 'moveUp', 'moveDown', 'groupByChannel', 'flipList', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',
   'selectAllVideos', 'selectDuplicates', 'selectShortsOnly', 'selectVideosOnly', 'selectWithFilter', 'likeVideos', 'selected', 'title', 'watched',
 ];
 
@@ -42,10 +46,9 @@ export default defineContentScript({
     'https://www.youtube.com/pop-up-player/*',
   ],
   runAt: 'document_end',
-  main() {
+  main(ctx) {
     if (document.title === '404 Not Found') return;
     if (!document.querySelector('ytd-app, ytmusic-app')) return;
-    const isFirefox = navigator.userAgent.includes('Firefox');
 
     const send = (type: string, value?: unknown) =>
       window.dispatchEvent(new CustomEvent(TO_PAGE, { detail: JSON.stringify({ type, value }) }));
@@ -53,8 +56,8 @@ export default defineContentScript({
     const onPageMessage = (event: Event) => {
       try {
         const message = JSON.parse((event as CustomEvent<string>).detail);
-        if (PAGE_PERSISTED.has(message.type)) void browser.storage.local.set({ [message.type]: message.value });
-        else if (message.type === 'url') void browser.runtime.sendMessage(message);
+        if (validPagePreference(message.type, message.value)) void browser.storage.local.set({ [message.type]: message.value }).catch(() => {});
+        else if (message.type === 'url' && allowedExtensionUrl(message.value)) void browser.runtime.sendMessage(message).catch(() => {});
       } catch {
         // Malformed message from the page; ignore.
       }
@@ -69,10 +72,11 @@ export default defineContentScript({
       return options;
     };
 
-    const onStorageChanged = (changes: Record<string, { newValue?: unknown }>) => {
+    const onStorageChanged = (changes: Record<string, { newValue?: unknown }>, areaName: string) => {
+      if (areaName !== 'local') return;
       const options: Record<string, unknown> = {};
       for (const key of Object.keys(changes)) {
-        if (key === 'dark' || key === 'counts') continue;
+        if (key === 'counts' || !(key in DEFAULTS || PAGE_PERSISTED.has(key))) continue;
         options[key] = 'newValue' in changes[key]! ? changes[key]!.newValue : DEFAULTS[key];
       }
       pushOptions(options);
@@ -84,34 +88,30 @@ export default defineContentScript({
       browser.storage.onChanged.removeListener(onStorageChanged);
       send('destroy');
     };
-
-    // Firefox re-runs the script on updates, so clear the previous instance first.
-    if (isFirefox) destroy();
+    ctx.onInvalidated(destroy);
 
     // Connecting tells the background worker to enable the toolbar button for this tab.
-    // The page script must survive a port reconnect: its destroy path is permanent, and
-    // YouTube's cast marker can prevent reinjection after the service worker restarts.
+    // The page script survives worker reconnects; only content-script replacement tears it down.
     const connect = () => {
+      if (ctx.isInvalid) return;
       const port = browser.runtime.connect();
-      if (!isFirefox) {
-        const onDisconnect = () => {
-          port.onDisconnect.removeListener(onDisconnect);
-          setTimeout(() => {
-            if (browser.runtime.id) {
-              connect();
-            }
-          }, 100);
-        };
-        port.onDisconnect.addListener(onDisconnect);
-      }
+      let removeInvalidationListener = () => {};
+      const onDisconnect = () => {
+        port.onDisconnect.removeListener(onDisconnect);
+        removeInvalidationListener();
+        ctx.setTimeout(connect, 100);
+      };
+      port.onDisconnect.addListener(onDisconnect);
+      removeInvalidationListener = ctx.onInvalidated(() => {
+        port.onDisconnect.removeListener(onDisconnect);
+        port.disconnect();
+      });
     };
     connect();
 
     window.addEventListener(FROM_PAGE, onPageMessage, true);
     browser.runtime.onMessage.addListener(onRuntimeMessage);
     browser.storage.onChanged.addListener(onStorageChanged as never);
-
-    if (document.querySelector('html[data-cast-api-enabled]')) return;
 
     const sendMessages = () => {
       const messages: Record<string, string> = {};
@@ -124,16 +124,31 @@ export default defineContentScript({
     };
 
     const injectPageScript = () => {
-      if (document.querySelector('html[data-cast-api-enabled]')) return;
+      // Replace our own runtime on reinjection; YouTube's Cast marker is unrelated.
+      send('destroy');
       const script = document.createElement('script');
       script.src = browser.runtime.getURL('/polymer.js' as never);
       script.onload = () => {
         script.remove();
-        void browser.storage.local.get().then(pushOptions).then(syncTheme);
+        if (ctx.isInvalid) return;
+        // Retired restrictions must not survive an update or reinjection.
+        void browser.storage.local.remove(['blacklisted', 'handle']).catch(() => {}).then(() => browser.storage.local.get()).then((options) => {
+          if (ctx.isInvalid) return;
+          delete options.blacklisted;
+          delete options.handle;
+          pushOptions({ ...DEFAULTS, ...options });
+          return syncTheme(options);
+        }).catch(() => {});
         sendMessages();
       };
+      ctx.onInvalidated(() => script.remove());
       document.documentElement.appendChild(script);
     };
+    const theme = new MutationObserver(() => {
+      if (!ctx.isInvalid) void browser.storage.local.set({ dark: document.documentElement.hasAttribute('dark') }).catch(() => {});
+    });
+    theme.observe(document.documentElement, { attributes: true, attributeFilter: ['dark'] });
+    ctx.onInvalidated(() => theme.disconnect());
     injectPageScript();
   },
 });

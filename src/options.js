@@ -51,7 +51,8 @@
         c && a && window.close();
     });
   }
-  o.storage.onChanged.addListener((t) => {
+  o.storage.onChanged.addListener((t, area) => {
+    if (area !== 'local') return;
     for (const o in t) {
       const n = e(o);
       if (n) {
@@ -125,7 +126,7 @@
         (function () {
           const n = t.createElement("section");
           n.id = "options-buttons";
-          const e = `<button id="shortcuts">${o.i18n.getMessage(
+          const e = `<button id="configure-shortcuts">${o.i18n.getMessage(
               "shortcuts"
             )}</button>`,
             i = `<button id="reset-callouts">${o.i18n.getMessage(
@@ -133,7 +134,7 @@
             )}</button>`;
           (n.innerHTML = `${e}<br>${i}`),
             l(
-              n.querySelector("#shortcuts"),
+              n.querySelector("#configure-shortcuts"),
               c
                 ? "https://mzl.la/3Qwp5QQ"
                 : (s ? "edge" : "chrome") + "://extensions/shortcuts"
