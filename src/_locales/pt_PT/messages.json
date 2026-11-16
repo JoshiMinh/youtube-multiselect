@@ -299,12 +299,6 @@
    "reverseFilter": {
       "message": "Inverter filtro"
    },
-   "selectShortsOnly": {
-      "message": "Selecionar apenas Shorts"
-   },
-   "selectVideosOnly": {
-      "message": "Selecionar apenas vídeos"
-   },
    "settingsEyebrow": {
       "message": "Preferências da extensão"
    },
@@ -331,5 +325,59 @@
    },
    "togglePlaylistGuide": {
       "message": "Alternar guia de playlists"
+   },
+   "moveUp": {
+      "message": "Mover uma posição para cima"
+   },
+   "moveDown": {
+      "message": "Mover uma posição para baixo"
+   },
+   "filterApply": {
+      "message": "Selecionar resultados"
+   },
+   "filterHelp": {
+      "message": "Os resultados são adicionados à seleção atual."
+   },
+   "filterPattern": {
+      "message": "Texto ou expressão regular"
+   },
+   "filterResult": {
+      "message": "{count} resultados selecionados"
+   },
+   "filterSource": {
+      "message": "Pesquisar por"
+   },
+   "filterLoading": {
+      "message": "A selecionar…"
+   },
+   "sortDurationAsc": {
+      "message": "Duration: shortest first"
+   },
+   "sortDurationDesc": {
+      "message": "Duration: longest first"
+   },
+   "sortDateAsc": {
+      "message": "Upload date: oldest first"
+   },
+   "sortDateDesc": {
+      "message": "Upload date: newest first"
+   },
+   "sortMissingData": {
+      "message": "No usable duration or upload date is available for the selection."
+   },
+   "menuFiles": {
+      "message": "Import / Export"
+   },
+   "menuMoveStep": {
+      "message": "Move one position"
+   },
+   "menuMoveEnds": {
+      "message": "Move to top / bottom"
+   },
+   "menuDuration": {
+      "message": "Duration"
+   },
+   "menuDate": {
+      "message": "Upload date"
    }
 }

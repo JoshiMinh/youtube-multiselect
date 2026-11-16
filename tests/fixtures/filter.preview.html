@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" dark>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Selection filter — component states</title>
+<link rel="stylesheet" href="../../src/polymer/filter.css">
+<style>
+  body { margin:0; background:#181818; color:#eee; font:14px Arial,sans-serif; }
+  main { width:min(720px,calc(100% - 32px)); margin:24px auto; }
+  h1 { font-size:20px; font-weight:600; }
+  h2 { color:#aaa; font-size:13px; font-weight:400; margin:24px 0 8px; }
+  section.preview > .msfy-filter { position:relative; inset:auto; transform:none; width:min(360px,100%); box-shadow:none; }
+</style>
+<main><h1>Selection filter</h1><p>Interactive component preview with three sample videos.</p></main>
+<script type="module">
+import { createFilter } from '../../src/polymer/filter.js';
+const messages = {
+  selectWithFilter:'Select with filter', title:'Title', channelName:'Channel', watched:'Watched',
+  close:'Close', filterHelpTooltip:'Regular expression syntax', caseSensitive:'Case sensitive', reverseFilter:'Invert filter',
+  filterApply:'Select matches', filterHelp:'Matches are added to your current selection.', filterPattern:'Text or regular expression',
+  filterResult:'{count} matches selected', filterSource:'Match by', filterLoading:'Selecting…', invalidFilter:'Invalid regular expression',
+};
+for (const name of ['Default', 'Hover', 'Focus', 'Active', 'Disabled', 'Loading', 'Error', 'Success']) {
+  const section = document.createElement('section');
+  section.className = 'preview';
+  const title = document.createElement('h2');
+  title.textContent = name;
+  section.append(title);
+  const rows = [{checked:false}, {checked:false}, {checked:false}];
+  const view = createFilter({ messages, state:{title:{value:'video',option:false},channel:{value:'',option:false},watched:{value:'100',option:false}}, checkboxes:()=>rows,
+    data:()=>({title:{simpleText:'Sample video'}}), onChange:()=>{}, onClose:()=>{view.root.hidden=true;}, onHelp:()=>{} });
+  section.append(view.root);
+  document.querySelector('main').append(section);
+  const input = view.input, button = view.root.querySelector('#done');
+  input.id += '-' + name;
+  view.root.querySelector('.msfy-filter-label').htmlFor = input.id;
+  const option = view.root.querySelector('.msfy-filter-option input');
+  option.id += '-' + name;
+  view.root.querySelector('.msfy-filter-option label').htmlFor = option.id;
+  view.root.querySelectorAll('#choice input').forEach(radio => radio.name = 'source-' + name);
+  if (name === 'Hover') input.classList.add('is-hover');
+  if (name === 'Focus') input.classList.add('is-focus');
+  if (name === 'Active') button.classList.add('is-active');
+  if (name === 'Disabled') view.root.querySelectorAll('input,button').forEach(node=>node.disabled=true);
+  if (name === 'Loading') { view.root.dataset.state='loading'; view.root.setAttribute('aria-busy','true'); button.disabled=true; view.root.querySelector('[role=status]').textContent=messages.filterLoading; }
+  if (name === 'Error') { view.root.dataset.state='error'; input.value='['; input.setAttribute('aria-invalid','true'); view.root.querySelector('[role=status]').textContent=messages.invalidFilter; }
+  if (name === 'Success') { view.root.dataset.state='success'; view.root.querySelector('[role=status]').textContent='3 matches selected'; }
+}
+</script>
+</html>

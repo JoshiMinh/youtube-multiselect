@@ -299,12 +299,6 @@
    "reverseFilter": {
       "message": "フィルターを反転"
    },
-   "selectShortsOnly": {
-      "message": "Shorts のみ選択"
-   },
-   "selectVideosOnly": {
-      "message": "動画のみ選択"
-   },
    "settingsEyebrow": {
       "message": "拡張機能の設定"
    },
@@ -331,5 +325,59 @@
    },
    "togglePlaylistGuide": {
       "message": "プレイリストガイドを切り替え"
+   },
+   "moveUp": {
+      "message": "1つ上に移動"
+   },
+   "moveDown": {
+      "message": "1つ下に移動"
+   },
+   "filterApply": {
+      "message": "一致を選択"
+   },
+   "filterHelp": {
+      "message": "一致する動画を現在の選択に追加します。"
+   },
+   "filterPattern": {
+      "message": "文字列または正規表現"
+   },
+   "filterResult": {
+      "message": "{count}件の一致を選択しました"
+   },
+   "filterSource": {
+      "message": "検索対象"
+   },
+   "filterLoading": {
+      "message": "選択中…"
+   },
+   "sortDurationAsc": {
+      "message": "再生時間：短い順"
+   },
+   "sortDurationDesc": {
+      "message": "再生時間：長い順"
+   },
+   "sortDateAsc": {
+      "message": "投稿日：古い順"
+   },
+   "sortDateDesc": {
+      "message": "投稿日：新しい順"
+   },
+   "sortMissingData": {
+      "message": "選択した動画の再生時間または投稿日を取得できません。"
+   },
+   "menuFiles": {
+      "message": "インポート / エクスポート"
+   },
+   "menuMoveStep": {
+      "message": "1つ移動"
+   },
+   "menuMoveEnds": {
+      "message": "先頭 / 末尾へ移動"
+   },
+   "menuDuration": {
+      "message": "再生時間"
+   },
+   "menuDate": {
+      "message": "投稿日"
    }
 }

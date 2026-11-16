@@ -1,7 +1,7 @@
 {
   "name": "youtube-multiselect",
   "private": true,
-  "version": "1.7.1",
+  "version": "1.7.2",
   "type": "module",
   "packageManager": "pnpm@12.15.0",
   "scripts": {
@@ -11,7 +11,7 @@
     "zip": "wxt zip",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
-    "test:browser": "node tests/runtime.mjs && node tests/options.mjs && node tests/libraries.mjs && node tests/hardening.mjs",
+    "test:browser": "node tests/runtime.mjs && node tests/options.mjs && node tests/libraries.mjs && node tests/hardening.mjs && node tests/ui.mjs",
     "postinstall": "wxt prepare"
   },
   "devDependencies": {

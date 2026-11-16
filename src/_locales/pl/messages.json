@@ -9,7 +9,7 @@
       "message": "Zapisz na liście Do obejrzenia"
    },
    "likeVideos": {
-       "message": "Polub zaznaczone filmy"
+      "message": "Polub zaznaczone filmy"
    },
    "addVideosFromFile": {
       "message": "Dodaj filmy z pliku"
@@ -299,12 +299,6 @@
    "reverseFilter": {
       "message": "Odwróć filtr"
    },
-   "selectShortsOnly": {
-      "message": "Zaznacz tylko Shorts"
-   },
-   "selectVideosOnly": {
-      "message": "Zaznacz tylko filmy"
-   },
    "settingsEyebrow": {
       "message": "Preferencje rozszerzenia"
    },
@@ -331,5 +325,59 @@
    },
    "togglePlaylistGuide": {
       "message": "Przełącz przewodnik po playlistach"
+   },
+   "moveUp": {
+      "message": "Przenieś o jedną pozycję w górę"
+   },
+   "moveDown": {
+      "message": "Przenieś o jedną pozycję w dół"
+   },
+   "filterApply": {
+      "message": "Wybierz dopasowania"
+   },
+   "filterHelp": {
+      "message": "Dopasowania są dodawane do bieżącego zaznaczenia."
+   },
+   "filterPattern": {
+      "message": "Tekst lub wyrażenie regularne"
+   },
+   "filterResult": {
+      "message": "Wybrano {count} dopasowań"
+   },
+   "filterSource": {
+      "message": "Szukaj według"
+   },
+   "filterLoading": {
+      "message": "Wybieranie…"
+   },
+   "sortDurationAsc": {
+      "message": "Duration: shortest first"
+   },
+   "sortDurationDesc": {
+      "message": "Duration: longest first"
+   },
+   "sortDateAsc": {
+      "message": "Upload date: oldest first"
+   },
+   "sortDateDesc": {
+      "message": "Upload date: newest first"
+   },
+   "sortMissingData": {
+      "message": "No usable duration or upload date is available for the selection."
+   },
+   "menuFiles": {
+      "message": "Import / Export"
+   },
+   "menuMoveStep": {
+      "message": "Move one position"
+   },
+   "menuMoveEnds": {
+      "message": "Move to top / bottom"
+   },
+   "menuDuration": {
+      "message": "Duration"
+   },
+   "menuDate": {
+      "message": "Upload date"
    }
 }

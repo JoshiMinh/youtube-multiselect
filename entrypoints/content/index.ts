@@ -28,10 +28,11 @@ const MESSAGE_KEYS = [
   'cancel', 'save', 'caseSensitive', 'channelName', 'chooseOutputFormat', 'clickToClose', 'close',
   'confirmRemoveContent', 'copy', 'cut', 'deselectAllVideos','downloadSelection',
   'extensionName', 'filterHelpTooltip', 'invalidData', 'invalidFilter', 'keys', 'playlistPosition',
-  'reverseFilter',
+  'filterApply', 'filterHelp', 'filterPattern', 'filterResult', 'filterSource', 'filterLoading',
+  'reverseFilter', 'menuDuration', 'menuDate', 'menuFiles', 'menuMoveStep', 'menuMoveEnds',
   'loadEntirePlaylist', 'loadingEntirePlaylist', 'localeDir', 'moveAfter', 'moveToBottom',
   'moveToTop', 'moveUp', 'moveDown', 'groupByChannel', 'flipList', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',
-  'selectAllVideos', 'selectDuplicates', 'selectShortsOnly', 'selectVideosOnly', 'selectWithFilter', 'likeVideos', 'selected', 'title', 'watched',
+  'selectAllVideos', 'selectDuplicates', 'sortDurationAsc', 'sortDurationDesc', 'sortDateAsc', 'sortDateDesc', 'sortMissingData', 'selectWithFilter', 'likeVideos', 'selected', 'title', 'watched',
 ];
 
 // Port of the original content script (document_end, YouTube and YouTube Music).

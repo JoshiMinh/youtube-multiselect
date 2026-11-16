@@ -299,12 +299,6 @@
    "reverseFilter": {
       "message": "Filtreyi ters çevir"
    },
-   "selectShortsOnly": {
-      "message": "Yalnızca Shorts seç"
-   },
-   "selectVideosOnly": {
-      "message": "Yalnızca video seç"
-   },
    "settingsEyebrow": {
       "message": "Uzantı tercihleri"
    },
@@ -331,5 +325,59 @@
    },
    "togglePlaylistGuide": {
       "message": "Oynatma listesi rehberini aç veya kapat"
+   },
+   "moveUp": {
+      "message": "Bir sıra yukarı taşı"
+   },
+   "moveDown": {
+      "message": "Bir sıra aşağı taşı"
+   },
+   "filterApply": {
+      "message": "Eşleşenleri seç"
+   },
+   "filterHelp": {
+      "message": "Eşleşmeler geçerli seçime eklenir."
+   },
+   "filterPattern": {
+      "message": "Metin veya düzenli ifade"
+   },
+   "filterResult": {
+      "message": "{count} eşleşme seçildi"
+   },
+   "filterSource": {
+      "message": "Eşleştirme ölçütü"
+   },
+   "filterLoading": {
+      "message": "Seçiliyor…"
+   },
+   "sortDurationAsc": {
+      "message": "Duration: shortest first"
+   },
+   "sortDurationDesc": {
+      "message": "Duration: longest first"
+   },
+   "sortDateAsc": {
+      "message": "Upload date: oldest first"
+   },
+   "sortDateDesc": {
+      "message": "Upload date: newest first"
+   },
+   "sortMissingData": {
+      "message": "No usable duration or upload date is available for the selection."
+   },
+   "menuFiles": {
+      "message": "Import / Export"
+   },
+   "menuMoveStep": {
+      "message": "Move one position"
+   },
+   "menuMoveEnds": {
+      "message": "Move to top / bottom"
+   },
+   "menuDuration": {
+      "message": "Duration"
+   },
+   "menuDate": {
+      "message": "Upload date"
    }
 }

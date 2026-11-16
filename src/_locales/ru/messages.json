@@ -299,12 +299,6 @@
    "reverseFilter": {
       "message": "Инвертировать фильтр"
    },
-   "selectShortsOnly": {
-      "message": "Выбирать только Shorts"
-   },
-   "selectVideosOnly": {
-      "message": "Выбирать только видео"
-   },
    "settingsEyebrow": {
       "message": "Настройки расширения"
    },
@@ -331,5 +325,59 @@
    },
    "togglePlaylistGuide": {
       "message": "Переключить руководство по плейлистам"
+   },
+   "moveUp": {
+      "message": "Переместить на одну позицию вверх"
+   },
+   "moveDown": {
+      "message": "Переместить на одну позицию вниз"
+   },
+   "filterApply": {
+      "message": "Выбрать совпадения"
+   },
+   "filterHelp": {
+      "message": "Совпадения добавляются к текущему выделению."
+   },
+   "filterPattern": {
+      "message": "Текст или регулярное выражение"
+   },
+   "filterResult": {
+      "message": "Выбрано совпадений: {count}"
+   },
+   "filterSource": {
+      "message": "Искать по"
+   },
+   "filterLoading": {
+      "message": "Выбор…"
+   },
+   "sortDurationAsc": {
+      "message": "Duration: shortest first"
+   },
+   "sortDurationDesc": {
+      "message": "Duration: longest first"
+   },
+   "sortDateAsc": {
+      "message": "Upload date: oldest first"
+   },
+   "sortDateDesc": {
+      "message": "Upload date: newest first"
+   },
+   "sortMissingData": {
+      "message": "No usable duration or upload date is available for the selection."
+   },
+   "menuFiles": {
+      "message": "Import / Export"
+   },
+   "menuMoveStep": {
+      "message": "Move one position"
+   },
+   "menuMoveEnds": {
+      "message": "Move to top / bottom"
+   },
+   "menuDuration": {
+      "message": "Duration"
+   },
+   "menuDate": {
+      "message": "Upload date"
    }
 }

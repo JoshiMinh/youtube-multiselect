@@ -71,6 +71,7 @@ try {
       await page.locator('#source-channel').check();
       await page.locator('#msfy-select-filter section > input').fill('Alpha');
       await page.locator('#msfy-select-filter #done').click();
+      await page.waitForFunction(() => document.querySelector('#msfy-select-filter')?.dataset.state === 'success');
       assert.equal(await boxes.nth(0).getAttribute('checked'), '');
       await page.locator('#msfy-select-filter-close').click();
       console.log('Library checks passed: Music duplicate detection and artist filtering.');

@@ -15,6 +15,8 @@ keeps preferences in the local browser profile.
 
 - Select individual videos with the mouse or keyboard.
 - Select all videos or select by title, channel, or watched progress.
+- Use the filter's title/channel/watched tabs, inline pattern validation, and
+  match feedback. Filter results are added to the current selection.
 - Search for duplicate videos, including in the reverse direction.
 - Copy, cut, and paste videos between playlists.
 - Add videos to a playlist, Watch Later, or the queue.
@@ -29,6 +31,8 @@ keeps preferences in the local browser profile.
 - Sort playlist names.
 - Use a floating action bar at the bottom center, bottom left, or a custom
   position.
+- Keep its menu anchored with an 8px gap, automatic placement, and scrolling
+  when the available window height is limited.
 - Configure the extension through the options page.
 - Use the interface in 14 languages.
 
@@ -198,3 +202,7 @@ to the terms set by its original author.
 
 Report bugs, request features, and ask questions in the
 [GitHub issue tracker](https://github.com/JoshiMinh/youtube-multiselect/issues).
+
+Selected playlist items can be sorted by duration (shortest/longest first) or upload date (oldest/newest first). Unknown values remain last; relative dates are approximate and currently parsed in English and Japanese. If no usable values are exposed, sorting reports that the data is unavailable. The menu scrolls within the available screen height.
+
+The action menu uses paired buttons for movement, duration sorting, upload-date sorting, and import/export. Every action is directly accessible with a tooltip; rows use matching leading icons and button sizes.

@@ -1,20 +1,25 @@
 import { svg } from './dom.js';
 
 const paths = {
+  clock: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2a8 8 0 1 1 0 16 8 8 0 0 1 0-16zm-1 3v6l5 3 1-1.7-4-2.3V7z',
+  calendar: 'M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zM5 10h14v10H5zm0-4h2v2h2V6h6v2h2V6h2v2H5zm2 6h3v3H7zm7 0h3v3h-3z',
+  'move-step': 'M7 3 2 8l1.4 1.4L6 6.8V20h2V6.8l2.6 2.6L12 8zm9 1v13.2l-2.6-2.6L12 16l5 5 5-5-1.4-1.4-2.6 2.6V4z',
+  'move-ends': 'M3 2h18v2H3zm0 18h18v2H3zm8-14-4 4 1.4 1.4 2.6-2.6v6.4l-2.6-2.6L7 14l5 5 5-5-1.4-1.4-2.6 2.6V8.8l2.6 2.6L17 10l-5-5z',
+  'file-transfer': 'M3 3h10l5 5v3h-2V9h-5V5H5v14h5v2H3zm13 10 4 4-1.4 1.4-1.6-1.6V22h-2v-5.2l-1.6 1.6L12 17z',
+  'file-upload': 'M11 17V7.8l-3.6 3.6L6 10l6-6 6 6-1.4 1.4L13 7.8V17zM4 18h2v2h12v-2h2v4H4z',
+  'file-download': 'M11 3h2v9.2l3.6-3.6L18 10l-6 6-6-6 1.4-1.4 3.6 3.6zM4 18h2v2h12v-2h2v4H4z',
   help: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z',
   info: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z',
   'select-all': 'M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z',
   'unselect-all': 'M1.79 12l5.58 5.59L5.96 19 .37 13.41 1.79 12zm.45-7.78L12.9 14.89l-1.28 1.28L7.44 12l-1.41 1.41L11.62 19l2.69-2.69 4.89 4.89 1.41-1.41L3.65 2.81 2.24 4.22zm14.9 9.27L23.62 7 22.2 5.59l-6.48 6.48 1.42 1.42zM17.96 7l-1.41-1.41-3.65 3.66 1.41 1.41L17.96 7z',
   'flip-list': 'M7 3v3h10v2H7v3L3 7l4-4zm10 8v3H7v2h10v3l4-4-4-4z',
+  'move-up': 'm12 4-7 7 1.4 1.4L11 7.8V20h2V7.8l4.6 4.6L19 11z',
+  'move-down': 'M11 4v12.2l-4.6-4.6L5 13l7 7 7-7-1.4-1.4-4.6 4.6V4z',
+  'move-top': 'M4 3h16v2H4zm8 4-6 6 1.4 1.4 3.6-3.6V21h2V10.8l3.6 3.6L18 13z',
+  'move-bottom': 'M4 19h16v2H4zm7-16v10.2L7.4 9.6 6 11l6 6 6-6-1.4-1.4-3.6 3.6V3z',
 };
 
 export function iconSet(prefix) {
   return svg('svg', {}, svg('defs', {},
-    Object.entries(paths).map(([name, d]) => svg('g', { id: `${prefix}-${name}` }, svg('path', { d }))),
-    svg('g', { id: `${prefix}-shorts` },
-      svg('rect', { x: 4, y: 3, width: 16, height: 18, rx: 4, fill: 'none', stroke: 'currentColor', 'stroke-width': 2 }),
-      svg('path', { d: 'm10 7 6 5-6 5V7z' })),
-    svg('g', { id: `${prefix}-video` },
-      svg('rect', { x: 3, y: 5, width: 18, height: 14, rx: 2, fill: 'none', stroke: 'currentColor', 'stroke-width': 2 }),
-      svg('path', { d: 'm10 8 6 4-6 4V8z' }))));
+    Object.entries(paths).map(([name, d]) => svg('g', { id: `${prefix}-${name}` }, svg('path', { d })))));
 }

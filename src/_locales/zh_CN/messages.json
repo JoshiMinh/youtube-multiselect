@@ -299,12 +299,6 @@
    "reverseFilter": {
       "message": "反转筛选条件"
    },
-   "selectShortsOnly": {
-      "message": "仅选择 Shorts"
-   },
-   "selectVideosOnly": {
-      "message": "仅选择视频"
-   },
    "settingsEyebrow": {
       "message": "扩展设置"
    },
@@ -331,5 +325,59 @@
    },
    "togglePlaylistGuide": {
       "message": "切换播放列表指南"
+   },
+   "moveUp": {
+      "message": "上移一位"
+   },
+   "moveDown": {
+      "message": "下移一位"
+   },
+   "filterApply": {
+      "message": "选择匹配项"
+   },
+   "filterHelp": {
+      "message": "匹配的视频会添加到当前选择。"
+   },
+   "filterPattern": {
+      "message": "文本或正则表达式"
+   },
+   "filterResult": {
+      "message": "已选择 {count} 个匹配项"
+   },
+   "filterSource": {
+      "message": "匹配依据"
+   },
+   "filterLoading": {
+      "message": "正在选择…"
+   },
+   "sortDurationAsc": {
+      "message": "Duration: shortest first"
+   },
+   "sortDurationDesc": {
+      "message": "Duration: longest first"
+   },
+   "sortDateAsc": {
+      "message": "Upload date: oldest first"
+   },
+   "sortDateDesc": {
+      "message": "Upload date: newest first"
+   },
+   "sortMissingData": {
+      "message": "No usable duration or upload date is available for the selection."
+   },
+   "menuFiles": {
+      "message": "Import / Export"
+   },
+   "menuMoveStep": {
+      "message": "Move one position"
+   },
+   "menuMoveEnds": {
+      "message": "Move to top / bottom"
+   },
+   "menuDuration": {
+      "message": "Duration"
+   },
+   "menuDate": {
+      "message": "Upload date"
    }
 }

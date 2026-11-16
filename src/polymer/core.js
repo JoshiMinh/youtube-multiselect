@@ -4,6 +4,10 @@ import { parseSelectionFile, selectionHtml } from './selection-files.js';
 import { element as el, svg, dragHandle } from './dom.js';
 import { iconSet } from './icons.js';
 import { createPlaylistIndexes } from './indexes.js';
+import { createFilter } from './filter.js';
+import filterStyles from './filter.css?inline';
+import { anchorToolbarMenu } from './menu-position.js';
+import { sortedVideos } from './sort-videos.js';
 
 export default function runPolymer() {
 "use strict";
@@ -212,37 +216,6 @@ export default function runPolymer() {
   }
   function lt() {
     st(x, !1), kt.l();
-  }
-  function isShortVideo(t) {
-    let row = t;
-    for (let i = 0; row && i < 10; i++, row = row.parentElement) {
-      if (row.matches?.("ytm-shorts-lockup-view-model, ytm-shorts-lockup-view-model-v2, ytd-reel-item-renderer"))
-        return !0;
-      if (row.matches?.("yt-lockup-view-model, ytd-playlist-video-renderer, ytd-video-renderer, ytd-rich-grid-media, ytd-grid-video-renderer, ytd-compact-video-renderer")) {
-        const links = [...row.querySelectorAll?.("a[href]") || []];
-        if (links.some((link) => {
-          try {
-            return new URL(link.getAttribute("href") || "", location.origin).pathname.startsWith("/shorts/");
-          } catch {
-            return false;
-          }
-        }))
-          return !0;
-        const data = row.__data?.data ?? row.__data ?? row.data;
-        if (
-          data &&
-          /"(?:isShort|isShorts|shortsLockupViewModel)"\s*:\s*(?:true|{)|"style":"SHORTS"|\/shorts\//i.test(
-            JSON.stringify(data)
-          )
-        )
-          return !0;
-      }
-    }
-    return !1;
-  }
-  function selectByType(t) {
-    P().forEach((e) => (e.checked = isShortVideo(e) === t)), kt.l();
-    return !1;
   }
   function pt(t) {
     if (t && t.getAttribute("position") !== z.positioning)
@@ -601,7 +574,7 @@ export default function runPolymer() {
     })(),
     gt = (function () {
       const n = `${s}-action-menu`;
-      let o, i, r, a, c, d, l, p;
+      let o, i, r, a, c, d, l, p, anchoring, available;
       const u = [
         {
           id: s + "-action-move-after",
@@ -649,28 +622,28 @@ export default function runPolymer() {
         {
           id: s + "-action-move-up",
           handler: () => moveStep("up"),
-          icon: "arrow_upward",
+          icon: `${s}:${s}-move-up`,
           label: () => L.messages.moveUp,
           enabled: () => a && c && !d && !r,
         },
         {
           id: s + "-action-move-down",
           handler: () => moveStep("down"),
-          icon: "arrow_downward",
+          icon: `${s}:${s}-move-down`,
           label: () => L.messages.moveDown,
           enabled: () => a && c && !d && !r,
         },
         {
           id: s + "-action-move-to-top",
           handler: Mt,
-          icon: "vertical_align_top",
+          icon: `${s}:${s}-move-top`,
           label: () => L.messages.moveToTop,
           enabled: () => a && (c || W()) && !d && !r,
         },
         {
           id: s + "-action-move-to-bottom",
           handler: Ct,
-          icon: "vertical_align_bottom",
+          icon: `${s}:${s}-move-bottom`,
           label: () => L.messages.moveToBottom,
           enabled: () => a && c && !d && !r,
         },
@@ -703,18 +676,32 @@ export default function runPolymer() {
           enabled: () => !Zt.lt,
         },
         {
-          id: s + "-action-select-shorts",
-          handler: () => selectByType(!0),
-          icon: `${s}:${s}-shorts`,
-          label: () => L.messages.selectShortsOnly,
-          enabled: () => P().length > 0,
+          id: s + "-action-sort-duration-asc",
+          handler: () => sortSelected("duration", "asc"),
+          icon: `${s}:${s}-move-up`,
+          label: () => L.messages.sortDurationAsc,
+          enabled: () => a && c && !d,
         },
         {
-          id: s + "-action-select-videos",
-          handler: () => selectByType(!1),
-          icon: `${s}:${s}-video`,
-          label: () => L.messages.selectVideosOnly,
-          enabled: () => P().length > 0,
+          id: s + "-action-sort-duration-desc",
+          handler: () => sortSelected("duration", "desc"),
+          icon: `${s}:${s}-move-down`,
+          label: () => L.messages.sortDurationDesc,
+          enabled: () => a && c && !d,
+        },
+        {
+          id: s + "-action-sort-date-asc",
+          handler: () => sortSelected("date", "asc"),
+          icon: `${s}:${s}-move-up`,
+          label: () => L.messages.sortDateAsc,
+          enabled: () => a && c && !d,
+        },
+        {
+          id: s + "-action-sort-date-desc",
+          handler: () => sortSelected("date", "desc"),
+          icon: `${s}:${s}-move-down`,
+          label: () => L.messages.sortDateDesc,
+          enabled: () => a && c && !d,
         },
         {
           id: s + "-action-load-entire-playlist",
@@ -726,14 +713,14 @@ export default function runPolymer() {
         {
           id: s + "-download-selection",
           handler: jt,
-          icon: "icons:file-download",
+          icon: `${s}:${s}-file-download`,
           label: () => L.messages.downloadSelection,
           enabled: () => a,
         },
         {
           id: s + "-add-videos-from-file",
           handler: Ft,
-          icon: "icons:file-upload",
+          icon: `${s}:${s}-file-upload`,
           label: () => L.messages.addVideosFromFile,
           enabled: () => c && !d,
         },
@@ -761,13 +748,45 @@ export default function runPolymer() {
           separator: () => (a ? "" : "top"),
         },
       ];
+      function renderMenu() {
+        const list = o.firstElementChild;
+        const actionNode = (action, paired = false) => {
+          return el(paired ? 'button' : 'div', {
+            id: action.id, tabindex: 0, role: 'menuitem', type: paired ? 'button' : null,
+            title: action.label(), 'aria-label': action.label(),
+          }, el('yt-icon', { icon: action.icon }), paired ? null : el('span', { class: `${s}-menu-label` }, action.label()));
+        };
+        const groups = [
+          { ids: ['msfy-action-move-up', 'msfy-action-move-down'], label: L.messages.menuMoveStep, icon: 'move-step' },
+          { ids: ['msfy-action-move-to-top', 'msfy-action-move-to-bottom'], label: L.messages.menuMoveEnds, icon: 'move-ends' },
+          { ids: ['msfy-action-sort-duration-asc', 'msfy-action-sort-duration-desc'], label: L.messages.menuDuration, icon: 'clock' },
+          { ids: ['msfy-action-sort-date-asc', 'msfy-action-sort-date-desc'], label: L.messages.menuDate, icon: 'calendar' },
+          { ids: ['msfy-add-videos-from-file', 'msfy-download-selection'], label: L.messages.menuFiles, icon: 'file-transfer' },
+        ];
+        const paired = new Set();
+        const rows = [];
+        for (const action of available) {
+          if (paired.has(action.id)) continue;
+          const group = groups.find(group => group.ids.includes(action.id));
+          let content;
+          if (group) {
+            const buttons = group.ids.map(id => available.find(candidate => candidate.id === id)).filter(Boolean);
+            buttons.forEach(candidate => paired.add(candidate.id));
+            content = el('div', { class: 'msfy-menu-pair', role: 'group', 'aria-label': group.label },
+              el('yt-icon', { icon: `${s}:${s}-${group.icon}` }),
+              el('span', { class: `${s}-menu-label` }, group.label), ...buttons.map(candidate => actionNode(candidate, true)));
+          } else content = actionNode(action);
+          const row = el('div', { class: y, separator: action.separator?.() || null }, content);
+          rows.push(row);
+        }
+        list.replaceChildren(...rows);
+        i = [...list.querySelectorAll('[role="menuitem"]')];
+      }
       function f(t) {
         t.stopPropagation();
-        const e = t.target.closest?.(`.${y} > div`)?.id;
-        if (e) {
-          const t = u.find((t) => t.id === e);
-          t && (gt.et(), t.handler() && lt());
-        }
+        const id = t.target.closest?.('[role="menuitem"]')?.id;
+        const action = u.find(action => action.id === id);
+        if (action) { gt.et(); if (action.handler()) lt(); }
       }
       const h = (() => {
         const t = (t = i.at(0)) => (i.at(i.indexOf(t) - 1) || i.at(-1)).focus(),
@@ -798,10 +817,8 @@ export default function runPolymer() {
       function b() {
         gt.et();
       }
-      function g() {
-        kt.nt();
-      }
       return {
+        position() { anchoring?.update(); },
         ot(h, x) {
           const v = !o || p;
           if ((this.et(), v)) {
@@ -818,9 +835,8 @@ export default function runPolymer() {
               (!(function (r, a, c) {
                 (o = e.createElement("div")),
                   (o.id = n),
-                  o.append(el('div', { id: 'listbox', class: $, tabindex: -1 },
-                    r.map(({ id, icon, label, separator }) => el('div', { class: y, tabindex: -1, separator: separator?.() || null },
-                      el('div', { id, tabindex: 0 }, el('yt-icon', { icon }), label()))))),
+                  o.append(el('div', { id: 'msfy-menu-list', class: $, tabindex: -1, role: 'menu' })),
+                  (available = r), renderMenu(),
                   p
                     ? ((o.className = s + "-context-menu"),
                       o.style.setProperty("--x", a + t.scrollX + "px"),
@@ -828,22 +844,23 @@ export default function runPolymer() {
                       o.style.setProperty("--scroll-y", t.scrollY + "px"),
                       e.body.appendChild(o))
                     : ((o.className = s + "-bar-menu"), kt.ct(o)),
-                  (i = [...o.querySelectorAll(`.${y} > div`)]);
+                  (i = [...o.querySelectorAll('[role="menuitem"]')]);
+                if (!p) anchoring = anchorToolbarMenu(o, kt.element);
               })(_, h, x),
               e.addEventListener("keydown", m, !0),
               o.addEventListener("click", f, !0),
               o.addEventListener("contextmenu", it, !0),
-              setTimeout(() => o && t.addEventListener("click", b)),
-              t.addEventListener("resize", g, !0));
+              setTimeout(() => o && t.addEventListener("click", b)));
           }
         },
         et() {
+          anchoring?.destroy();
+          anchoring = null;
           o &&
             (e.removeEventListener("keydown", m, !0),
             o.removeEventListener("click", f, !0),
             o.removeEventListener("contextmenu", it, !0),
             t.removeEventListener("click", b),
-            t.removeEventListener("resize", g, !0),
             o.remove(),
             (o = i = null));
         },
@@ -987,10 +1004,10 @@ export default function runPolymer() {
           {
             id: "selection",
             update() {
-              this.node.text = { simpleText: `${d} / ${a}` };
+              this.node.textContent = `${d} / ${a}`;
             },
             html() {
-              return [el('yt-formatted-string', { id: this.id }), el('span', {}, L.messages.selected)];
+              return [el('span', { id: this.id }), el('span', { class: `${s}-selection-label` }, L.messages.selected)];
             },
           },
           {
@@ -1037,18 +1054,7 @@ export default function runPolymer() {
         (d = S().length), (a = P().length), h.forEach((t) => t.update?.());
       }
       function b() {
-        const e = z.barPosition.x,
-          n = z.barPosition.y,
-          o = r.clientWidth + 18,
-          i = r.clientHeight + 2,
-          a = t.innerWidth - e - o,
-          c = t.innerHeight / 2 > n + i;
-        a < 240
-          ? r.classList.add("right-side")
-          : r.classList.remove("right-side"),
-          c
-            ? r.classList.add("bottom-side")
-            : r.classList.remove("bottom-side");
+        gt.position();
       }
       function $() {
         l && (l(), (l = null)), pt(r) && (l = Wt(r, "barPosition", b));
@@ -1084,7 +1090,7 @@ export default function runPolymer() {
             (r = null));
         },
         ct(t) {
-          r?.appendChild(t);
+          e.body.appendChild(t);
         },
         l() {
           r && m();
@@ -1098,6 +1104,7 @@ export default function runPolymer() {
         get dt() {
           return o;
         },
+        get element() { return r; },
         get ft() {
           return r?.contains(e.activeElement);
         },
@@ -1266,7 +1273,7 @@ export default function runPolymer() {
                     Y() && (_t(t), St(o)))
                   );
               }
-              if (kt.ft) return;
+              if (kt.ft || t.target.closest?.(`#${s}-action-menu`)) return;
               const r = i.getHandler(e);
               r && (it(t), r(t.target));
             };
@@ -1820,6 +1827,13 @@ export default function runPolymer() {
         .map((item) => item.setVideoId);
     return reorderSelected(order, L.messages.groupByChannel);
   }
+  function sortSelected(field, direction) {
+    const items = [...S()].map((checkbox) => ({ id: U(checkbox), data: j(checkbox).data, row: checkbox.parentElement.parentElement }));
+    const { order, known } = sortedVideos(items, field, direction);
+    if (!known) return Kt(L.messages.sortMissingData), !1;
+    const key = field === "date" ? (direction === "asc" ? "sortDateAsc" : "sortDateDesc") : (direction === "asc" ? "sortDurationAsc" : "sortDurationDesc");
+    return reorderSelected(order, L.messages[key]);
+  }
   function flipSelected() {
     return reorderSelected([...S()].map(U).reverse(), L.messages.flipList);
   }
@@ -2235,6 +2249,7 @@ export default function runPolymer() {
           n ||
             ((n = e.createElement("style")),
             (n.id = t),
+            n.append(e.createTextNode(filterStyles)),
             e.head.appendChild(n),
             Ut?.create()),
           n
@@ -2252,8 +2267,6 @@ export default function runPolymer() {
               a = "var(--yt-spec-10-percent-layer)",
               d = `1px solid ${a}`,
               l = 4,
-              b = Zt.dt,
-              g = b + "-close",
               v = vt.dt,
               w = kt.dt,
               A = s + "-heartbeat-" + c,
@@ -2295,32 +2308,7 @@ export default function runPolymer() {
                 `#${T} > header > #${I}:hover { background-color: ${a}; border-radius: 50%; }`,
                 `#${T} > #status { min-height: 18px; margin: 0 0 8px; color: var(--yt-spec-text-secondary, #aaa); font-size: 12px; }`,
                 `#${T} > [role="progressbar"] { height: 28px; box-sizing: border-box; padding: 5px 8px; background-color: var(--yt-spec-call-to-action, #065fd4); color: #fff; text-align: center; border-radius: 8px; font-size: 12px; font-weight: 600; transition: width 120ms linear; }`,
-                `#${b} { width: min(460px, calc(100vw - 32px)); box-sizing: border-box; padding: 0 20px 20px; font-family: Roboto, Arial, sans-serif; font-size: 14px; position: fixed; z-index: 2029; box-shadow: 0 8px 32px rgba(0,0,0,.4); background-color: var(--yt-spec-menu-background, #212121); color: var(--yt-spec-text-primary, #f1f1f1); text-align: start; border-radius: 12px; border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
-                `#${b}[position=center] { bottom: 130px; left: 50vw; transform: translateX(-50%); }`,
-                `#${b}[position=left] { bottom: 130px; left: clamp(12px, calc(100vw - 460px), 50px); }`,
-                `#${b}[position=custom] { left: clamp(0px, var(--x), calc(100vw - var(--right-offset))); top: clamp(1px, var(--y), calc(100vh - var(--bottom-offset))); }`,
-                `#${b} > #drag-handle { visibility: hidden; position: relative; cursor: move; margin: 0 auto; padding: 6px 0; width: 50%; }`,
-                `#${b} > #drag-handle > hr { border: 0; height: 2px; border-radius: 1px; background-color: ${a}; }`,
-                `#${b} > #drag-handle > hr:first-child { margin: 0; }`,
-                `#${b} > #drag-handle > hr:last-child { margin: 3px 0 0; }`,
-                `#${b}[position=custom] > #drag-handle { visibility: visible; }`,
-                `#${b} > #content > header { display: flex; align-items: center; min-height: 56px; padding: 0 0 4px; border-bottom: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
-                `#${b} > #content > header > #title { padding-left: 10px; padding-right: 5px; }`,
-                `#${b} > #content > header > #${g} { margin-left: auto; }`,
-                `#${b} > #content > #choice { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; margin: 18px 0; }`,
-                `#${b} > #content > #choice > input { margin: 0; accent-color: var(--yt-spec-call-to-action, #3ea6ff); cursor: pointer; }`,
-                `#${b} > #content > #choice > label { cursor: pointer; }`,
-                `#${b} > #content > section { display: flex; align-items: center; gap: 12px; }`,
-                `#${b} > #content > section > input { flex: 1; min-width: 0; height: 38px; box-sizing: border-box; margin: 0; padding: 0 12px; border: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.2)); border-radius: 6px; font-family: inherit; font-size: inherit; background-color: transparent; color: inherit; outline: none; }`,
-                `#${b} > #content > section > input:focus { border-color: var(--yt-spec-call-to-action, #3ea6ff); box-shadow: 0 0 0 1px var(--yt-spec-call-to-action, #3ea6ff); }`,
-                `#${b} > #content > section > #done { flex: none; width: 40px; height: 40px; margin: 0; }`,
-                `#${b} > #content > footer { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--yt-spec-10-percent-layer, rgba(255,255,255,.12)); }`,
-                `#${b} > #content > footer > div { display: flex; align-items: center; gap: 10px; }`,
-                `#${b} > #content > footer > div > input { width: 18px; height: 18px; margin: 0; accent-color: var(--yt-spec-call-to-action, #3ea6ff); cursor: pointer; }`,
-                `#${b} > #content > footer > div > label { cursor: pointer; }`,
-                `#${b} > #content yt-icon-button { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; }`,
-                `#${b} > #content yt-icon-button:hover { background-color: ${a}; border-radius: 50%; }`,
-                `#${w} { display: none; position: fixed; width: max-content; box-sizing: border-box; padding: 8px; border-radius: ${k}; border: ${d}; box-shadow: ${o}; background-color: ${i}; color: ${r}; font-family: Roboto, Arial, sans-serif; font-size: 14px; max-width: min(${t}px, calc(100vw - 24px)); z-index: 2030; }`,
+                `#${w} { display: none; position: fixed; width: max-content; box-sizing: border-box; padding: 4px 6px; border-radius: ${k}; border: ${d}; box-shadow: ${o}; background-color: ${i}; color: ${r}; font-family: Roboto, Arial, sans-serif; font-size: 14px; max-width: min(${t}px, calc(100vw - 24px)); z-index: 2030; }`,
                 `#${w}[position=center] { bottom: 30px; left: 50vw; transform: translateX(-50%); }`,
                 `#${w}[position=left] { bottom: 30px; left: clamp(12px, calc(100vw - ${t}px), 50px); }`,
                 `#${w}[position=custom] { left: clamp(0px, var(--x), calc(100vw - var(--right-offset))); top: clamp(1px, var(--y), calc(100vh - var(--bottom-offset))); }`,
@@ -2329,24 +2317,30 @@ export default function runPolymer() {
                 `#${w} > #drag-handle > hr:first-child { margin: 0; }`,
                 `#${w} > #drag-handle > hr:last-child { margin: 2px 0 0; }`,
                 `#${w}[position=custom] > #drag-handle { visibility: visible; }`,
-                `#${w} > #content { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 4px; outline: none; }`,
-                `#${w} > #content > #selection { min-width: 4.5em; margin-left: 12px; text-align: end; white-space: nowrap; pointer-events: none; font-weight: 500; font-variant-numeric: tabular-nums; }`,
-                `#${w} > #content > span { pointer-events: none; margin: 0 12px 0 2px; color: var(--yt-spec-text-secondary, #aaa); }`,
-                `#${w} > #content > yt-icon-button { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; }`,
+                `#${w} > #content { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2px; outline: none; }`,
+                `#${w} > #content > #selection { margin: 0 2px 0 4px; white-space: nowrap; pointer-events: none; font-weight: 500; font-variant-numeric: tabular-nums; }`,
+                `#${w} > #content > .${s}-selection-label { pointer-events: none; margin: 0 4px 0 0; font-size: 12px; color: var(--yt-spec-text-secondary, #aaa); white-space: nowrap; }`,
+                `#${w} > #content > yt-icon-button { --yt-icon-button-icon-width: ${e}; --yt-icon-button-icon-height: ${e}; width: ${L}px; height: ${L}px; flex: none; }`,
+                `#${w} > #content > tp-yt-paper-tooltip:not(:defined) { display: none; }`,
                 `#${w} > #content > yt-icon-button:hover { background-color: ${a}; border-radius: 50%; }`,
                 `#${w} > #content > yt-icon-button[disabled] { pointer-events: none; cursor: auto; color: var(--paper-icon-button-disabled-text, var(--disabled-text-color)); }`,
-                `.${s}-bar-menu { position: relative; }`,
-                `.${s}-bar-menu > #listbox { position: absolute; right: -8px; bottom: calc(100% + 40px); max-height: calc(100vh - 160px); overflow: auto; }`,
-                `#${w}.right-side > .${s}-bar-menu > #listbox { right: -8px; }`,
-                `#${w}.bottom-side > .${s}-bar-menu > #listbox { top: calc(100% + 16px); bottom: auto; }`,
+                `.${s}-bar-menu { position: fixed; z-index: 2031; width: max-content; max-width: calc(100vw - 16px); }`,
+                `.${s}-bar-menu > #msfy-menu-list { box-sizing: border-box; max-width: calc(100vw - 16px); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-gutter: stable; touch-action: pan-y; }`,
                 `.${s}-context-menu { position: absolute; z-index: 2030; transform: translateX(clamp(5vw, var(--x), calc(100vw - 100% - 40px))) translateY(clamp(5vh, var(--y), calc(100vh - 100% - 30px + var(--scroll-y)))); }`,
-                `.${s}-context-menu > #listbox { max-height: calc(100vh - 100px); overflow: auto; }`,
-                `#listbox.${$} { border-radius: ${k}; border: ${d}; padding: 8px 0px; font-family: Roboto, Arial, sans-serif; white-space: nowrap; box-shadow: ${o}; background-color: ${i}; color: ${r}; }`,
-                `.${y} > div { cursor: pointer; min-height: 36px; padding: 0 36px 0 16px; font-size: 14px; display: flex; align-items: center; }`,
+                `.${s}-context-menu > #msfy-menu-list { max-height: calc(100vh - 100px); overflow: auto; }`,
+                `#msfy-menu-list.${$} { display: block; box-sizing: border-box; height: auto; min-height: 0; margin: 0; border-radius: ${k}; border: ${d}; padding: 8px 0px; font-family: Roboto, Arial, sans-serif; white-space: nowrap; box-shadow: ${o}; background-color: ${i}; color: ${r}; }`,
+                `.${y} { display: block; box-sizing: border-box; height: auto; min-height: 0; margin: 0; padding: 0; flex: none; }`,
+                `.${y} > div { box-sizing: border-box; height: 36px; max-height: 36px; margin: 0; line-height: 20px; flex: none; cursor: pointer; min-height: 36px; padding: 0 36px 0 16px; font-size: 14px; display: flex; align-items: center; }`,
                 `.${y} > div:focus { background-color: ${a}; outline: 0; }`,
                 `.${y} > div:hover { background-color: ${a}; }`,
                 `.${y} > div:hover:focus { background-color: var(--${s}-spec-20-percent-layer); }`,
-                `.${y} > div > yt-icon { pointer-events: none; margin-right: 16px; color: var(--yt-spec-icon-inactive); }`,
+                `.${y} > div > yt-icon { pointer-events: none; flex: none; margin-right: 16px; color: var(--yt-spec-icon-inactive); }`,
+                `.${y} > div > .${s}-menu-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }`,
+                `.${y} > .msfy-menu-pair { gap: 0; padding-right: 12px; cursor: default; font: 400 14px/20px Roboto, Arial, sans-serif; }`,
+                `.msfy-menu-pair > .${s}-menu-label { flex: 1; margin-right: 8px; }`,
+                `.msfy-menu-pair > button { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 32px; height: 32px; padding: 4px; border: 0; border-radius: 6px; background: transparent; color: inherit; font: inherit; cursor: pointer; }`,
+                `.msfy-menu-pair > button:hover, .msfy-menu-pair > button:focus-visible { background: ${a}; outline: 1px solid currentColor; }`,
+                `.msfy-menu-pair > button > yt-icon { width: 24px; height: 24px; pointer-events: none; }`,
                 `.${y}[separator="top"]::before, .${y}[separator="bottom"]::after { content: ""; display: block; height: 1px; background-color: ${a}; margin: 8px 0; }`,
                 `@keyframes ${wt.dt} { from { opacity: 1; } to { opacity: 0; transform: scale(2); } }`,
                 `#${wt.dt} { background: ${_}; animation: ${wt.dt} 0.5s linear forwards; position: fixed; left: 50%; top: 50%; width: ${M}px; height: ${M}px; margin-left: -${C}px; margin-top: -${C}px; border-radius: ${C}px; z-index: 2030; pointer-events: none; display: none; }`,
@@ -2882,151 +2876,46 @@ export default function runPolymer() {
       }
     }
   }
-  const Zt = (function () {
-    const n = s + "-select-filter",
-      o = n + "-close",
-      i = n + "-help",
-      r = encodeURI(
-        "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet"
-      );
-    let a, c;
-    function d() {
-      c && (c(), (c = null)), pt(a) && (c = Wt(a, "filterPosition"));
+  const Zt = (() => {
+    let panel, view, cleanup;
+    function position() {
+      cleanup?.();
+      cleanup = null;
+      if (pt(panel)) cleanup = Wt(panel, 'filterPosition');
     }
-    function l() {
-      c && (c(), (c = null)), gt.et(), a.remove(), (a = null), kt.l();
-    }
-    function p() {
-      if (!a) {
-        (a = e.createElement("div")), (a.id = n);
-        const c = [et(o, "close"), nt(o, L.messages.close)],
-          p = [et(i, `${s}:${s}-help`), nt(i, L.messages.filterHelpTooltip)],
-          u = et("done", "icons:done"),
-          f = el('header', {}, el('yt-icon', { icon: 'icons:filter-list' }), el('span', { id: 'title' }, L.messages.selectWithFilter), p, c),
-          h = [el('input', { type: 'radio', name: 'source', value: 'title', id: 'source-title', checked: true }), el('label', { for: 'source-title' }, L.messages.title)],
-          m = [el('input', { type: 'radio', name: 'source', value: 'shortBylineText', id: 'source-channel' }), el('label', { for: 'source-channel' }, L.messages.channelName)],
-          b = [el('input', { type: 'radio', name: 'source', value: 'watched', id: 'source-watched' }), el('label', { for: 'source-watched' }, L.messages.watched)],
-          $ = el('section', {}, el('input'), el('output', { style: 'display: none; width: 3em; text-align: right;' }, el('span'), ' %'), u),
-          y = n + "-case-sensitive",
-          g = el('footer', {}, el('div', {}, el('input', { type: 'checkbox', id: y }), el('label', { for: y }, L.messages.caseSensitive)));
-        a.append(dragHandle(), el('div', { id: 'content' }, f, el('div', { id: 'choice' }, h, m, b), $, g)),
-          a
-            .querySelector("#content > header > #" + i)
-            .addEventListener("click", () => t.open(r, "_blank")),
-          a.querySelector("#" + o).addEventListener("click", l);
-        let x = z.filter.title;
-        const v = a.querySelector("section > input"),
-          w = v.nextElementSibling;
-        v.value = x.value;
-        v.addEventListener("input", (t) => {
-          (x.value = v.value),
-            "range" === v.type && (w.firstElementChild.textContent = x.value);
-        });
-        const _ = a.querySelector(`#${y}`);
-        (_.checked = x.option),
-          _.addEventListener("change", (t) => {
-            x.option = _.checked;
-          }),
-          a.querySelector("#source-title").addEventListener("change", (t) => {
-            (x = z.filter.title),
-              (v.style.width = "15em"),
-              v.removeAttribute("type"),
-              v.removeAttribute("min"),
-              v.removeAttribute("max"),
-              (v.value = x.value),
-              v.focus(),
-              (w.style.display = "none"),
-              (_.checked = x.option),
-              (_.nextElementSibling.textContent = L.messages.caseSensitive);
-          }),
-          a.querySelector("#source-channel").addEventListener("change", (t) => {
-            (x = z.filter.channel),
-              (v.style.width = "15em"),
-              v.removeAttribute("type"),
-              v.removeAttribute("min"),
-              v.removeAttribute("max"),
-              (v.value = x.value),
-              v.focus(),
-              (w.style.display = "none"),
-              (_.checked = x.option),
-              (_.nextElementSibling.textContent = L.messages.caseSensitive);
-          }),
-          a.querySelector("#source-watched").addEventListener("change", (t) => {
-            (x = z.filter.watched),
-              (v.style.width = "12em"),
-              v.setAttribute("type", "range"),
-              v.setAttribute("min", "1"),
-              v.setAttribute("max", "100"),
-              (v.value = x.value),
-              v.focus(),
-              (w.style.display = "block"),
-              (w.firstElementChild.textContent = x.value),
-              (_.checked = x.option),
-              (_.nextElementSibling.textContent = L.messages.reverseFilter);
-          });
-        const k = () => a.querySelector('input[name="source"]:checked').value,
-          E = () =>
-            (function (t, e, n) {
-              if (t)
-                try {
-                  const o = "watched" !== n ? new RegExp(t, e ? "i" : "") : t,
-                    i = P();
-                  for (let t = 0; t < i.length; t++) {
-                    const r = i[t],
-                      a = j(r).data;
-                    if ("watched" === n) {
-                      const t = a.thumbnailOverlays?.find(
-                          (t) => t.thumbnailOverlayResumePlaybackRenderer
-                        ),
-                        n =
-                          t?.thumbnailOverlayResumePlaybackRenderer
-                            ?.percentDurationWatched ?? 0;
-                      (e ? n >= o : n < o) && (r.checked = !0);
-                    } else {
-                      const t =
-                        a?.[n]?.runs?.map((t) => t.text).join("") || a?.[n]?.simpleText ||
-                        ("title" === n ? a?.headline?.simpleText : "");
-                      o.test(t) && (r.checked = !0);
-                    }
-                  }
-                  kt.l();
-                } catch (t) {
-                  t.message, Kt("👎   " + L.messages.invalidFilter);
-                }
-            })(v.value, !_.checked, k());
-        v.addEventListener("keyup", (t) => "Enter" === t.key && E()),
-          a
-            .querySelector("#content > section > #done")
-            .addEventListener("click", E),
-          e.body.appendChild(a),
-          e.activeElement,
-          d(),
-          $t.j(v),
-          kt.l();
-      }
+    function close() {
+      if (!panel) return;
+      cleanup?.();
+      cleanup = null;
+      gt.et();
+      view.destroy();
+      panel = null;
+      view = null;
+      kt.l();
+      e.getElementById(kt.dt)?.querySelector('#menu')?.focus();
     }
     return {
       tt() {
-        a || p();
+        if (panel) return;
+        view = createFilter({
+          messages: L.messages, state: z.filter, checkboxes: P,
+          data: (checkbox) => j(checkbox)?.data,
+          onChange: () => kt.l(), onClose: close,
+          onHelp: () => t.open('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet', '_blank', 'noopener'),
+          onError: () => Kt(L.messages.invalidFilter),
+        });
+        panel = view.root;
+        e.body.append(panel);
+        position();
+        $t.j(view.input);
+        kt.l();
       },
-      st() {
-        a && l();
-      },
-      U() {
-        a && (a.style.display = "block");
-      },
-      _t() {
-        a && (a.style.display = "none");
-      },
-      ut() {
-        d();
-      },
-      get dt() {
-        return n;
-      },
-      get lt() {
-        return !!a;
-      },
+      st: close,
+      U() { if (panel) panel.style.display = 'block'; },
+      _t() { if (panel) panel.style.display = 'none'; },
+      ut: position,
+      get dt() { return 'msfy-select-filter'; },
+      get lt() { return Boolean(panel); },
     };
   })();
   function Kt(t) {

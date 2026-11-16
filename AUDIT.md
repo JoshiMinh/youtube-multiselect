@@ -9,7 +9,7 @@ Audited November 13, 2026; approved follow-up fixes completed November 15, 2026.
 | Chrome MV3 build | PASS | Production build completed |
 | Firefox MV2 build | PASS | Production build completed; toolbar startup tested with MV2 API mocks |
 | Types and patch hygiene | PASS | TypeScript and `git diff --check` |
-| Unit/background tests | PASS | 10 tests, including every five-item selection combination in both move directions and a DOM-sink guard |
+| Unit/background tests | PASS | 17 tests, including move selection combinations, menu positioning, item-specific Shorts metadata, a DOM-sink guard, and locale coverage |
 | Browser feature tests | PASS | Production bundles tested with Polymer and native wrappers |
 | Settings | PASS | Every setting, default restoration, storage updates, navigation, theme, tour reset, 320/768/1440px widths |
 | Live YouTube startup/reload | PASS | Public playlist: 100 selection boxes before and after refresh; no extension page errors |
@@ -116,3 +116,29 @@ node smoke.mjs
 ```
 
 The browser suites use local response fixtures. Only `smoke.mjs` contacts a real public YouTube page, in a temporary signed-out profile.
+
+## UI follow-up
+
+The four movement operations are retained with distinct local SVG icons. Up/down
+labels explicitly mean one position, with translations in all 14 catalogs.
+The filter now uses segmented source controls, a labeled input and apply button,
+inline validation, loading/result feedback, and an accessible live status.
+The toolbar counter uses its actual text width instead of a fixed minimum width;
+unnecessary counter/label margins and outer padding were reduced. Japanese UI
+checks verify unique menu labels, registered icons, a toolbar under 300px for
+`5 / 63`, and filter layouts at 320/375/414/768px. The Select duplicates feature
+retains its existing behavior.
+
+The action menu now anchors to the toolbar's measured bounds with an 8px gap,
+opens on the side with available space, and clamps to the viewport. Tall menus
+scroll without losing their scroll position during repositioning. Browser checks
+cover bottom, custom top, and narrow-screen toolbar positions and keyboard focus.
+
+The Shorts/videos-only selection actions were removed on November 16. Four new
+selected-item sorting actions use the existing server-backed playlist reorder
+path. Duration and upload date each support ascending and descending order;
+unknown values sort last and ties retain their original order. Relative English
+and Japanese upload dates are approximate; other unrecognized date labels remain
+unknown. Menus retain capped heights and support wheel, keyboard, and touch scroll.
+
+Version 1.7.2 fixes missing sort labels in the content-script MESSAGE_KEYS list. The four unlabeled 36px sort rows caused the apparent blank gap. UI regression tests now receive only the keys forwarded by the content script and assert that every sort label is nonempty.

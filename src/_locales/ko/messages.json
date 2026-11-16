@@ -299,12 +299,6 @@
    "reverseFilter": {
       "message": "필터 반전"
    },
-   "selectShortsOnly": {
-      "message": "Shorts만 선택"
-   },
-   "selectVideosOnly": {
-      "message": "동영상만 선택"
-   },
    "settingsEyebrow": {
       "message": "확장 프로그램 환경설정"
    },
@@ -331,5 +325,59 @@
    },
    "togglePlaylistGuide": {
       "message": "재생목록 가이드 전환"
+   },
+   "moveUp": {
+      "message": "한 칸 위로 이동"
+   },
+   "moveDown": {
+      "message": "한 칸 아래로 이동"
+   },
+   "filterApply": {
+      "message": "일치 항목 선택"
+   },
+   "filterHelp": {
+      "message": "일치하는 동영상을 현재 선택에 추가합니다."
+   },
+   "filterPattern": {
+      "message": "텍스트 또는 정규 표현식"
+   },
+   "filterResult": {
+      "message": "일치 항목 {count}개 선택됨"
+   },
+   "filterSource": {
+      "message": "검색 기준"
+   },
+   "filterLoading": {
+      "message": "선택 중…"
+   },
+   "sortDurationAsc": {
+      "message": "Duration: shortest first"
+   },
+   "sortDurationDesc": {
+      "message": "Duration: longest first"
+   },
+   "sortDateAsc": {
+      "message": "Upload date: oldest first"
+   },
+   "sortDateDesc": {
+      "message": "Upload date: newest first"
+   },
+   "sortMissingData": {
+      "message": "No usable duration or upload date is available for the selection."
+   },
+   "menuFiles": {
+      "message": "Import / Export"
+   },
+   "menuMoveStep": {
+      "message": "Move one position"
+   },
+   "menuMoveEnds": {
+      "message": "Move to top / bottom"
+   },
+   "menuDuration": {
+      "message": "Duration"
+   },
+   "menuDate": {
+      "message": "Upload date"
    }
 }

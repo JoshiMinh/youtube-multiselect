@@ -246,10 +246,10 @@
       "message": "Move down here"
    },
    "moveUp": {
-      "message": "Move up"
+      "message": "Move up one position"
    },
    "moveDown": {
-      "message": "Move down"
+      "message": "Move down one position"
    },
    "moveToBottom": {
       "message": "Move to bottom"
@@ -292,12 +292,6 @@
    },
    "selectDuplicates": {
       "message": "Select duplicates"
-   },
-   "selectShortsOnly": {
-      "message": "Select Shorts only"
-   },
-   "selectVideosOnly": {
-      "message": "Select videos only"
    },
    "selectWithFilter": {
       "message": "Select with filter"
@@ -343,5 +337,53 @@
    },
    "togglePlaylistGuide": {
       "message": "Toggle Playlist Guide"
+   },
+   "filterApply": {
+      "message": "Select matches"
+   },
+   "filterHelp": {
+      "message": "Matches are added to your current selection."
+   },
+   "filterPattern": {
+      "message": "Text or regular expression"
+   },
+   "filterResult": {
+      "message": "{count} matches selected"
+   },
+   "filterSource": {
+      "message": "Match by"
+   },
+   "filterLoading": {
+      "message": "Selecting…"
+   },
+   "sortDurationAsc": {
+      "message": "Duration: shortest first"
+   },
+   "sortDurationDesc": {
+      "message": "Duration: longest first"
+   },
+   "sortDateAsc": {
+      "message": "Upload date: oldest first"
+   },
+   "sortDateDesc": {
+      "message": "Upload date: newest first"
+   },
+   "sortMissingData": {
+      "message": "No usable duration or upload date is available for the selection."
+   },
+   "menuFiles": {
+      "message": "Import / Export"
+   },
+   "menuMoveStep": {
+      "message": "Move one position"
+   },
+   "menuMoveEnds": {
+      "message": "Move to top / bottom"
+   },
+   "menuDuration": {
+      "message": "Duration"
+   },
+   "menuDate": {
+      "message": "Upload date"
    }
 }

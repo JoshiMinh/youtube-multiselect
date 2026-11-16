@@ -84,7 +84,7 @@ try {
       disconnectedCallback() { definition.detached(); }
     });
     window.ytcfg = { get: (key) => ({ LOGGED_IN: true, INNERTUBE_CONTEXT: { client: {} }, INNERTUBE_API_KEY: 'fixture' })[key] };
-    const items = ids.map((id) => ({ richItemRenderer: { content: { shortsLockupViewModel: { contentId: id, menu: { playlistSetVideoId: `set-${id}` } } } } }));
+    const items = ids.map((id, index) => ({ richItemRenderer: { content: { [index < 2 ? 'shortsLockupViewModel' : 'lockupViewModel']: { contentId: id, menu: { playlistSetVideoId: `set-${id}` } } } } }));
     const data = {
       header: { playlistHeaderRenderer: { playlistId: 'fixture' } },
       contents: { twoColumnBrowseResultsRenderer: { tabs: [
@@ -180,12 +180,6 @@ try {
   const preference = (values) => page.evaluate((values) => chrome.storage.local.set(values), values);
   const edits = () => page.evaluate(() => window.requests.filter((request) => request.url?.includes('/edit_playlist')).length);
 
-  await action('action-select-shorts');
-  assert.equal(await checked(), 2);
-  await action('action-select-videos');
-  assert.equal(await checked(), 2);
-  assert.equal(await page.locator('yt-lockup-view-model [checked]').count(), 2);
-
   await select(ids[0]);
   await page.locator(`[data-id="${ids[3]}"] [id="msfy-video-checkbox"]`).locator('..').click({ modifiers: ['Shift'] });
   assert.equal(await checked(), 3, 'shift click selects a contiguous range');
@@ -211,18 +205,20 @@ try {
   const filter = page.locator('#msfy-select-filter');
   await filter.locator('section > input').fill('Video title');
   await filter.locator('#done').click();
+  await page.waitForFunction(() => document.querySelector('#msfy-select-filter')?.dataset.state === 'success');
   assert.equal(await checked(), 2, 'title filter');
   await clear();
   await filter.locator('#source-watched').check();
   await filter.locator('section > input').evaluate((input) => { input.value = '50'; input.dispatchEvent(new Event('input')); });
   await filter.locator('#done').click();
+  await page.waitForFunction(() => document.querySelector('#msfy-select-filter')?.dataset.state === 'success');
   assert.equal(await checked(), 2, 'watched progress filter');
   await clear();
   await filter.locator('#source-title').check();
   await filter.locator('section > input').fill('[');
   await filter.locator('#done').click();
   assert.equal(await checked(), 0);
-  assert.equal(await page.evaluate(() => window.toasts.at(-1)), 'Invalid regular expression');
+  assert.equal(await filter.locator('[role="status"]').textContent(), 'Invalid regular expression');
   await filter.locator('#msfy-select-filter-close').click();
   await action('action-select-filter');
   assert.equal(await filter.locator('section > input').inputValue(), '[', 'filter text survives reopening');
@@ -235,6 +231,25 @@ try {
   await page.waitForFunction((first) => document.querySelector('#grid').firstElementChild.dataset.id === first, beforeFlip.at(-1));
   assert.equal(await wrappers.count(), 4, 'flip retains all rows');
   assert.deepEqual(await page.locator('#grid > ytd-rich-item-renderer').evaluateAll((rows) => rows.map((row) => row.dataset.id)), beforeFlip.reverse());
+  await bar.locator('#select').click();
+  await bar.locator('#unselect').click();
+  await page.evaluate(() => {
+    document.querySelectorAll('[id="msfy-video-checkbox"]').forEach((checkbox, index) => {
+      const row = checkbox.parentElement.parentElement;
+      row.data = { ...(row.data ?? {}) };
+      delete row.data.lengthSeconds; delete row.data.publishDate;
+      const badge = document.createElement('yt-thumbnail-overlay-badge-view-model');
+      const badgeText = document.createElement('span'); badgeText.className = 'ytBadgeShapeBadgeText'; badgeText.textContent = `${index + 1}:00`; badge.append(badgeText); row.append(badge);
+      const date = document.createElement('div'); date.id = 'video-info'; date.textContent = `Channel · 37万 回視聴 · ${4 - index} か月前`; row.append(date);
+      row.closest('ytd-rich-item-renderer').dataset.sortValue = index + 1;
+    });
+  });
+  for (const field of ['duration', 'date']) for (const direction of ['desc', 'asc']) {
+    await bar.locator('#select').click();
+    await action(`action-sort-${field}-${direction}`);
+    const expected = direction === 'asc' ? ['1','2','3','4'] : ['4','3','2','1'];
+    await page.waitForFunction((expected) => JSON.stringify([...document.querySelectorAll('#grid > ytd-rich-item-renderer')].map(row => row.dataset.sortValue)) === JSON.stringify(expected), expected);
+  }
   await bar.locator('#select').click();
   await action('action-group-by-channel');
   await page.waitForFunction(() => document.querySelectorAll('[id="msfy-video-checkbox"][checked]').length === 0);
