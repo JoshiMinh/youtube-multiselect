@@ -1,6 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { sortedVideos } from '../src/polymer/sort-videos.js';
+import { matchesDuration, parseDurationInput, sortedVideos, videoDuration } from '../src/polymer/sort-videos.js';
+
+test('duration thresholds accept mm:ss and hh:mm:ss and compare strictly', () => {
+  assert.equal(parseDurationInput('5:00'), 300);
+  assert.equal(parseDurationInput('1:05:00'), 3900);
+  assert.equal(parseDurationInput('5:60'), null);
+  assert.equal(parseDurationInput('1:60:00'), null);
+  assert.equal(matchesDuration(299, 300, false), true);
+  assert.equal(matchesDuration(301, 300, false), false);
+  assert.equal(matchesDuration(301, 300, true), true);
+  assert.equal(matchesDuration(300, 300, true), false);
+  assert.equal(matchesDuration(null, 300, false), false);
+});
+
+test('duration matching reuses playlist metadata and DOM duration fallback', () => {
+  assert.equal(videoDuration({ lengthSeconds: '75' }), 75);
+  assert.equal(videoDuration({}, { querySelectorAll: () => [{ textContent: '1:15' }] }), 75);
+  assert.equal(videoDuration({}, { querySelectorAll: () => [{ textContent: 'LIVE' }] }), null);
+});
 
 test('duration sorts stably in both directions with unknown and live items last', () => {
   const items = [{id:'a',data:{lengthSeconds:'90'}},{id:'b',data:{lengthText:{simpleText:'1:00'}}},{id:'c',data:{lengthText:{simpleText:'LIVE'}}},{id:'d',data:{lengthSeconds:90}}];

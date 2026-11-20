@@ -15,7 +15,8 @@ keeps preferences in the local browser profile.
 
 - Select individual videos with the mouse or keyboard.
 - Select all videos or select by title, channel, or watched progress.
-- Use the filter's title/channel/watched tabs, inline pattern validation, and
+- Select videos shorter or longer than a duration such as `5:00` or `1:05:00`.
+- Use the filter's title/channel/watched/duration tabs, inline validation, and
   match feedback. Filter results are added to the current selection.
 - Search for duplicate videos, including in the reverse direction.
 - Copy, cut, and paste videos between playlists.
@@ -118,6 +119,14 @@ Create a package for store upload:
 ```bash
 pnpm zip
 ```
+
+Create a Firefox package:
+
+```sh
+pnpm zip:firefox
+```
+
+Published GitHub releases include production ZIPs for Chrome and Firefox.
 
 ## Smoke test
 

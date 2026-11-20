@@ -29,6 +29,7 @@ const MESSAGE_KEYS = [
   'confirmRemoveContent', 'copy', 'cut', 'deselectAllVideos','downloadSelection',
   'extensionName', 'filterHelpTooltip', 'invalidData', 'invalidFilter', 'keys', 'playlistPosition',
   'filterApply', 'filterHelp', 'filterPattern', 'filterResult', 'filterSource', 'filterLoading',
+  'durationShorterThan', 'durationLongerThan', 'durationFormat', 'invalidDuration',
   'reverseFilter', 'menuDuration', 'menuDate', 'menuFiles', 'menuMoveStep', 'menuMoveEnds',
   'loadEntirePlaylist', 'loadingEntirePlaylist', 'localeDir', 'moveAfter', 'moveToBottom',
   'moveToTop', 'moveUp', 'moveDown', 'groupByChannel', 'flipList', 'noDuplicatesFound', 'paste', 'reloadRequired', 'remove', 'removeVideos',

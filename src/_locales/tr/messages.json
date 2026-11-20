@@ -350,6 +350,18 @@
    "filterLoading": {
       "message": "Seçiliyor…"
    },
+   "durationShorterThan": {
+      "message": "Daha kısa"
+   },
+   "durationLongerThan": {
+      "message": "Daha uzun"
+   },
+   "durationFormat": {
+      "message": "mm:ss or hh:mm:ss"
+   },
+   "invalidDuration": {
+      "message": "Süreyi mm:ss veya hh:mm:ss biçiminde girin."
+   },
    "sortDurationAsc": {
       "message": "Duration: shortest first"
    },

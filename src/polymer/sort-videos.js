@@ -1,6 +1,6 @@
 const text = (value) => typeof value === 'string' ? value : value?.simpleText ?? value?.runs?.map((run) => run.text).join('') ?? value?.content ?? '';
 
-function duration(data, row) {
+export function videoDuration(data, row) {
   const seconds = Number(data.lengthSeconds);
   if (data.lengthSeconds != null && Number.isFinite(seconds) && seconds >= 0) return seconds;
   const candidates = [text(data.lengthText), ...(data.thumbnailOverlays ?? []).map((overlay) => text(overlay.thumbnailOverlayTimeStatusRenderer?.text)),
@@ -10,6 +10,23 @@ function duration(data, row) {
     if (/^\d+(?::\d{2}){1,2}$/.test(value)) return value.split(':').reduce((sum, part) => sum * 60 + Number(part), 0);
   }
   return null;
+}
+
+export function parseDurationInput(value) {
+  const input = String(value).trim();
+  if (/^\d+:[0-5]\d$/.test(input)) {
+    const [minutes, seconds] = input.split(':').map(Number);
+    return minutes * 60 + seconds;
+  }
+  if (/^\d+:[0-5]\d:[0-5]\d$/.test(input)) {
+    const [hours, minutes, seconds] = input.split(':').map(Number);
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+  return null;
+}
+
+export function matchesDuration(seconds, threshold, longer) {
+  return Number.isFinite(seconds) && Number.isFinite(threshold) && (longer ? seconds > threshold : seconds < threshold);
 }
 
 function date(data, row, now) {
@@ -26,7 +43,7 @@ function date(data, row, now) {
 }
 
 export function sortedVideos(items, field, direction, now = Date.now()) {
-  const values = items.map((item) => ({ ...item, value: field === 'duration' ? duration(item.data ?? {}, item.row) : date(item.data ?? {}, item.row, now) }));
+  const values = items.map((item) => ({ ...item, value: field === 'duration' ? videoDuration(item.data ?? {}, item.row) : date(item.data ?? {}, item.row, now) }));
   const known = values.filter((item) => item.value !== null).length;
   values.sort((a, b) => a.value === null ? (b.value === null ? 0 : 1) : b.value === null ? -1 : (a.value - b.value) * (direction === 'desc' ? -1 : 1));
   return { order: values.map((item) => item.id), known };

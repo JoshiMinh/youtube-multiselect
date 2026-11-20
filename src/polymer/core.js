@@ -54,6 +54,7 @@ export default function runPolymer() {
         title: { value: "", option: !1 },
         channel: { value: "", option: !1 },
         watched: { value: "100", option: !1 },
+        duration: { value: "", option: !1 },
       },
     };
   let L,
@@ -2899,7 +2900,7 @@ export default function runPolymer() {
         if (panel) return;
         view = createFilter({
           messages: L.messages, state: z.filter, checkboxes: P,
-          data: (checkbox) => j(checkbox)?.data,
+          data: (checkbox) => { const item = j(checkbox); return { data: item?.data ?? {}, row: item }; },
           onChange: () => kt.l(), onClose: close,
           onHelp: () => t.open('https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet', '_blank', 'noopener'),
           onError: () => Kt(L.messages.invalidFilter),

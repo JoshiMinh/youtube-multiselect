@@ -42,7 +42,7 @@ html[dark] .msfy-filter {
 .msfy-filter header > svg { flex: none; color: var(--msfy-filter-muted); }
 .msfy-filter button { font: inherit; cursor: pointer; white-space: nowrap; }
 .msfy-filter .msfy-filter-icon { display: grid; place-items: center; flex: none; border: 0; border-radius: 6px; width: 32px; height: 32px; padding: 0; color: var(--msfy-filter-muted); background: transparent; }
-.msfy-filter #choice { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 8px; background: var(--msfy-filter-surface); margin-bottom: 16px; }
+.msfy-filter #choice { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 8px; background: var(--msfy-filter-surface); margin-bottom: 16px; }
 .msfy-filter #choice label { position: relative; min-width: 0; cursor: pointer; }
 .msfy-filter #choice input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
 .msfy-filter #choice span { display: block; border-radius: 5px; padding: 8px 4px; text-align: center; font-size: 13px; color: var(--msfy-filter-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

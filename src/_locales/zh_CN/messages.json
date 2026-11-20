@@ -350,6 +350,18 @@
    "filterLoading": {
       "message": "正在选择…"
    },
+   "durationShorterThan": {
+      "message": "短于"
+   },
+   "durationLongerThan": {
+      "message": "长于"
+   },
+   "durationFormat": {
+      "message": "mm:ss or hh:mm:ss"
+   },
+   "invalidDuration": {
+      "message": "请输入 mm:ss 或 hh:mm:ss 格式的时长。"
+   },
    "sortDurationAsc": {
       "message": "Duration: shortest first"
    },

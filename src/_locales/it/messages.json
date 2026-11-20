@@ -350,6 +350,18 @@
    "filterLoading": {
       "message": "Selezione…"
    },
+   "durationShorterThan": {
+      "message": "Più breve di"
+   },
+   "durationLongerThan": {
+      "message": "Più lunga di"
+   },
+   "durationFormat": {
+      "message": "mm:ss or hh:mm:ss"
+   },
+   "invalidDuration": {
+      "message": "Inserisci una durata nel formato mm:ss o hh:mm:ss."
+   },
    "sortDurationAsc": {
       "message": "Duration: shortest first"
    },

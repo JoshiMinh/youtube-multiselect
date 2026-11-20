@@ -350,6 +350,18 @@
    "filterLoading": {
       "message": "Выбор…"
    },
+   "durationShorterThan": {
+      "message": "Короче"
+   },
+   "durationLongerThan": {
+      "message": "Длиннее"
+   },
+   "durationFormat": {
+      "message": "mm:ss or hh:mm:ss"
+   },
+   "invalidDuration": {
+      "message": "Введите длительность в формате mm:ss или hh:mm:ss."
+   },
    "sortDurationAsc": {
       "message": "Duration: shortest first"
    },

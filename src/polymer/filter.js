@@ -1,4 +1,5 @@
 import { element as el, svg, dragHandle } from './dom.js';
+import { matchesDuration, parseDurationInput, videoDuration } from './sort-videos.js';
 
 const pathIcon = (d) => svg('svg', { viewBox: '0 0 24 24', width: 20, height: 20, 'aria-hidden': 'true' }, svg('path', { d, fill: 'currentColor' }));
 
@@ -38,32 +39,40 @@ export function createFilter({ messages, state, checkboxes, data, onChange, onCl
     status.textContent = text;
     input.setAttribute('aria-invalid', String(kind === 'error'));
   }
+  function hasValue() { return source === 'watched' ? Boolean(input.value) : input.value.trim().length > 0; }
   function refresh() {
     input.type = source === 'watched' ? 'range' : 'text';
     if (source === 'watched') input.min = '1', input.max = '100';
     else input.removeAttribute('min'), input.removeAttribute('max');
+    if (source === 'duration') input.placeholder = messages.durationFormat;
+    else input.removeAttribute('placeholder');
     input.value = current.value;
     output.hidden = source !== 'watched';
     output.firstElementChild.textContent = current.value;
     option.checked = current.option;
-    optionLabel.textContent = source === 'watched' ? messages.reverseFilter : messages.caseSensitive;
-    fieldLabel.textContent = source === 'watched' ? `${messages.watched} ${option.checked ? '<' : '≥'}` : messages.filterPattern;
-    apply.disabled = !input.value || busy;
+    optionLabel.textContent = source === 'watched' ? messages.reverseFilter : source === 'duration' ? (option.checked ? messages.durationLongerThan : messages.durationShorterThan) : messages.caseSensitive;
+    fieldLabel.textContent = source === 'watched' ? `${messages.watched} ${option.checked ? '<' : '≥'}` : source === 'duration' ? messages.menuDuration : messages.filterPattern;
+    apply.disabled = !hasValue() || busy;
     feedback('default', messages.filterHelp);
   }
-  for (const [value, key, text] of [['title', 'title', messages.title], ['shortBylineText', 'channel', messages.channelName], ['watched', 'watched', messages.watched]]) {
+  for (const [value, key, text] of [['title', 'title', messages.title], ['shortBylineText', 'channel', messages.channelName], ['watched', 'watched', messages.watched], ['duration', 'duration', messages.menuDuration]]) {
     const radio = el('input', { type: 'radio', name: 'source', value, id: `source-${key}`, checked: key === 'title' });
     radio.addEventListener('change', () => {
       cancelPending();
       source = value;
-      current = state[key];
+      current = state[key] ?? (state[key] = { value: '', option: false });
       refresh();
       input.focus();
     });
     choice.append(el('label', { title: text }, radio, el('span', {}, text)));
   }
   function validate() {
-    if (source === 'watched' || !input.value) return true;
+    if (source === 'watched' || !input.value.trim()) return true;
+    if (source === 'duration') {
+      if (parseDurationInput(input.value) !== null) return true;
+      feedback('error', messages.invalidDuration);
+      return false;
+    }
     try { new RegExp(input.value, option.checked ? '' : 'i'); return true; }
     catch { feedback('error', messages.invalidFilter); return false; }
   }
@@ -71,7 +80,7 @@ export function createFilter({ messages, state, checkboxes, data, onChange, onCl
     cancelPending();
     current.value = input.value;
     output.firstElementChild.textContent = input.value;
-    apply.disabled = !input.value || busy;
+    apply.disabled = !hasValue() || busy;
     const invalid = root.dataset.state === 'error';
     feedback('default', messages.filterHelp);
     if (invalid) validate();
@@ -80,14 +89,15 @@ export function createFilter({ messages, state, checkboxes, data, onChange, onCl
   option.addEventListener('change', () => {
     cancelPending();
     current.option = option.checked;
-    apply.disabled = !input.value;
+    apply.disabled = !hasValue();
     const invalid = root.dataset.state === 'error';
     if (source === 'watched') fieldLabel.textContent = `${messages.watched} ${option.checked ? '<' : '≥'}`;
+    if (source === 'duration') optionLabel.textContent = option.checked ? messages.durationLongerThan : messages.durationShorterThan;
     feedback('default', messages.filterHelp);
     if (invalid) validate();
   });
   function select() {
-    if (busy || !input.value || !validate()) return;
+    if (busy || !hasValue() || !validate()) return;
     busy = true;
     apply.disabled = true;
     root.setAttribute('aria-busy', 'true');
@@ -97,13 +107,18 @@ export function createFilter({ messages, state, checkboxes, data, onChange, onCl
       if (!root.isConnected) return;
       let count = 0;
       try {
-        const matcher = source === 'watched' ? Number(input.value) : new RegExp(input.value, option.checked ? '' : 'i');
+        const matcher = source === 'watched' ? Number(input.value) : source === 'duration' ? null : new RegExp(input.value, option.checked ? '' : 'i');
+        const durationThreshold = source === 'duration' ? parseDurationInput(input.value) : null;
         for (const checkbox of checkboxes()) {
-          const item = data(checkbox) || {};
+          const value = data(checkbox) || {};
+          const item = value.data ?? value;
           let matches;
           if (source === 'watched') {
             const progress = item.thumbnailOverlays?.find((entry) => entry.thumbnailOverlayResumePlaybackRenderer)?.thumbnailOverlayResumePlaybackRenderer?.percentDurationWatched ?? 0;
             matches = option.checked ? progress < matcher : progress >= matcher;
+          } else if (source === 'duration') {
+            const seconds = videoDuration(item, value.row);
+            matches = matchesDuration(seconds, durationThreshold, option.checked);
           } else {
             const text = item[source]?.runs?.map((run) => run.text).join('') || item[source]?.simpleText || (source === 'title' ? item.headline?.simpleText : '') || '';
             matches = matcher.test(text);
@@ -117,7 +132,7 @@ export function createFilter({ messages, state, checkboxes, data, onChange, onCl
         onError?.(error);
       } finally {
         busy = false;
-        apply.disabled = !input.value;
+        apply.disabled = !hasValue();
         root.removeAttribute('aria-busy');
       }
     });

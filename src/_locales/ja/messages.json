@@ -350,6 +350,18 @@
    "filterLoading": {
       "message": "選択中…"
    },
+   "durationShorterThan": {
+      "message": "より短い"
+   },
+   "durationLongerThan": {
+      "message": "より長い"
+   },
+   "durationFormat": {
+      "message": "mm:ss or hh:mm:ss"
+   },
+   "invalidDuration": {
+      "message": "mm:ss または hh:mm:ss 形式で入力してください。"
+   },
    "sortDurationAsc": {
       "message": "再生時間：短い順"
    },

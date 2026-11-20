@@ -350,6 +350,18 @@
    "filterLoading": {
       "message": "선택 중…"
    },
+   "durationShorterThan": {
+      "message": "보다 짧음"
+   },
+   "durationLongerThan": {
+      "message": "보다 김"
+   },
+   "durationFormat": {
+      "message": "mm:ss or hh:mm:ss"
+   },
+   "invalidDuration": {
+      "message": "mm:ss 또는 hh:mm:ss 형식으로 입력하세요."
+   },
    "sortDurationAsc": {
       "message": "Duration: shortest first"
    },

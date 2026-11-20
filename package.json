@@ -1,7 +1,7 @@
 {
   "name": "youtube-multiselect",
   "private": true,
-  "version": "1.7.2",
+  "version": "1.8",
   "type": "module",
   "packageManager": "pnpm@12.15.0",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
     "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
     "test:browser": "node tests/runtime.mjs && node tests/options.mjs && node tests/libraries.mjs && node tests/hardening.mjs && node tests/ui.mjs",
